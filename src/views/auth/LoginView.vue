@@ -9,7 +9,7 @@ const visible = ref(false);
 
 // TODO 로그인 구현할 것
 function login() {
-  authStore.login('glen', AuthType.SCHOOL);
+  authStore.login('glen', AuthType.ROOT);
   router.push('/');
 }
 
