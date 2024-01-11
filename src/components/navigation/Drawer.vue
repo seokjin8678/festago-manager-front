@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { useDrawerStore } from '@/stores/useDrawerStore.ts';
+import { useAuthStore } from '@/stores/useAuthStore.ts';
+import AdminDrawerItems from '@/components/navigation/items/AdminDrawerItems.vue';
+import SchoolDrawerItems from '@/components/navigation/items/SchoolDrawerItems.vue';
 
 const drawerStore = useDrawerStore();
+const authStore = useAuthStore();
 </script>
 
 <template>
-  <v-navigation-drawer v-model="drawerStore.isShow" disable-resize-watcher="true">
-    <!--  -->
+  <v-navigation-drawer v-model="drawerStore.isShow" :disable-resize-watcher="true">
+    <v-list v-if="!authStore.isLogin">
+      <v-list-item prepend-icon="mdi-login" title="로그인이 필요합니다." @click="$router.push('/login')" />
+    </v-list>
+    <v-list v-else-if="authStore.isAdmin">
+      <AdminDrawerItems />
+    </v-list>
+    <v-list v-else>
+      <SchoolDrawerItems />
+    </v-list>
   </v-navigation-drawer>
 </template>
