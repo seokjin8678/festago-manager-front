@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useDrawerStore } from '@/stores/useDrawerStore.ts';
 import { useAuthStore } from '@/stores/useAuthStore.ts';
-import AdminDrawerItems from '@/components/navigation/items/AdminDrawerItems.vue';
-import SchoolDrawerItems from '@/components/navigation/items/SchoolDrawerItems.vue';
+import AdminDrawerItems from '@/components/navigation/drawer/AdminDrawerItems.vue';
+import SchoolDrawerItems from '@/components/navigation/drawer/SchoolDrawerItems.vue';
 
 const drawerStore = useDrawerStore();
 const authStore = useAuthStore();
