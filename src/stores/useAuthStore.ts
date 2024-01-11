@@ -9,21 +9,19 @@ export const useAuthStore = defineStore('auth', () => {
   const isAdmin = computed(() => {
     return authType.value === AuthType.ADMIN || authType.value === AuthType.ROOT;
   });
+
   const isLogin = computed(() => {
     return authType.value !== AuthType.UNASSIGNED;
   });
 
   function login(usernameInput: string, authTypeInput: AuthType) {
     username.value = usernameInput;
-
     authType.value = authTypeInput;
   }
 
   function logout() {
     username.value = '';
-
     authType.value = AuthType.UNASSIGNED;
-
   }
 
   return {
