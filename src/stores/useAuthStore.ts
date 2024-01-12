@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { AuthType } from '@/type/AuthType.ts';
+import ApiService from '@/api';
 
 export const useAuthStore = defineStore('auth', () => {
+  const accessToken = ref('');
   const username = ref('');
   const authType = ref<AuthType>(AuthType.UNASSIGNED);
 
@@ -14,17 +16,24 @@ export const useAuthStore = defineStore('auth', () => {
     return authType.value !== AuthType.UNASSIGNED;
   });
 
-  function login(usernameInput: string, authTypeInput: AuthType) {
-    username.value = usernameInput;
-    authType.value = authTypeInput;
+  function login(dto: {
+    accessToken: string,
+    username: string,
+    authType: AuthType
+  }) {
+    accessToken.value = dto.accessToken;
+    username.value = dto.username;
+    authType.value = dto.authType;
   }
 
   function logout() {
+    accessToken.value = '';
     username.value = '';
     authType.value = AuthType.UNASSIGNED;
   }
 
   return {
+    accessToken,
     username,
     authType,
     isAdmin,
@@ -34,6 +43,10 @@ export const useAuthStore = defineStore('auth', () => {
   };
 }, {
   persist: {
-    storage: sessionStorage,
+    storage: localStorage,
+    afterRestore(_context) {
+      const authStore = useAuthStore();
+      ApiService.changeAccessToken(authStore.accessToken);
+    },
   },
 });
