@@ -39,8 +39,9 @@ async function onSubmit() {
 
 <template>
   <v-card
-    class="mx-auto my-8 pa-15 pb-8"
+    class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
     max-width="800"
+    min-width="350"
     elevation="4"
   >
     <v-card-title>
@@ -88,7 +89,6 @@ async function onSubmit() {
       <span v-if="errorMessage" class="text-subtitle-2 text-red-darken-3">
         {{ errorMessage }}
       </span>
-
       <v-btn
         :disabled="!form"
         :loading="loading"
