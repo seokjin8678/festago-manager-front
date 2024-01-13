@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { router } from '@/router';
+import AuthService from '@/api/auth/AuthService.ts';
 
 const authStore = useAuthStore();
 
-function logout() {
+async function logout() {
+  await AuthService.logout();
   authStore.logout();
-  router.push('/login');
+  await router.push('/login');
 }
 </script>
 

@@ -1,7 +1,7 @@
 export const AuthType = {
-  ROOT: 'root',
-  ADMIN: 'admin',
-  SCHOOL: 'school',
-  UNASSIGNED: 'unassigned',
+  ROOT: 'ROOT',
+  ADMIN: 'ADMIN',
+  SCHOOL: 'SCHOOL',
+  UNASSIGNED: 'UNASSIGNED',
 } as const;
 export type AuthType = typeof AuthType[keyof typeof AuthType]

@@ -2,23 +2,46 @@
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { ref } from 'vue';
 import { router } from '@/router';
-import { AuthType } from '@/type/AuthType.ts';
+import AuthService from '@/api/auth/AuthService.ts';
+import ApiService from '@/api';
+import FestagoError from '@/api/FestagoError.ts';
 
 const authStore = useAuthStore();
 const visible = ref(false);
+const loginInput = ref({
+  username: '',
+  password: '',
+});
+const errorMessage = ref('');
+const loading = ref(false);
+const form = ref(false);
+const rules = ref({
+  required: (value: any) => !!value,
+});
 
-// TODO 로그인 구현할 것
-function login() {
-  authStore.login('glen', AuthType.ROOT);
-  router.push('/');
+async function onSubmit() {
+  form.value = false;
+  loading.value = true;
+  setTimeout(() => (form.value = true), 1000);
+  try {
+    const response = await AuthService.login(loginInput.value.username, loginInput.value.password);
+    ApiService.changeAccessToken(response.data.accessToken);
+    authStore.login(response.data);
+    await router.push('/');
+  } catch (e) {
+    if (e instanceof FestagoError) {
+      loading.value = false;
+      errorMessage.value = e.message;
+    }
+  }
 }
-
 </script>
 
 <template>
   <v-card
-    class="mx-auto my-8 pa-12 pb-8"
+    class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
     max-width="800"
+    min-width="350"
     elevation="4"
   >
     <v-card-title>
@@ -26,38 +49,57 @@ function login() {
         로그인
       </p>
     </v-card-title>
-
-    <div class="text-subtitle-1 text-medium-emphasis">
-      계정
-    </div>
-    <v-text-field
-      density="compact"
-      placeholder="계정을 입력해주세요."
-      prepend-inner-icon="mdi-account-outline"
-      variant="outlined"
-    />
-
-    <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-      비밀번호
-    </div>
-    <v-text-field
-      :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-      :type="visible ? 'text' : 'password'"
-      density="compact"
-      placeholder="비밀번호를 입력해주세요."
-      prepend-inner-icon="mdi-lock-outline"
-      variant="outlined"
-      @click:append-inner="visible = !visible"
-    />
-
-    <v-btn
-      :block="true"
-      class="mb-8"
-      color="blue"
-      size="large"
-      @click="login"
+    <v-form
+      v-model="form"
+      @submit.prevent="onSubmit"
     >
-      로그인
-    </v-btn>
+      <p class="text-subtitle-1 text-medium-emphasis">
+        계정
+      </p>
+      <v-text-field
+        ref="qqc"
+        density="compact"
+        placeholder="ID를 입력해주세요."
+        prepend-inner-icon="mdi-account-outline"
+        variant="outlined"
+        maxlength="50"
+        v-model="loginInput.username"
+        :rules="[rules.required]"
+        :hide-details="true"
+      />
+      <span v-if="errorMessage" class="text-subtitle-2 text-red-darken-3">
+        {{ errorMessage }}
+      </span>
+      <p class="text-subtitle-1 text-medium-emphasis mt-1">
+        비밀번호
+      </p>
+      <v-text-field
+        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="visible ? 'text' : 'password'"
+        density="compact"
+        placeholder="비밀번호를 입력해주세요."
+        prepend-inner-icon="mdi-lock-outline"
+        variant="outlined"
+        maxlength="50"
+        v-model="loginInput.password"
+        :rules="[rules.required]"
+        @click:append-inner="visible = !visible"
+        :hide-details="true"
+      />
+      <span v-if="errorMessage" class="text-subtitle-2 text-red-darken-3">
+        {{ errorMessage }}
+      </span>
+      <v-btn
+        :disabled="!form"
+        :loading="loading"
+        :block="true"
+        class="my-4"
+        color="blue"
+        size="large"
+        type="submit"
+      >
+        로그인
+      </v-btn>
+    </v-form>
   </v-card>
 </template>
