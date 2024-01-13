@@ -10,7 +10,11 @@ const drawerStore = useDrawerStore();
   <Drawer />
   <v-app-bar>
     <v-app-bar-nav-icon @click="drawerStore.toggle" />
-    <v-app-bar-title>페스타고 관리자 페이지</v-app-bar-title>
+    <v-app-bar-title>
+      <span class="text-body-1 text-md-h6">
+        페스타고 관리자 페이지
+      </span>
+    </v-app-bar-title>
     <AuthButton />
   </v-app-bar>
 </template>

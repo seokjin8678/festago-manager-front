@@ -13,10 +13,20 @@ async function logout() {
 </script>
 
 <template>
-  <v-btn prepend-icon="mdi-login" v-if="!authStore.isLogin" @click="$router.push('/login')">
+  <v-btn
+    v-if="!authStore.isLogin"
+    class="text-button"
+    prepend-icon="mdi-login"
+    @click="$router.push('/login')"
+  >
     로그인
   </v-btn>
-  <v-btn prepend-icon="mdi-logout" v-else @click="logout">
+  <v-btn
+    v-else
+    class="text-button"
+    prepend-icon="mdi-logout"
+    @click="logout"
+  >
     로그아웃
   </v-btn>
 </template>
