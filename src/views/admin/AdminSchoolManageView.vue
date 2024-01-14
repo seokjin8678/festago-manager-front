@@ -15,9 +15,9 @@ const searchFilters = [
   { title: '도메인', value: 'domain' },
 ];
 const itemsPerPageOption = [
-  { value: '10', title:'10' },
-  { value: '25', title:'25' },
-  { value: '50', title:'50' },
+  { value: 10, title:'10' },
+  { value: 25, title:'25' },
+  { value: 50, title:'50' },
 ]
 const loading = ref(false);
 const itemsPerPage = ref(10);
