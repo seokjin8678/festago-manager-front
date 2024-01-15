@@ -38,8 +38,8 @@ export type SchoolCreateResponse = {
 }
 
 const AdminSchoolService = {
-  async fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<AdminSchoolResponse>> {
-    return await ApiService.get('/schools', {
+  fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<AdminSchoolResponse>> {
+    return ApiService.get('/schools', {
       page: paging.page,
       size: paging.itemsPerPage,
       sortBy: paging.sortBy[0]?.key,
@@ -48,7 +48,7 @@ const AdminSchoolService = {
       filterKeyword: search.filterKeyword,
     });
   },
-  async createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolCreateRequest>> {
+  createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolCreateRequest>> {
     return ApiService.post('/admin/api/schools', request);
   },
 };

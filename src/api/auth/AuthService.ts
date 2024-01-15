@@ -8,13 +8,13 @@ export type LoginResponse = {
 }
 
 const AuthService = {
-  async login(username: string, password: string) {
+  login(username: string, password: string) {
     return ApiService.post<LoginResponse>('/admin/api/login', {
       username,
       password,
     });
   },
-  async logout() {
+  logout() {
     ApiService.changeAccessToken('');
     return ApiService.get<null>('/admin/api/logout');
   },
