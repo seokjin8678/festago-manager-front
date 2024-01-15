@@ -26,12 +26,12 @@ axiosInstance.interceptors.response.use(value => value, error => {
 
 // TODO Promise<AxiosResponse<ApiResponse<T>>>와 같이 변경하려면 백엔드 API 명세가 변경되어야 함
 const ApiService = {
-  async get<T>(uri: string, queryParam: any = null): Promise<AxiosResponse<T>> {
-    return await axiosInstance.get(uri, { params: queryParam });
+  get<T>(uri: string, queryParam: any = null): Promise<AxiosResponse<T>> {
+    return axiosInstance.get(uri, { params: queryParam });
   },
 
-  async post<T>(uri: string, data: any): Promise<AxiosResponse<T>> {
-    return await axiosInstance.post(uri, data);
+  post<T>(uri: string, data: any): Promise<AxiosResponse<T>> {
+    return axiosInstance.post(uri, data);
   },
 
   changeAccessToken(accessToken: string) {
