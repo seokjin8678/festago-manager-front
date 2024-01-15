@@ -2,38 +2,49 @@
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { ref } from 'vue';
 import { router } from '@/router';
-import AuthService from '@/api/auth/AuthService.ts';
+import AuthService, { LoginRequest } from '@/api/auth/AuthService.ts';
 import ApiService from '@/api';
 import FestagoError from '@/api/FestagoError.ts';
+import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import { useField, useForm } from 'vee-validate';
 
 const authStore = useAuthStore();
-const visible = ref(false);
-const loginInput = ref({
-  username: '',
-  password: '',
+const snackbarStore = useSnackbarStore();
+const { handleSubmit, handleReset } = useForm<LoginRequest>({
+  validationSchema: {
+    username(value: string) {
+      if (!value) return '계정은 필수입니다.';
+      return true;
+    },
+    password(value: string) {
+      if (!value) return '비밀번호는 필수입니다.';
+      return true;
+    },
+  },
 });
-const errorMessage = ref('');
+const usernameField = useField('username');
+const passwordField = useField('password');
+const invalidForm = ref(false);
 const loading = ref(false);
-const form = ref(false);
-const rules = ref({
-  required: (value: any) => !!value,
-});
+const passwordVisible = ref(false);
 
-function onSubmit() {
-  form.value = false;
+const onSubmit = handleSubmit(request => {
   loading.value = true;
-  setTimeout(() => (form.value = true), 1000);
-  AuthService.login(loginInput.value.username, loginInput.value.password).then(response => {
+  setTimeout(() => (loading.value = false), 1000);
+  AuthService.login(request).then(response => {
+    handleReset();
     ApiService.changeAccessToken(response.data.accessToken);
     authStore.login(response.data);
     router.push('/');
+    snackbarStore.showSuccess(`${response.data.username}님, 환영합니다!`)
   }).catch(e => {
     if (e instanceof FestagoError) {
-      loading.value = false;
-      errorMessage.value = e.message;
+      usernameField.setErrors(e.message);
+      passwordField.setErrors(e.message);
     } else throw e;
   });
-}
+});
+
 </script>
 
 <template>
@@ -49,56 +60,46 @@ function onSubmit() {
       </p>
     </v-card-title>
     <v-form
-      v-model="form"
+      v-model="invalidForm"
       @submit.prevent="onSubmit"
     >
       <p class="text-subtitle-1 text-medium-emphasis">
         계정
       </p>
       <v-text-field
-        ref="qqc"
+        v-model="usernameField.value.value"
+        :error-messages="usernameField.errorMessage.value"
         density="compact"
         placeholder="ID를 입력해주세요."
         prepend-inner-icon="mdi-account-outline"
         variant="outlined"
         maxlength="50"
-        v-model="loginInput.username"
-        :rules="[rules.required]"
-        :hide-details="true"
       />
-      <span v-if="errorMessage" class="text-subtitle-2 text-red-darken-3">
-        {{ errorMessage }}
-      </span>
       <p class="text-subtitle-1 text-medium-emphasis mt-1">
         비밀번호
       </p>
       <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
+        v-model="passwordField.value.value"
+        :error-messages="passwordField.errorMessage.value"
+        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+        :type="passwordVisible ? 'text' : 'password'"
         density="compact"
         placeholder="비밀번호를 입력해주세요."
         prepend-inner-icon="mdi-lock-outline"
         variant="outlined"
         maxlength="50"
-        v-model="loginInput.password"
-        :rules="[rules.required]"
-        @click:append-inner="visible = !visible"
-        :hide-details="true"
+        @click:append-inner="passwordVisible = !passwordVisible"
       />
-      <span v-if="errorMessage" class="text-subtitle-2 text-red-darken-3">
-        {{ errorMessage }}
-      </span>
       <v-btn
-        :disabled="!form"
+        :disabled="!invalidForm"
         :loading="loading"
         :block="true"
         class="my-4"
         color="blue"
         size="large"
         type="submit"
-      >
-        로그인
-      </v-btn>
+        text="로그인"
+      />
     </v-form>
   </v-card>
 </template>
