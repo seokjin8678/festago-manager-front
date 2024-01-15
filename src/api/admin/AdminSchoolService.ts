@@ -26,6 +26,17 @@ export type AdminSchoolResponse = {
   }[]
 }
 
+export type SchoolCreateRequest = {
+  name: string,
+  domain: string
+}
+
+export type SchoolCreateResponse = {
+  id: number,
+  domain: string,
+  name: string,
+}
+
 const AdminSchoolService = {
   async fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<AdminSchoolResponse>> {
     return await ApiService.get('/schools', {
@@ -36,6 +47,9 @@ const AdminSchoolService = {
       searchKeyword: search.searchKeyword,
       filterKeyword: search.filterKeyword,
     });
+  },
+  async createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolCreateRequest>> {
+    return ApiService.post('/admin/api/schools', request);
   },
 };
 
