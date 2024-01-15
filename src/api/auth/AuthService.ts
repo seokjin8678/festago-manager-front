@@ -1,6 +1,11 @@
 import ApiService from '@/api';
 import { AuthType } from '@/type/AuthType.ts';
 
+export type LoginRequest = {
+  username: string,
+  password: string
+}
+
 export type LoginResponse = {
   accessToken: string,
   username: string,
@@ -8,11 +13,8 @@ export type LoginResponse = {
 }
 
 const AuthService = {
-  login(username: string, password: string) {
-    return ApiService.post<LoginResponse>('/admin/api/login', {
-      username,
-      password,
-    });
+  login(request: LoginRequest) {
+    return ApiService.post<LoginResponse>('/admin/api/login', request);
   },
   logout() {
     ApiService.changeAccessToken('');
