@@ -13,11 +13,7 @@ const authStore = useAuthStore();
     <v-list v-if="!authStore.isLogin">
       <v-list-item prepend-icon="mdi-login" title="로그인이 필요합니다." @click="$router.push('/login')" />
     </v-list>
-    <v-list v-else-if="authStore.isAdmin">
-      <AdminDrawerItems />
-    </v-list>
-    <v-list v-else>
-      <SchoolDrawerItems />
-    </v-list>
+    <AdminDrawerItems v-else-if="authStore.isAdmin" />
+    <SchoolDrawerItems v-else />
   </v-navigation-drawer>
 </template>
