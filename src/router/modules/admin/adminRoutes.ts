@@ -1,7 +1,8 @@
 import RootAdminView from '@/views/root/RootAdminView.vue';
 import AdminMyPageView from '@/views/admin/AdminMyPageView.vue';
-import AdminSchoolManageView from '@/views/admin/AdminSchoolManageView.vue';
+import AdminSchoolManageListView from '@/views/admin/school/AdminSchoolManageListView.vue';
 import AdminFestivalManageView from '@/views/admin/AdminFestivalManageView.vue';
+import AdminSchoolManageCreateView from '@/views/admin/school/AdminSchoolManageCreateView.vue';
 
 const adminRoutes = [
   {
@@ -16,13 +17,18 @@ const adminRoutes = [
   },
   {
     path: '/admin/school',
-    name: 'adminSchoolManage',
-    component: AdminSchoolManageView,
+    name: 'adminSchoolManageListView',
+    component: AdminSchoolManageListView,
   },
   {
     path: '/admin/festival',
     name: 'adminFestivalManage',
     component: AdminFestivalManageView,
   },
+  {
+    path: '/admin/school/create',
+    name: 'adminSchoolManageCreateView',
+    component: AdminSchoolManageCreateView
+  }
 ];
 export default adminRoutes;
