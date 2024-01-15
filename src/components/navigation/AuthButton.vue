@@ -5,10 +5,11 @@ import AuthService from '@/api/auth/AuthService.ts';
 
 const authStore = useAuthStore();
 
-async function logout() {
-  await AuthService.logout();
-  authStore.logout();
-  await router.push('/login');
+function logout() {
+  AuthService.logout().then(() => {
+    authStore.logout();
+    router.push('/login');
+  });
 }
 </script>
 

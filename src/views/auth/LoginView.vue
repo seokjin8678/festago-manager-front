@@ -19,21 +19,20 @@ const rules = ref({
   required: (value: any) => !!value,
 });
 
-async function onSubmit() {
+function onSubmit() {
   form.value = false;
   loading.value = true;
   setTimeout(() => (form.value = true), 1000);
-  try {
-    const response = await AuthService.login(loginInput.value.username, loginInput.value.password);
+  AuthService.login(loginInput.value.username, loginInput.value.password).then(response => {
     ApiService.changeAccessToken(response.data.accessToken);
     authStore.login(response.data);
-    await router.push('/');
-  } catch (e) {
+    router.push('/');
+  }).catch(e => {
     if (e instanceof FestagoError) {
       loading.value = false;
       errorMessage.value = e.message;
-    }
-  }
+    } else throw e;
+  });
 }
 </script>
 
