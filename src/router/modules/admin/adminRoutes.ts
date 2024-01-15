@@ -3,6 +3,7 @@ import AdminMyPageView from '@/views/admin/AdminMyPageView.vue';
 import AdminSchoolManageListView from '@/views/admin/school/AdminSchoolManageListView.vue';
 import AdminFestivalManageView from '@/views/admin/AdminFestivalManageView.vue';
 import AdminSchoolManageCreateView from '@/views/admin/school/AdminSchoolManageCreateView.vue';
+import AdminSchoolManageEditView from '@/views/admin/school/AdminSchoolManageEditView.vue';
 
 const adminRoutes = [
   {
@@ -28,7 +29,12 @@ const adminRoutes = [
   {
     path: '/admin/school/create',
     name: 'adminSchoolManageCreateView',
-    component: AdminSchoolManageCreateView
-  }
+    component: AdminSchoolManageCreateView,
+  },
+  {
+    path: '/admin/school/edit/:id',
+    name: 'adminSchoolManageEdit',
+    component: AdminSchoolManageEditView,
+  },
 ];
 export default adminRoutes;

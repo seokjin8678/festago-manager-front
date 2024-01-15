@@ -18,12 +18,14 @@ import { AxiosResponse } from 'axios';
  *   ]
  * }
  */
-export type AdminSchoolResponse = {
-  schools: {
-    id: number,
-    domain: string,
-    name: string,
-  }[]
+export type SchoolResponses = {
+  schools: SchoolResponse[]
+}
+
+export type SchoolResponse = {
+  id: number,
+  domain: string,
+  name: string
 }
 
 export type SchoolCreateRequest = {
@@ -31,14 +33,16 @@ export type SchoolCreateRequest = {
   domain: string
 }
 
-export type SchoolCreateResponse = {
-  id: number,
-  domain: string,
+export type SchoolUpdateRequest = {
   name: string,
+  domain: string
 }
 
 const AdminSchoolService = {
-  fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<AdminSchoolResponse>> {
+  fetchSchool(schoolId: number): Promise<AxiosResponse<SchoolResponse>> {
+    return ApiService.get(`/schools/${schoolId}`);
+  },
+  fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<SchoolResponses>> {
     return ApiService.get('/schools', {
       page: paging.page,
       size: paging.itemsPerPage,
@@ -48,8 +52,14 @@ const AdminSchoolService = {
       filterKeyword: search.filterKeyword,
     });
   },
-  createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolCreateRequest>> {
+  createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolResponse>> {
     return ApiService.post('/admin/api/schools', request);
+  },
+  updateSchool(schoolId: number, request: SchoolUpdateRequest) {
+    return ApiService.patch(`/admin/api/schools/${schoolId}`, request);
+  },
+  deleteSchool(schoolId: number) {
+    return ApiService.delete(`/admin/api/schools/${schoolId}`);
   },
 };
 

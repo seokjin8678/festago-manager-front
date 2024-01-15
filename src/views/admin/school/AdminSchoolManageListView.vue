@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
-import AdminSchoolService, { AdminSchoolResponse } from '@/api/admin/AdminSchoolService.ts';
+import AdminSchoolService, { SchoolResponses } from '@/api/admin/AdminSchoolService.ts';
 import { PagingRequest } from '@/api/PagingRequest.ts';
 import { SearchRequest } from '@/api/SearchRequest.ts';
 
@@ -8,6 +8,7 @@ const tableHeaders = [
   { title: 'ID', key: 'id' },
   { title: '이름', key: 'name' },
   { title: '도메인', key: 'domain' },
+  { title: '수정/삭제', key: 'actions', sortable: false },
 ];
 const searchFilters = [
   { title: 'ID', value: 'id' },
@@ -15,15 +16,15 @@ const searchFilters = [
   { title: '도메인', value: 'domain' },
 ];
 const itemsPerPageOption = [
-  { value: 10, title:'10' },
-  { value: 25, title:'25' },
-  { value: 50, title:'50' },
-]
+  { value: 10, title: '10' },
+  { value: 25, title: '25' },
+  { value: 50, title: '50' },
+];
 const loading = ref(false);
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const searchRequest: Ref<SearchRequest> = ref({ searchKeyword: null, filterKeyword: null });
-const items: Ref<AdminSchoolResponse> = ref({ schools: [] });
+const items: Ref<SchoolResponses> = ref({ schools: [] });
 
 // TODO 백엔드에서 검색 필터링을 구현해야함
 function searchResult() {
@@ -89,6 +90,15 @@ function fetchItems(paging: PagingRequest) {
       :items-per-page-options="itemsPerPageOption"
       v-model:items-per-page="itemsPerPage"
       @update:options="fetchItems"
-    />
+    >
+      <template v-slot:item.actions="{item}">
+        <v-icon
+          class="mr-2"
+          icon="mdi-pencil"
+          color="grey-darken-3"
+          @click="$router.push(`/admin/school/edit/${item.id}`)"
+        />
+      </template>
+    </v-data-table-server>
   </v-card>
 </template>

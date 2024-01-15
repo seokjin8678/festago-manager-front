@@ -34,6 +34,14 @@ const ApiService = {
     return axiosInstance.post(uri, data);
   },
 
+  patch<T>(uri: string, data: any = null): Promise<AxiosResponse<T>> {
+    return axiosInstance.patch(uri, data);
+  },
+
+  delete<T>(uri: string, data: any = null): Promise<AxiosResponse<T>> {
+    return axiosInstance.delete(uri, data);
+  },
+
   changeAccessToken(accessToken: string) {
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
