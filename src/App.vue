@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Navigation from '@/components/navigation/Navigation.vue';
+import Snackbar from '@/components/snackbar/Snackbar.vue';
 </script>
 
 <template>
@@ -8,5 +9,6 @@ import Navigation from '@/components/navigation/Navigation.vue';
     <v-main>
       <router-view />
     </v-main>
+    <Snackbar />
   </v-app>
 </template>
