@@ -1,24 +1,14 @@
 import ApiService from '@/api';
-import { AuthType } from '@/type/AuthType.ts';
-
-export type LoginRequest = {
-  username: string,
-  password: string
-}
-
-export type LoginResponse = {
-  accessToken: string,
-  username: string,
-  authType: AuthType
-}
+import LoginApiSpec, { LoginRequest, LoginResponse } from '@/api/spec/auth/LoginApiSpec.ts';
+import LogoutApiSpec, { LogoutResponse } from '@/api/spec/auth/LogoutApiSpec.ts';
 
 const AuthService = {
   login(request: LoginRequest) {
-    return ApiService.post<LoginResponse>('/admin/api/login', request);
+    return ApiService.request<LoginResponse>(LoginApiSpec, request);
   },
   logout() {
     ApiService.changeAccessToken('');
-    return ApiService.get<null>('/admin/api/logout');
+    return ApiService.request<LogoutResponse>(LogoutApiSpec);
   },
 };
 

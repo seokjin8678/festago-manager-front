@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate';
-import AdminSchoolService, { SchoolCreateRequest } from '@/api/admin/AdminSchoolService.ts';
+import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { ref } from 'vue';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
+import { CreateSchoolRequest } from '@/api/spec/school/CreateSchoolApiSpec.ts';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<SchoolCreateRequest>({
+const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';

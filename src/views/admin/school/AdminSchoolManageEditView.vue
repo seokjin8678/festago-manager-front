@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import AdminSchoolService, { SchoolUpdateRequest } from '@/api/admin/AdminSchoolService.ts';
+import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { useRoute } from 'vue-router';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
+import { UpdateSchoolRequest } from '@/api/spec/school/UpdateSchoolApiSpec.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminSchoolService.fetchSchool(parseInt(route.params.id as string)).then(response => {
+  AdminSchoolService.fetchOneSchool(parseInt(route.params.id as string)).then(response => {
     schoolId.value = response.data.id;
     nameField.resetField({
       value: response.data.name,
@@ -28,7 +29,7 @@ onMounted(() => {
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<SchoolUpdateRequest>({
+const { handleSubmit, isFieldDirty } = useForm<UpdateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';

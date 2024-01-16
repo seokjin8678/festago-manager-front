@@ -2,6 +2,17 @@ import { PagingRequest } from '@/api/PagingRequest.ts';
 import { SearchRequest } from '@/api/SearchRequest.ts';
 import ApiService from '@/api';
 import { AxiosResponse } from 'axios';
+import UpdateSchoolApiSpec, {
+  UpdateSchoolRequest,
+  UpdateSchoolResponse,
+} from '@/api/spec/school/UpdateSchoolApiSpec.ts';
+import FetchSchoolsApiSpec, { FetchSchoolsResponse } from '@/api/spec/school/FetchSchoolsApiSpec.ts';
+import CreateSchoolApiSpec, {
+  CreateSchoolRequest,
+  CreateSchoolResponse,
+} from '@/api/spec/school/CreateSchoolApiSpec.ts';
+import DeleteSchoolApiSpec, { DeleteSchoolResponse } from '@/api/spec/school/DeleteSchoolApiSpec.ts';
+import FetchOneSchoolApiSpec, { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.ts';
 
 /**
  * TODO 미래에 다음과 같은 형식이 되어야 함
@@ -18,32 +29,13 @@ import { AxiosResponse } from 'axios';
  *   ]
  * }
  */
-export type SchoolResponses = {
-  schools: SchoolResponse[]
-}
-
-export type SchoolResponse = {
-  id: number,
-  domain: string,
-  name: string
-}
-
-export type SchoolCreateRequest = {
-  name: string,
-  domain: string
-}
-
-export type SchoolUpdateRequest = {
-  name: string,
-  domain: string
-}
 
 const AdminSchoolService = {
-  fetchSchool(schoolId: number): Promise<AxiosResponse<SchoolResponse>> {
-    return ApiService.get(`/schools/${schoolId}`);
+  fetchOneSchool(schoolId: number): Promise<AxiosResponse<FetchOneSchoolResponse>> {
+    return ApiService.request(FetchOneSchoolApiSpec(schoolId));
   },
-  fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<SchoolResponses>> {
-    return ApiService.get('/schools', {
+  fetchSchools(paging: PagingRequest, search: SearchRequest): Promise<AxiosResponse<FetchSchoolsResponse>> {
+    return ApiService.request(FetchSchoolsApiSpec, {
       page: paging.page,
       size: paging.itemsPerPage,
       sortBy: paging.sortBy[0]?.key,
@@ -52,14 +44,14 @@ const AdminSchoolService = {
       filterKeyword: search.filterKeyword,
     });
   },
-  createSchool(request: SchoolCreateRequest): Promise<AxiosResponse<SchoolResponse>> {
-    return ApiService.post('/admin/api/schools', request);
+  createSchool(request: CreateSchoolRequest): Promise<AxiosResponse<CreateSchoolResponse>> {
+    return ApiService.request(CreateSchoolApiSpec, request);
   },
-  updateSchool(schoolId: number, request: SchoolUpdateRequest) {
-    return ApiService.patch(`/admin/api/schools/${schoolId}`, request);
+  updateSchool(schoolId: number, request: UpdateSchoolRequest): Promise<AxiosResponse<UpdateSchoolResponse>> {
+    return ApiService.request(UpdateSchoolApiSpec(schoolId), request);
   },
-  deleteSchool(schoolId: number) {
-    return ApiService.delete(`/admin/api/schools/${schoolId}`);
+  deleteSchool(schoolId: number): Promise<AxiosResponse<DeleteSchoolResponse>> {
+    return ApiService.request(DeleteSchoolApiSpec(schoolId));
   },
 };
 
