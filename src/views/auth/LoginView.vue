@@ -2,12 +2,13 @@
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { ref } from 'vue';
 import { router } from '@/router';
-import AuthService, { LoginRequest } from '@/api/auth/AuthService.ts';
+import AuthService from '@/api/auth/AuthService.ts';
 import ApiService from '@/api';
 import FestagoError from '@/api/FestagoError.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
+import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
