@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
-import AdminSchoolService, { SchoolResponses } from '@/api/admin/AdminSchoolService.ts';
+import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { PagingRequest } from '@/api/PagingRequest.ts';
 import { SearchRequest } from '@/api/SearchRequest.ts';
 import RouterPath from '@/router/RouterPath.ts';
+import { FetchSchoolsResponse } from '@/api/spec/school/FetchSchoolsApiSpec.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -25,7 +26,7 @@ const loading = ref(false);
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const searchRequest: Ref<SearchRequest> = ref({ searchKeyword: null, filterKeyword: null });
-const items: Ref<SchoolResponses> = ref({ schools: [] });
+const items: Ref<FetchSchoolsResponse> = ref({ schools: [] });
 
 // TODO 백엔드에서 검색 필터링을 구현해야함
 function searchResult() {

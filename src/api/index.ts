@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import FestagoError from '@/api/FestagoError.ts';
+import ApiSpec from '@/api/spec/ApiSpec.ts';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -24,22 +25,19 @@ axiosInstance.interceptors.response.use(value => value, error => {
   ));
 });
 
+const apiActions = {
+  'GET': <T>(url: string, queryParam: any = null): Promise<AxiosResponse<T>> => axiosInstance.get(url, { params: queryParam }),
+  'POST': <T>(url: string, data: any = null): Promise<AxiosResponse<T>> => axiosInstance.post(url, data),
+  'PATCH': <T>(url: string, data: any = null): Promise<AxiosResponse<T>> => axiosInstance.patch(url, data),
+  'DELETE': <T>(url: string, data: any = null): Promise<AxiosResponse<T>> => axiosInstance.delete(url, data),
+};
+
 // TODO Promise<AxiosResponse<ApiResponse<T>>>와 같이 변경하려면 백엔드 API 명세가 변경되어야 함
 const ApiService = {
-  get<T>(uri: string, queryParam: any = null): Promise<AxiosResponse<T>> {
-    return axiosInstance.get(uri, { params: queryParam });
-  },
-
-  post<T>(uri: string, data: any): Promise<AxiosResponse<T>> {
-    return axiosInstance.post(uri, data);
-  },
-
-  patch<T>(uri: string, data: any = null): Promise<AxiosResponse<T>> {
-    return axiosInstance.patch(uri, data);
-  },
-
-  delete<T>(uri: string, data: any = null): Promise<AxiosResponse<T>> {
-    return axiosInstance.delete(uri, data);
+  request<T>(spec: ApiSpec, data: any = null): Promise<AxiosResponse<T>> {
+    const { url, method } = spec;
+    const apiAction = apiActions[method];
+    return apiAction(url, data);
   },
 
   changeAccessToken(accessToken: string) {
