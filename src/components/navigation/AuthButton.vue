@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { router } from '@/router';
 import AuthService from '@/api/auth/AuthService.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import RouterPath from '@/router/RouterPath.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
@@ -10,7 +11,7 @@ const snackbarStore = useSnackbarStore();
 function logout() {
   AuthService.logout().then(() => {
     authStore.logout();
-    router.push('/login');
+    router.push(RouterPath.Auth.LoginPage.path);
     snackbarStore.showSuccess('로그아웃 되었습니다.')
   });
 }
@@ -21,7 +22,7 @@ function logout() {
     v-if="!authStore.isLogin"
     class="text-button"
     prepend-icon="mdi-login"
-    @click="$router.push('/login')"
+    @click="$router.push(RouterPath.Auth.LoginPage.path)"
   >
     로그인
   </v-btn>
