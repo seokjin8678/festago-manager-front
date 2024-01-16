@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
+import RouterPath from '@/router/RouterPath.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -21,7 +22,7 @@ onMounted(() => {
     });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push('/admin/school');
+      router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
       snackbarStore.showError('해당 학교를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -66,7 +67,7 @@ const onUpdateSubmit = handleSubmit(request => {
 function deleteSchool() {
   AdminSchoolService.deleteSchool(schoolId.value!).then(() => {
     snackbarStore.showSuccess('학교가 삭제되었습니다.');
-    router.push('/admin/school');
+    router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);

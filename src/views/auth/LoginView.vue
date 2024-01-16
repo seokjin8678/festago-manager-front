@@ -7,6 +7,7 @@ import ApiService from '@/api';
 import FestagoError from '@/api/FestagoError.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
+import RouterPath from '@/router/RouterPath.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
@@ -35,7 +36,7 @@ const onSubmit = handleSubmit(request => {
     handleReset();
     ApiService.changeAccessToken(response.data.accessToken);
     authStore.login(response.data);
-    router.push('/');
+    router.push(RouterPath.Common.HomePage.path);
     snackbarStore.showSuccess(`${response.data.username}님, 환영합니다!`)
   }).catch(e => {
     if (e instanceof FestagoError) {

@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { AuthType } from '@/type/AuthType.ts';
 import { ref } from 'vue';
+import RouterPath from '@/router/RouterPath.ts';
 
 const authStore = useAuthStore();
 const menus = ref([]);
@@ -15,10 +16,22 @@ const menus = ref([]);
   </div>
   <v-divider />
   <v-list density="compact" :nav="true" v-model:opened="menus">
-    <v-list-item prepend-icon="mdi-home-city" title="홈" @click="$router.push('/')" />
-    <v-list-item prepend-icon="mdi-shield-crown-outline" title="루트 어드민 관리" @click="$router.push('/root')"
-                 v-if="authStore.authType === AuthType.ROOT" />
-    <v-list-item prepend-icon="mdi-account" title="내 정보" @click="$router.push('/admin/my-page')" />
+    <v-list-item
+      prepend-icon="mdi-home-city"
+      title="홈"
+      @click="$router.push(RouterPath.Common.HomePage.path)"
+    />
+    <v-list-item
+      prepend-icon="mdi-shield-crown-outline"
+      title="루트 어드민 관리"
+      @click="$router.push(RouterPath.Admin.RootAdminPage.path)"
+      v-if="authStore.authType === AuthType.ROOT"
+    />
+    <v-list-item
+      prepend-icon="mdi-account"
+      title="내 정보"
+      @click="$router.push(RouterPath.Admin.AdminMyPage.path)"
+    />
     <v-list-group value="학교관리">
       <template v-slot:activator="{ props }">
         <v-list-item
@@ -29,11 +42,11 @@ const menus = ref([]);
       </template>
       <v-list-item
         title="학교 추가"
-        @click="$router.push('/admin/school/create')"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageCreatePage.path)"
       />
       <v-list-item
         title="학교 목록"
-        @click="$router.push('/admin/school')"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageListPage.path)"
       />
     </v-list-group>
   </v-list>

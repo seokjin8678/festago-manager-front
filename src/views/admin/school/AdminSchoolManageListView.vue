@@ -3,6 +3,7 @@ import { Ref, ref } from 'vue';
 import AdminSchoolService, { SchoolResponses } from '@/api/admin/AdminSchoolService.ts';
 import { PagingRequest } from '@/api/PagingRequest.ts';
 import { SearchRequest } from '@/api/SearchRequest.ts';
+import RouterPath from '@/router/RouterPath.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -96,7 +97,10 @@ function fetchItems(paging: PagingRequest) {
           class="mr-2"
           icon="mdi-pencil"
           color="grey-darken-3"
-          @click="$router.push(`/admin/school/edit/${item.id}`)"
+          @click="$router.push({
+            name: RouterPath.Admin.AdminSchoolManageEditPage.name,
+            params: { id: item.id },
+          })"
         />
       </template>
     </v-data-table-server>
