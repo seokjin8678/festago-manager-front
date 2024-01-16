@@ -1,5 +1,5 @@
 class FestagoError implements Error {
-  name: string = '';
+  name: string = 'FestagoError';
   errorCode: string;
   message: string;
   status: number;
