@@ -32,7 +32,6 @@ const apiActions = {
   'DELETE': (url: string, data: any = null) => axiosInstance.delete(url, data),
 };
 
-// TODO Promise<AxiosResponse<ApiResponse<T>>>와 같이 변경하려면 백엔드 API 명세가 변경되어야 함
 const ApiService = {
   request<T>(spec: ApiSpec, data: any = null): Promise<AxiosResponse<T>> {
     const { url, method } = spec;
