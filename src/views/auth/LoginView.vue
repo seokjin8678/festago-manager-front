@@ -35,10 +35,11 @@ const onSubmit = handleSubmit(request => {
   setTimeout(() => (loading.value = false), 1000);
   AuthService.login(request).then(response => {
     handleReset();
-    ApiService.changeAccessToken(response.data.accessToken);
-    authStore.login(response.data);
+    const { accessToken, username, authType } = response.data;
+    ApiService.changeAccessToken(accessToken);
+    authStore.login({ accessToken, username, authType });
     router.push(RouterPath.Common.HomePage.path);
-    snackbarStore.showSuccess(`${response.data.username}님, 환영합니다!`)
+    snackbarStore.showSuccess(`${username}님, 환영합니다!`);
   }).catch(e => {
     if (e instanceof FestagoError) {
       usernameField.setErrors(e.message);

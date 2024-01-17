@@ -14,12 +14,13 @@ const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   AdminSchoolService.fetchOneSchool(parseInt(route.params.id as string)).then(response => {
-    schoolId.value = response.data.id;
+    const { id, name, domain } = response.data;
+    schoolId.value = id;
     nameField.resetField({
-      value: response.data.name,
+      value: name,
     });
     domainField.resetField({
-      value: response.data.domain,
+      value: domain,
     });
   }).catch(e => {
     if (e instanceof FestagoError) {

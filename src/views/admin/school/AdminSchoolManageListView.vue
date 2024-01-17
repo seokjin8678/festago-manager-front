@@ -36,8 +36,9 @@ function searchResult() {
 function fetchItems(paging: PagingRequest) {
   loading.value = true;
   AdminSchoolService.fetchSchools(paging, searchRequest.value).then(response => {
-    items.value.schools = response.data.schools;
-    totalItems.value = response.data.schools.length;
+    const { schools } = response.data;
+    items.value.schools = schools;
+    totalItems.value = schools.length;
     loading.value = false;
   });
 }
@@ -100,7 +101,7 @@ function fetchItems(paging: PagingRequest) {
           color="grey-darken-3"
           @click="$router.push({
             name: RouterPath.Admin.AdminSchoolManageEditPage.name,
-            params: { id: item.id },
+            params: { id: item.id }
           })"
         />
       </template>
