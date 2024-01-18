@@ -9,6 +9,7 @@ import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
+import { AuthType } from '@/type/AuthType.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
@@ -35,7 +36,11 @@ const onSubmit = handleSubmit(request => {
   setTimeout(() => (loading.value = false), 1000);
   AuthService.login(request).then(response => {
     handleReset();
-    const { accessToken, username, authType } = response.data;
+    // TODO 백엔드 로그인 API가 완성되면 변경할 것
+    // const { accessToken, username, authType } = response.data;
+    const { accessToken } = response.data;
+    const username = 'ADMIN'
+    const authType = AuthType.ADMIN;
     ApiService.changeAccessToken(accessToken);
     authStore.login({ accessToken, username, authType });
     router.push(RouterPath.Common.HomePage.path);
