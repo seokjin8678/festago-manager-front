@@ -15,7 +15,7 @@ const props = defineProps<{
     title: string,
     value: number,
   }[],
-  fetch: (request: PagingRequest) => {},
+  fetch: (request: PagingRequest) => void,
   itemLength: number,
   items: any[],
   detailPageRouterName?: string

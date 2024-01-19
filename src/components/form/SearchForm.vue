@@ -4,7 +4,7 @@ import { SearchRequest } from '@/api/SearchRequest.ts';
 
 const props = defineProps<{
   searchFilters: { title: string, value: string }[]
-  search: (searchRequest: SearchRequest) => {}
+  search: (searchRequest: SearchRequest) => void
 }>();
 const searchRequest = ref<SearchRequest>({ searchFilter: null, searchKeyword: null });
 const loading = ref(false);
