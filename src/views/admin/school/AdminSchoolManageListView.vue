@@ -26,7 +26,7 @@ const itemsPerPageOption = [
 const loading = ref(false);
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
-const searchRequest: Ref<SearchRequest> = ref({ searchKeyword: null, filterKeyword: null });
+const searchRequest: Ref<SearchRequest> = ref({ searchFilter: null, searchKeyword: null });
 const items: Ref<FetchSchoolsResponse> = ref({ schools: [] });
 
 // TODO 백엔드에서 검색 필터링을 구현해야함

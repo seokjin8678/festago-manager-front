@@ -3,10 +3,10 @@ import { ref } from 'vue';
 import { SearchRequest } from '@/api/SearchRequest.ts';
 
 const props = defineProps<{
-  filterKeywords: { title: string, value: string }[]
+  searchFilters: { title: string, value: string }[]
   search: (searchRequest: SearchRequest) => {}
 }>();
-const searchRequest = ref<SearchRequest>({ filterKeyword: '', searchKeyword: '' });
+const searchRequest = ref<SearchRequest>({ searchFilter: null, searchKeyword: null });
 const loading = ref(false);
 
 function searchFunction() {
@@ -24,10 +24,10 @@ function searchFunction() {
       <v-col :cols="3">
         <v-select
           class="pa-2 ma-2"
-          v-model="searchRequest.filterKeyword"
+          v-model="searchRequest.searchFilter"
           :clearable="true"
           label="필터"
-          :items="props.filterKeywords"
+          :items="props.searchFilters"
           variant="outlined"
           :hide-details="true"
         />
@@ -47,7 +47,7 @@ function searchFunction() {
       <v-col :cols="1">
         <v-btn
           :loading="loading"
-          :disabled="!(!!(searchRequest.searchKeyword && searchRequest.filterKeyword))"
+          :disabled="!(!!(searchRequest.searchKeyword && searchRequest.searchFilter))"
           class="py-7 text-h6"
           color="blue"
           type="submit"

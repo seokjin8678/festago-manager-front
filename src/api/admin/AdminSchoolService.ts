@@ -23,8 +23,8 @@ const AdminSchoolService = {
       size: paging.itemsPerPage,
       sortBy: paging.sortBy[0]?.key,
       order: paging.sortBy[0]?.order,
+      filterKeyword: search.searchFilter,
       searchKeyword: search.searchKeyword,
-      filterKeyword: search.filterKeyword,
     });
   },
   createSchool(request: CreateSchoolRequest) {
