@@ -3,7 +3,7 @@
 import { PagingRequest } from '@/api/PagingRequest.ts';
 
 const model = defineModel({
-  default: false,
+  required: true,
 });
 const props = defineProps<{
   tableHeaders: {
