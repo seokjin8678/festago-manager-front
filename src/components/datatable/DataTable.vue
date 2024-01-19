@@ -2,9 +2,7 @@
 
 import { PagingRequest } from '@/api/PagingRequest.ts';
 
-const model = defineModel({
-  default: false,
-});
+const loading = defineModel<boolean>('loading', { required: true });
 const props = defineProps<{
   tableHeaders: {
     title: string,
@@ -26,7 +24,7 @@ const props = defineProps<{
 <template>
   <v-data-table-server
     :headers="props.tableHeaders"
-    :loading="model"
+    :loading="loading"
     :items-length="props.itemLength"
     :items="props.items"
     :items-per-page-options="props.itemsPerPageOptions"

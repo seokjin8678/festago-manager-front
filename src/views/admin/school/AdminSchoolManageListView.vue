@@ -62,6 +62,7 @@ function fetch(paging: PagingRequest) {
       :search-filters="searchFilters"
     />
     <DataTable
+      :loading="loading"
       :table-headers="tableHeaders"
       :items-per-page-options="itemsPerPageOptions"
       :fetch="fetch"
