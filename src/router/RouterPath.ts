@@ -8,6 +8,7 @@ import AdminFestivalManageView from '@/views/admin/AdminFestivalManageView.vue';
 import AdminSchoolManageCreateView from '@/views/admin/school/AdminSchoolManageCreateView.vue';
 import AdminSchoolManageEditView from '@/views/admin/school/AdminSchoolManageEditView.vue';
 import SchoolFestivalManageView from '@/views/school/SchoolFestivalManageView.vue';
+import AdminArtistManageListView from '@/views/admin/artist/AdminArtistManageListView.vue';
 
 const RouterPath = {
   Common: {
@@ -59,6 +60,11 @@ const RouterPath = {
       path: '/admin/festivals',
       name: 'adminFestivalManagePage',
       component: AdminFestivalManageView,
+    },
+    AdminArtistManageListPage: {
+      path: '/admin/artists',
+      name: 'adminArtistManageListPage',
+      component: AdminArtistManageListView,
     },
   },
   School: {
