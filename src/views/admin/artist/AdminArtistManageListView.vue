@@ -4,7 +4,7 @@ import RouterPath from '@/router/RouterPath.ts';
 import DataTable from '@/components/datatable/DataTable.vue';
 import { Ref, ref } from 'vue';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
-import { FetchArtistsResponse } from '@/api/spec/artist/FetchArtists.ts';
+import { FetchArtistsResponse } from '@/api/spec/artist/FetchArtistsApiSpec.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },

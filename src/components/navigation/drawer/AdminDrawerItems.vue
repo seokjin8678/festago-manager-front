@@ -58,6 +58,10 @@ const menus = ref([]);
         ></v-list-item>
       </template>
       <v-list-item
+        title="아티스트 추가"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageCreatePage.path)"
+      />
+      <v-list-item
         title="아티스트 목록"
         @click="$router.push(RouterPath.Admin.AdminArtistManageListPage.path)"
       />
