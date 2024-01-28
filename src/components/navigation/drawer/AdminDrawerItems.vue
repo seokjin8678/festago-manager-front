@@ -32,7 +32,7 @@ const menus = ref([]);
       title="내 정보"
       @click="$router.push(RouterPath.Admin.AdminMyPage.path)"
     />
-    <v-list-group value="학교관리">
+    <v-list-group>
       <template v-slot:activator="{ props }">
         <v-list-item
           v-bind="props"
@@ -47,6 +47,23 @@ const menus = ref([]);
       <v-list-item
         title="학교 목록"
         @click="$router.push(RouterPath.Admin.AdminSchoolManageListPage.path)"
+      />
+    </v-list-group>
+    <v-list-group>
+      <template v-slot:activator="{ props }">
+        <v-list-item
+          v-bind="props"
+          prepend-icon="mdi-account-music-outline"
+          title="아티스트 관리"
+        ></v-list-item>
+      </template>
+      <v-list-item
+        title="아티스트 추가"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageCreatePage.path)"
+      />
+      <v-list-item
+        title="아티스트 목록"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageListPage.path)"
       />
     </v-list-group>
   </v-list>
