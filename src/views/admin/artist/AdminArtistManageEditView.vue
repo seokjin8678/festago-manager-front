@@ -8,6 +8,7 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { UpdateArtistRequest } from '@/api/spec/artist/UpdateArtistApiSpec.ts';
+import EditForm from '@/components/form/EditForm.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -66,7 +67,7 @@ const onUpdateSubmit = handleSubmit(request => {
   });
 });
 
-function deleteArtist() {
+function onDeleteSubmit() {
   AdminArtistService.deleteArtist(artistId.value!).then(() => {
     snackbarStore.showSuccess('아티스트가 삭제되었습니다.');
     router.push(RouterPath.Admin.AdminArtistManageListPage.path);
@@ -80,99 +81,38 @@ function deleteArtist() {
 const artistId = ref<number>();
 const nameField = useField<string>('name');
 const profileImageField = useField<string>('profileImage');
-const invalidForm = ref(false);
 const loading = ref(false);
-const showDialog = ref(false);
 </script>
 
 <template>
-  <v-dialog
-    v-model="showDialog"
-    max-width="500"
+  <EditForm
+    form-title="아티스트 수정/삭제"
+    :on-update-submit="onUpdateSubmit"
+    :on-delete-submit="onDeleteSubmit"
+    :loading="loading"
   >
-    <v-card class="pa-5">
-      <v-card-title class="text-h5 text-center">
-        정말로 삭제할까요?
-      </v-card-title>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn
-          text="취소"
-          color="blue-darken-1"
-          variant="text"
-          @click="showDialog = false"
-        />
-        <v-btn
-          text="삭제"
-          color="red-darken-1"
-          variant="text"
-          @click="deleteArtist"
-        />
-        <v-spacer />
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-  <v-card
-    class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
-    max-width="800"
-    min-width="350"
-    elevation="4"
-  >
-    <v-card-title class="mb-3 text-h4 text-center">
-      아티스트 수정/삭제
-    </v-card-title>
-    <v-form
-      v-model="invalidForm"
-      @submit.prevent="onUpdateSubmit"
-    >
-      <v-text-field
-        class="mb-3"
-        variant="outlined"
-        label="ID"
-        :model-value="artistId"
-        :readonly="true"
-      />
-      <v-text-field
-        class="mb-3"
-        v-model="nameField.value.value"
-        :error-messages="nameField.errorMessage.value"
-        placeholder="아티스트 이름"
-        variant="outlined"
-        label="아티스트 이름"
-      />
-      <v-text-field
-        class="mb-3"
-        v-model="profileImageField.value.value"
-        :error-messages="profileImageField.errorMessage.value"
-        placeholder="https://festa-go.site/image.png"
-        variant="outlined"
-        label="아티스트 이미지 URL"
-      />
-      <v-btn
-        :disabled="!invalidForm"
-        :loading="loading"
-        class="text-h6"
-        type="submit"
-        text="수정"
-        color="blue"
-        :block="true"
-      />
-      <v-btn
-        :disabled="loading"
-        class="text-h6 mt-4"
-        text="삭제"
-        color="red"
-        :block="true"
-        @click="showDialog = true"
-      />
-      <v-btn
-        :disabled="loading"
-        class="text-h6 mt-4"
-        text="취소"
-        color="grey"
-        :block="true"
-        @click="$router.go(-1)"
-      />
-    </v-form>
-  </v-card>
+    <v-text-field
+      class="mb-3"
+      variant="outlined"
+      label="ID"
+      :model-value="artistId"
+      :readonly="true"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="nameField.value.value"
+      :error-messages="nameField.errorMessage.value"
+      placeholder="아티스트 이름"
+      variant="outlined"
+      label="아티스트 이름"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="profileImageField.value.value"
+      :error-messages="profileImageField.errorMessage.value"
+      placeholder="https://festa-go.site/image.png"
+      variant="outlined"
+      label="아티스트 이미지 URL"
+    />
+  </EditForm>
 </template>
