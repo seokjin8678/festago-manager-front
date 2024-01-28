@@ -6,6 +6,7 @@ import { useField, useForm } from 'vee-validate';
 import { CreateArtistRequest } from '@/api/spec/artist/CreateArtistApiSpec.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import FestagoError from '@/api/FestagoError.ts';
+import CreateForm from '@/components/form/CreateForm.vue';
 
 const snackbarStore = useSnackbarStore();
 const { handleSubmit, handleReset } = useForm<CreateArtistRequest>({
@@ -23,7 +24,6 @@ const { handleSubmit, handleReset } = useForm<CreateArtistRequest>({
 
 const nameField = useField('name');
 const profileImageField = useField('profileImage');
-const invalidForm = ref(false);
 const loading = ref(false);
 
 const onSubmit = handleSubmit(request => {
@@ -42,46 +42,26 @@ const onSubmit = handleSubmit(request => {
 </script>
 
 <template>
-  <v-card
-    class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
-    max-width="800"
-    min-width="350"
-    elevation="4"
+  <CreateForm
+    :on-submit="onSubmit"
+    :loading="loading"
+    form-title="아티스트 추가"
   >
-    <v-card-title class="mb-3">
-      <p class="text-h4 text-center">
-        아티스트 추가
-      </p>
-    </v-card-title>
-    <v-form
-      v-model="invalidForm"
-      @submit.prevent="onSubmit"
-    >
-      <v-text-field
-        class="mb-3"
-        v-model="nameField.value.value"
-        :error-messages="nameField.errorMessage.value"
-        placeholder="아티스트 이름"
-        variant="outlined"
-        label="아티스트 이름"
-      />
-      <v-text-field
-        class="mb-3"
-        v-model="profileImageField.value.value"
-        :error-messages="profileImageField.errorMessage.value"
-        placeholder="https://festa-go.site/image.png"
-        variant="outlined"
-        label="아티스트 이미지 URL"
-      />
-      <v-btn
-        :disabled="!invalidForm"
-        :loading="loading"
-        class="text-h6"
-        type="submit"
-        text="생성"
-        color="blue"
-        :block="true"
-      />
-    </v-form>
-  </v-card>
+    <v-text-field
+      class="mb-3"
+      v-model="nameField.value.value"
+      :error-messages="nameField.errorMessage.value"
+      placeholder="아티스트 이름"
+      variant="outlined"
+      label="아티스트 이름"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="profileImageField.value.value"
+      :error-messages="profileImageField.errorMessage.value"
+      placeholder="https://festa-go.site/image.png"
+      variant="outlined"
+      label="아티스트 이미지 URL"
+    />
+  </CreateForm>
 </template>
