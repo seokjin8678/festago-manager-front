@@ -30,6 +30,7 @@ const apiActions = {
   'POST': (url: string, data: any = null) => axiosInstance.post(url, data),
   'PATCH': (url: string, data: any = null) => axiosInstance.patch(url, data),
   'DELETE': (url: string, data: any = null) => axiosInstance.delete(url, data),
+  'PUT': (url: string, data: any = null) => axiosInstance.put(url, data),
 };
 
 const ApiService = {
