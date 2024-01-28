@@ -10,6 +10,7 @@ const tableHeaders = [
   { title: 'ID', key: 'id' },
   { title: '이름', key: 'name' },
   { title: '프로필 URL', key: 'profileImage' },
+  { title: '수정/삭제', key: 'actions', sortable: false },
 ];
 
 const itemsPerPageOptions = [
@@ -30,7 +31,6 @@ function fetch() {
     loading.value = false;
   });
 }
-
 </script>
 
 <template>
@@ -46,7 +46,7 @@ function fetch() {
       :fetch="fetch"
       :item-length="items.length"
       :items="items"
-      :detail-page-router-name="RouterPath.Admin.AdminSchoolManageEditPage.name"
+      :detail-page-router-name="RouterPath.Admin.AdminArtistManageEditPage.name"
     />
   </v-card>
 </template>
