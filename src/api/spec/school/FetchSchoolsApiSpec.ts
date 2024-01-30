@@ -5,15 +5,17 @@ export type FetchSchoolsRequest = {
 }
 
 export type FetchSchoolsResponse = {
-  schools: {
+  content: {
     id: number,
     domain: string,
-    name: string
-  }[]
+    name: string,
+    region: string,
+  }[],
+  totalElements: number
 }
 
 const FetchSchoolsApiSpec: ApiSpec = {
-  url: '/schools',
+  url: '/api/v1/schools',
   method: 'GET',
 };
 

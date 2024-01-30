@@ -9,7 +9,7 @@ export type DeleteSchoolResponse = {
 }
 
 const DeleteSchoolApiSpec = (schoolId: number): ApiSpec => ({
-  url: `/admin/api/schools/${schoolId}`,
+  url: `/admin/api/v1/schools/${schoolId}`,
   method: 'DELETE',
 });
 

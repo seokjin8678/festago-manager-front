@@ -15,13 +15,16 @@ const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   AdminSchoolService.fetchOneSchool(parseInt(route.params.id as string)).then(response => {
-    const { id, name, domain } = response.data;
+    const { id, name, domain, region } = response.data;
     schoolId.value = id;
     nameField.resetField({
       value: name,
     });
     domainField.resetField({
       value: domain,
+    });
+    regionField.resetField({
+      value: region,
     });
   }).catch(e => {
     if (e instanceof FestagoError) {
@@ -41,13 +44,17 @@ const { handleSubmit, isFieldDirty } = useForm<UpdateSchoolRequest>({
       if (!value) return '도메인은 필수입니다.';
       return true;
     },
+    region(value: string) {
+      if (!value) return '지역은 필수입니다.';
+      return true;
+    },
   },
 });
 
 const onUpdateSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  if (!isFieldDirty('name') && !isFieldDirty('domain')) {
+  if (!isFieldDirty('name') && !isFieldDirty('domain') && !isFieldDirty('region')) {
     snackbarStore.showError('아무것도 수정되지 않았습니다.');
     return;
   }
@@ -59,6 +66,9 @@ const onUpdateSubmit = handleSubmit(request => {
     });
     domainField.resetField({
       value: domainField.value.value,
+    });
+    regionField.resetField({
+      value: regionField.value.value,
     });
   }).catch(e => {
     if (e instanceof FestagoError) {
@@ -81,6 +91,7 @@ function onDeleteSubmit() {
 const schoolId = ref<number>();
 const nameField = useField<string>('name');
 const domainField = useField<string>('domain');
+const regionField = useField<string>('region');
 const loading = ref(false);
 </script>
 
@@ -113,6 +124,14 @@ const loading = ref(false);
       placeholder="school.ac.kr"
       variant="outlined"
       label="학교 도메인"
+    />
+    <v-select
+      class="mb-3"
+      v-model="regionField.value.value"
+      :error-messages="regionField.errorMessage.value"
+      :items="['서울', '대구', '부산']"
+      variant="outlined"
+      label="지역"
     />
   </EditForm>
 </template>
