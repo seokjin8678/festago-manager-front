@@ -2,7 +2,8 @@ import ApiSpec from '@/api/spec/ApiSpec.ts';
 
 export type UpdateSchoolRequest = {
   name: string,
-  domain: string
+  domain: string,
+  region: string,
 }
 
 export type UpdateSchoolResponse = {
@@ -10,7 +11,7 @@ export type UpdateSchoolResponse = {
 }
 
 const UpdateSchoolApiSpec = (schoolId: number): ApiSpec => ({
-  url: `/admin/api/schools/${schoolId}`,
+  url: `/admin/api/v1/schools/${schoolId}`,
   method: 'PATCH',
 });
 

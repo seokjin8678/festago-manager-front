@@ -23,10 +23,15 @@ const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
       if (!/^[a-zA-Z.]+$/.test(value)) return '도메인은 영문으로만 구성되어야 합니다.';
       return true;
     },
+    region(value: string) {
+      if (!value) return '지역은 필수입니다.';
+      return true;
+    },
   },
 });
 const nameField = useField('name');
 const domainField = useField('domain');
+const regionField = useField<string>('region');
 const loading = ref(false);
 
 const onSubmit = handleSubmit(request => {
@@ -65,6 +70,14 @@ const onSubmit = handleSubmit(request => {
       placeholder="school.ac.kr"
       variant="outlined"
       label="학교 도메인"
+    />
+    <v-select
+      class="mb-3"
+      v-model="regionField.value.value"
+      :error-messages="regionField.errorMessage.value"
+      :items="['서울', '대구', '부산']"
+      variant="outlined"
+      label="지역"
     />
   </CreateForm>
 </template>
