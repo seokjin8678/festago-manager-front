@@ -15,7 +15,7 @@ export type FetchSchoolsResponse = {
 }
 
 const FetchSchoolsApiSpec: ApiSpec = {
-  url: '/api/v1/schools',
+  url: '/admin/api/v1/schools',
   method: 'GET',
 };
 
