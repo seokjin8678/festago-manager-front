@@ -12,7 +12,7 @@ export type FetchOneSchoolResponse = {
 }
 
 const FetchOneSchoolApiSpec = (schoolId: number): ApiSpec => ({
-  url: `/api/v1/schools/${schoolId}`,
+  url: `/admin/api/v1/schools/${schoolId}`,
   method: 'GET',
 });
 
