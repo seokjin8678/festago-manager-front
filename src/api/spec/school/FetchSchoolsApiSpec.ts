@@ -1,16 +1,12 @@
 import ApiSpec from '@/api/spec/ApiSpec.ts';
+import { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.ts';
 
 export type FetchSchoolsRequest = {
   // empty
 }
 
 export type FetchSchoolsResponse = {
-  content: {
-    id: number,
-    domain: string,
-    name: string,
-    region: string,
-  }[],
+  content: FetchOneSchoolResponse[],
   totalElements: number
 }
 

@@ -66,5 +66,18 @@ const menus = ref([]);
         @click="$router.push(RouterPath.Admin.AdminArtistManageListPage.path)"
       />
     </v-list-group>
+    <v-list-group>
+      <template v-slot:activator="{ props }">
+        <v-list-item
+          v-bind="props"
+          prepend-icon="mdi-party-popper"
+          title="축제 관리"
+        ></v-list-item>
+      </template>
+      <v-list-item
+        title="축제 추가"
+        @click="$router.push(RouterPath.Admin.AdminFestivalManageCreatePage.path)"
+      />
+    </v-list-group>
   </v-list>
 </template>
