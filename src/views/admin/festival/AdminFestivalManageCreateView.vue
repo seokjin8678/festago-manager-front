@@ -135,13 +135,13 @@ function selectSchool(school: FetchOneSchoolResponse) {
         </thead>
         <tbody>
         <tr
-          v-for="item in schools"
-          :key="item.id"
+          v-for="school in schools"
+          :key="school.id"
         >
-          <td>{{ item.name }}</td>
+          <td>{{ school.name }}</td>
           <td>
             <v-btn
-              @click="selectSchool(item)"
+              @click="selectSchool(school)"
               text="선택"
             />
           </td>
