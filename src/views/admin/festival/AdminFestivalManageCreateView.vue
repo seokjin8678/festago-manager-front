@@ -6,6 +6,8 @@ import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { CreateFestivalRequest } from '@/api/spec/festival/CreateFestivalApiSpec.ts';
+import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
+import FestagoError from '@/api/FestagoError.ts';
 
 const snackbarStore = useSnackbarStore();
 const { handleSubmit, handleReset } = useForm<CreateFestivalRequest>({
@@ -49,9 +51,17 @@ const fetchSchoolsLoading = ref(false);
 const showSchoolSelectDialog = ref(false);
 const schoolSearchKeyword = ref('');
 const onSubmit = handleSubmit(request => {
-  console.log(request);
-  handleReset();
-  snackbarStore.showSuccess('축제가 생성되었습니다!');
+  loading.value = true;
+  setTimeout(() => (loading.value = false), 1000);
+  AdminFestivalService.createFestival(request).then(()=>{
+    handleReset();
+    loading.value = false;
+    snackbarStore.showSuccess('축제가 생성되었습니다!');
+  }).catch(e => {
+    if (e instanceof FestagoError) {
+      snackbarStore.showError(e.message);
+    } else throw e;
+  });
 });
 
 function fetchSchools() {
