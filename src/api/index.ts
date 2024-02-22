@@ -1,6 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
 import FestagoError from '@/api/FestagoError.ts';
 import ApiSpec from '@/api/spec/ApiSpec.ts';
+import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import { router } from '@/router';
+import { useAuthStore } from '@/stores/useAuthStore.ts';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,6 +13,15 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(value => value, error => {
   const response = error.response;
   if (response) {
+    if (response.status == 401) {
+      router.push('/login').then(() => {
+        const snackbarStore = useSnackbarStore();
+        const authStore = useAuthStore();
+
+        snackbarStore.showError(response.data.message);
+        authStore.logout();
+      });
+    }
     return Promise.reject(new FestagoError(
       response.data.errorCode,
       response.data.message,
