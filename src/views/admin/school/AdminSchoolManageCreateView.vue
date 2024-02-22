@@ -75,7 +75,7 @@ const onSubmit = handleSubmit(request => {
       class="mb-3"
       v-model="regionField.value.value"
       :error-messages="regionField.errorMessage.value"
-      :items="['서울', '대구', '부산']"
+      :items="['서울', '대구', '부산', '인천', '광주', '대전', '울산', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주']"
       variant="outlined"
       label="지역"
     />
