@@ -23,15 +23,33 @@ const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
       if (!/^[a-zA-Z.]+$/.test(value)) return '도메인은 영문으로만 구성되어야 합니다.';
       return true;
     },
+    logoUrl(value: string) {
+      if (value) {
+        if (value.length >= 255) return '로고 URL은 255글자 미만이어야 합니다.'
+        if (!value.startsWith("https://")) return '로고 URL은 https://로 시작되어야 합니다.'
+        if (!/\.(png|jpg)$/.test(value)) return '로고 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.'
+      }
+      return true;
+    },
+    backgroundImageUrl(value: string) {
+      if (value) {
+        if (value.length >= 255) return '백그라운드 이미지 URL은 255글자 미만이어야 합니다.';
+        if (!value.startsWith("https://")) return '백그라운드 이미지 URL은 https://로 시작되어야 합니다.'
+        if (!/\.(png|jpg)$/.test(value)) return '백그라운드 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.'
+      }
+      return true;
+    },
     region(value: string) {
       if (!value) return '지역은 필수입니다.';
       return true;
     },
   },
 });
-const nameField = useField('name');
-const domainField = useField('domain');
+const nameField = useField<string>('name');
+const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
+const logoUrlField = useField<string>('logoUrl');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 const loading = ref(false);
 
 const onSubmit = handleSubmit(request => {
@@ -70,6 +88,22 @@ const onSubmit = handleSubmit(request => {
       placeholder="school.ac.kr"
       variant="outlined"
       label="학교 도메인"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="logoUrlField.value.value"
+      :error-messages="logoUrlField.errorMessage.value"
+      placeholder="https://image.com/logo.png"
+      variant="outlined"
+      label="로고 URL (선택)"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
+      placeholder="https://image.com/backgroundImage.png"
+      variant="outlined"
+      label="백그라운드 이미지 URL (선택)"
     />
     <v-select
       class="mb-3"
