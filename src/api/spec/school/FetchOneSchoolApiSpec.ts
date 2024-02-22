@@ -9,6 +9,8 @@ export type FetchOneSchoolResponse = {
   domain: string,
   name: string,
   region: string,
+  logoUrl: string,
+  backgroundImageUrl: string
 }
 
 const FetchOneSchoolApiSpec = (schoolId: number): ApiSpec => ({
