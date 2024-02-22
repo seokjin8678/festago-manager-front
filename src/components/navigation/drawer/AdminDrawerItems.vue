@@ -78,6 +78,10 @@ const menus = ref([]);
         title="축제 추가"
         @click="$router.push(RouterPath.Admin.AdminFestivalManageCreatePage.path)"
       />
+      <v-list-item
+        title="축제 목록"
+        @click="$router.push(RouterPath.Admin.AdminFestivalManageListPage.path)"
+      />
     </v-list-group>
   </v-list>
 </template>
