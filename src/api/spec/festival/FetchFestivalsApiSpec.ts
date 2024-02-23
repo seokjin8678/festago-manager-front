@@ -1,12 +1,18 @@
 import ApiSpec from '@/api/spec/ApiSpec.ts';
-import { FetchOneFestivalResponse } from '@/api/spec/festival/FetchOneFestivalApiSpec.ts';
 
 export type FetchFestivalsRequest = {
   // empty
 }
 
 export type FetchFestivalsResponse = {
-  content: FetchOneFestivalResponse[],
+  content: {
+    id: number,
+    name: string,
+    schoolName: string,
+    startDate: string,
+    endDate: string,
+    stageCount: number
+  }[],
   totalElements: number
 }
 
