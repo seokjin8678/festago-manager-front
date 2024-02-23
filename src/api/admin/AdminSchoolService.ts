@@ -21,8 +21,7 @@ const AdminSchoolService = {
     return ApiService.request<FetchSchoolsResponse>(FetchSchoolsApiSpec, {
       page: paging.page,
       size: paging.itemsPerPage,
-      sortBy: paging.sortBy[0]?.key,
-      order: paging.sortBy[0]?.order,
+      sort: paging.sortBy[0] ? `${paging.sortBy[0].key},${paging.sortBy[0].order}` : null,
       searchKeyword: search.searchKeyword,
       searchFilter: search.searchFilter,
     });
