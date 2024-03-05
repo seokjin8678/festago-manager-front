@@ -11,6 +11,8 @@ import AdminArtistManageListView from '@/views/admin/artist/AdminArtistManageLis
 import AdminArtistManageCreateView from '@/views/admin/artist/AdminArtistManageCreateView.vue';
 import AdminArtistManageEditView from '@/views/admin/artist/AdminArtistManageEditView.vue';
 import AdminFestivalManageCreateView from '@/views/admin/festival/AdminFestivalManageCreateView.vue';
+import AdminFestivalManageListView from '@/views/admin/festival/AdminFestivalManageListView.vue';
+import AdminFestivalManageEditView from '@/views/admin/festival/AdminFestivalManageEditView.vue';
 
 const RouterPath = {
   Common: {
@@ -77,6 +79,16 @@ const RouterPath = {
       path: '/admin/festival/create', // 명시적으로 단수형 사용
       name: 'adminFestivalManageCreatePage',
       component: AdminFestivalManageCreateView,
+    },
+    AdminFestivalManageListPage: {
+      path: '/admin/festivals',
+      name: 'adminFestivalManageListPage',
+      component: AdminFestivalManageListView,
+    },
+    AdminFestivalManageEditPage: {
+      path: '/admin/festival/edit/:id',
+      name: 'adminFestivalManageEditPage',
+      component: AdminFestivalManageEditView,
     },
   },
   School: {
