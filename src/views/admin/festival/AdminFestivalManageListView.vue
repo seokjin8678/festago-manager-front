@@ -15,7 +15,7 @@ const tableHeaders = [
   { title: '학교', key: 'schoolName' },
   { title: '시작일', key: 'startDate' },
   { title: '종료일', key: 'endDate' },
-  { title: '공연 수', key: 'stageCount' },
+  { title: '공연 수', key: 'stageCount', sortable: false },
   { title: '수정/삭제', key: 'actions', sortable: false },
 ];
 const searchFilters = [
