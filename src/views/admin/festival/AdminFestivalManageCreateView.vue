@@ -26,7 +26,7 @@ const { handleSubmit, handleReset } = useForm<CreateFestivalRequest>({
       return true;
     },
     endDate(value: string) {
-      if (!value) return '시작일은 필수입니다.';
+      if (!value) return '종료일은 필수입니다.';
       return true;
     },
     posterImageUrl(value: string) {
