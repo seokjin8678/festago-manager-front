@@ -11,11 +11,11 @@ import RouterPath from '@/router/RouterPath.ts';
     </h1>
 
     <div>
-      <h3 class="my-2 pt-5">
-        축제 정보
-      </h3>
       <v-row>
-        <v-col :cols="6">
+        <v-col :cols="5">
+          <h3 class="my-2 pt-5">
+            축제 정보
+          </h3>
           <v-card>
             <v-card-item
               class="px-8 py-2"
@@ -64,6 +64,38 @@ import RouterPath from '@/router/RouterPath.ts';
               </div>
             </v-card-item>
           </v-card>
+        </v-col>
+        <v-col :cols="7">
+          <h3 class="my-2 pt-5">
+            공연 정보
+          </h3>
+          <v-table>
+            <thead>
+              <tr>
+                <th>
+                  시작 시간
+                </th>
+                <th>
+                  티켓 오픈 시간
+                </th>
+                <th>
+                  아티스트 목록
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2077-06-30T18:00:00</td>
+                <td>2077-06-30T18:00:00</td>
+                <td>장기하,아이유,에픽하이,장기하,아이유,에픽하이</td>
+              </tr>
+              <tr>
+                <td>2077-06-30T18:00:00</td>
+                <td>2077-06-30T18:00:00</td>
+                <td>장기하,아이유,에픽하이</td>
+              </tr>
+            </tbody>
+          </v-table>
         </v-col>
       </v-row>
     </div>
