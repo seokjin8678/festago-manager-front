@@ -14,6 +14,7 @@ import AdminFestivalManageCreateView from '@/views/admin/festival/AdminFestivalM
 import AdminFestivalManageListView from '@/views/admin/festival/AdminFestivalManageListView.vue';
 import AdminFestivalManageEditView from '@/views/admin/festival/AdminFestivalManageEditView.vue';
 import AdminFestivalManageDetailView from '@/views/admin/festival/AdminFestivalManageDetailView.vue';
+import AdminStageManageCreateView from '@/views/admin/stage/AdminStageManageCreateView.vue';
 
 const RouterPath = {
   Common: {
@@ -95,6 +96,11 @@ const RouterPath = {
       path: '/admin/festivals/:id/edit',
       name: 'adminFestivalManageEditPage',
       component: AdminFestivalManageEditView,
+    },
+    AdminStageManageCreatePage: {
+      path: '/admin/festivals/:id/stage/create',
+      name: 'adminStageManageCreatePage',
+      component: AdminStageManageCreateView,
     },
   },
   School: {

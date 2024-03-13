@@ -97,6 +97,7 @@ import RouterPath from '@/router/RouterPath.ts';
           <v-card
             class="py-2"
             variant="outlined"
+            @click="$router.push(RouterPath.Admin.AdminStageManageCreatePage)"
           >
             <v-card-item>
               <span class="mdi mdi-plus-box-multiple-outline" />
