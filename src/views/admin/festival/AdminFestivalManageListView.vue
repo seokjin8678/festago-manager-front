@@ -16,7 +16,7 @@ const tableHeaders = [
   { title: '시작일', key: 'startDate' },
   { title: '종료일', key: 'endDate' },
   { title: '공연 수', key: 'stageCount', sortable: false },
-  { title: '수정/삭제', key: 'actions', sortable: false },
+  { title: '상세', key: 'actions', sortable: false },
 ];
 const searchFilters = [
   { title: 'ID', value: 'id' },
@@ -71,7 +71,7 @@ function fetch(paging: PagingRequest) {
       :fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
-      :detail-page-router-name="RouterPath.Admin.AdminFestivalManageEditPage.name"
+      :detail-page-router-name="RouterPath.Admin.AdminFestivalManageDetailView.name"
     />
   </v-card>
 </template>
