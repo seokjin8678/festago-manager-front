@@ -12,6 +12,12 @@ type CreateStageForm = {
   startTime: string,
   ticketOpenTime: string
 }
+
+type Artist = {
+  id: number,
+  name: string
+}
+
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 const { handleSubmit, handleReset } = useForm<CreateStageForm>({
@@ -30,21 +36,21 @@ const startTimeField = useField('startTime');
 const ticketOpenTimeField = useField('ticketOpenTime');
 
 const loading = ref(false);
-const fetchedArtists = ref<{ id: number, name: string }[]>([]);
-const artists = ref(new Map<number, { id: number, name: string }>());
+const fetchedArtists = ref<Artist[]>([]);
+const artists = ref(new Map<number, Artist>());
 const showArtistSelectDialog = ref(false);
 const fetchArtistsLoading = ref(false);
 const artistSearchKeyword = ref('');
 
 function fetchArtists() {
   AdminArtistService.fetchArtists().then(response => {
-    fetchedArtists.value = response.data.map(it => (
-     { id: it.id, name: it.name }
+    fetchedArtists.value = response.data.map(artist => (
+      { id: artist.id, name: artist.name }
     ));
   });
 }
 
-function putArtist(artist: { id: number, name: string }) {
+function putArtist(artist: Artist) {
   if (artists.value.has(artist.id)) {
     snackbarStore.showError('이미 등록된 아티스트 입니다.');
   } else {
@@ -52,7 +58,7 @@ function putArtist(artist: { id: number, name: string }) {
   }
 }
 
-function removeArtist(artist: { id: number, name: string }) {
+function removeArtist(artist: Artist) {
   artists.value.delete(artist.id);
 }
 
