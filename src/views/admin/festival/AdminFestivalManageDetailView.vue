@@ -71,29 +71,29 @@ import RouterPath from '@/router/RouterPath.ts';
           </h3>
           <v-table>
             <thead>
-              <tr>
-                <th>
-                  시작 시간
-                </th>
-                <th>
-                  티켓 오픈 시간
-                </th>
-                <th>
-                  아티스트 목록
-                </th>
-              </tr>
+            <tr>
+              <th id="startTime">
+                시작 시간
+              </th>
+              <th id="ticketOpenTime">
+                티켓 오픈 시간
+              </th>
+              <th id="artists">
+                아티스트 목록
+              </th>
+            </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>2077-06-30T18:00:00</td>
-                <td>2077-06-30T18:00:00</td>
-                <td>장기하,아이유,에픽하이,장기하,아이유,에픽하이</td>
-              </tr>
-              <tr>
-                <td>2077-06-30T18:00:00</td>
-                <td>2077-06-30T18:00:00</td>
-                <td>장기하,아이유,에픽하이</td>
-              </tr>
+            <tr>
+              <td>2077-06-30T18:00:00</td>
+              <td>2077-06-30T18:00:00</td>
+              <td>장기하,아이유,에픽하이,장기하,아이유,에픽하이</td>
+            </tr>
+            <tr>
+              <td>2077-06-30T18:00:00</td>
+              <td>2077-06-30T18:00:00</td>
+              <td>장기하,아이유,에픽하이</td>
+            </tr>
             </tbody>
           </v-table>
         </v-col>

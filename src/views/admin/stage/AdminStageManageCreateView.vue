@@ -159,7 +159,7 @@ const onSubmit = handleSubmit(form => {
       >
         <v-row>
           <v-col
-            v-for="(artist, _) in artists.values()"
+            v-for="artist in artists.values()"
             :key="artist.id"
             class="py-1 pe-0"
             cols="auto"
