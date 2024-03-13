@@ -9,12 +9,14 @@ import RouterPath from '@/router/RouterPath.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { UpdateArtistRequest } from '@/api/spec/artist/UpdateArtistApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
+import { allTrue } from '@/utils/BooleanUtils.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   AdminArtistService.fetchOneArtist((parseInt(route.params.id as string))).then(response => {
+    // TODO 백엔드 아티스트 조회에 backgroundImageUrl을 추가해야함
     const { id, name, profileImage } = response.data;
     artistId.value = id;
     nameField.resetField({
@@ -22,6 +24,9 @@ onMounted(() => {
     });
     profileImageField.resetField({
       value: profileImage,
+    });
+    backgroundImageUrlField.resetField({
+      value: '',
     });
   }).catch(e => {
     if (e instanceof FestagoError) {
@@ -38,7 +43,11 @@ const { handleSubmit, isFieldDirty } = useForm<UpdateArtistRequest>({
       return true;
     },
     profileImage(value: string) {
-      if (!value) return '이미지 URL은 필수입니다.';
+      if (!value) return '프로필 이미지 URL은 필수입니다.';
+      return true;
+    },
+    backgroundImageUrl(value: string) {
+      if (!value) return '백그라운드 이미지 URL은 필수입니다.';
       return true;
     },
   },
@@ -47,7 +56,11 @@ const { handleSubmit, isFieldDirty } = useForm<UpdateArtistRequest>({
 const onUpdateSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  if (!isFieldDirty('name') && !isFieldDirty('profileImage')) {
+  if (allTrue(
+    !isFieldDirty('name'),
+    !isFieldDirty('profileImage'),
+    !isFieldDirty('backgroundImageUrl'),
+  )) {
     snackbarStore.showError('아무것도 수정되지 않았습니다.');
     return;
   }
@@ -59,6 +72,9 @@ const onUpdateSubmit = handleSubmit(request => {
     });
     profileImageField.resetField({
       value: profileImageField.value.value,
+    });
+    backgroundImageUrlField.resetField({
+      value: backgroundImageUrlField.value.value,
     });
   }).catch(e => {
     if (e instanceof FestagoError) {
@@ -81,6 +97,7 @@ function onDeleteSubmit() {
 const artistId = ref<number>();
 const nameField = useField<string>('name');
 const profileImageField = useField<string>('profileImage');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 const loading = ref(false);
 </script>
 
@@ -110,9 +127,17 @@ const loading = ref(false);
       class="mb-3"
       v-model="profileImageField.value.value"
       :error-messages="profileImageField.errorMessage.value"
-      placeholder="https://festa-go.site/image.png"
+      placeholder="https://festa-go.site/profile-image.png"
       variant="outlined"
-      label="아티스트 이미지 URL"
+      label="아티스트 프로필 이미지 URL"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
+      placeholder="https://festa-go.site/background-image.png"
+      variant="outlined"
+      label="아티스트 백그라운드 이미지 URL"
     />
   </EditForm>
 </template>
