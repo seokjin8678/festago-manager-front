@@ -92,7 +92,7 @@ const RouterPath = {
       component: AdminFestivalManageDetailView,
     },
     AdminFestivalManageEditPage: {
-      path: '/admin/festival/edit/:id',
+      path: '/admin/festivals/:id/edit',
       name: 'adminFestivalManageEditPage',
       component: AdminFestivalManageEditView,
     },
