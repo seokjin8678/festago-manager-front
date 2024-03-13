@@ -58,7 +58,7 @@ const RouterPath = {
       component: AdminSchoolManageCreateView,
     },
     AdminSchoolManageEditPage: {
-      path: '/admin/school/edit/:id', // 명시적으로 단수형 사용
+      path: '/admin/schools/:id/edit',
       name: 'adminSchoolManageEditPage',
       component: AdminSchoolManageEditView,
     },
@@ -73,7 +73,7 @@ const RouterPath = {
       component: AdminArtistManageListView,
     },
     AdminArtistManageEditPage: {
-      path: '/admin/artist/edit/:id', // 명시적으로 단수형 사용
+      path: '/admin/artists/:id/edit',
       name: 'adminArtistManageEditPage',
       component: AdminArtistManageEditView,
     },
