@@ -16,14 +16,19 @@ const { handleSubmit, handleReset } = useForm<CreateArtistRequest>({
       return true;
     },
     profileImage(value: string) {
-      if (!value) return '이미지 URL는 필수입니다.';
+      if (!value) return '프로필 이미지 URL은 필수입니다.';
+      return true;
+    },
+    backgroundImageUrl(value: string) {
+      if (!value) return '백그라운드 이미지 URL은 필수입니다.';
       return true;
     },
   },
 });
 
 const nameField = useField('name');
-const profileImageField = useField('profileImage');
+const profileImageUrlField = useField('profileImage');
+const backgroundImageUrlField = useField('backgroundImageUrl');
 const loading = ref(false);
 
 const onSubmit = handleSubmit(request => {
@@ -57,11 +62,19 @@ const onSubmit = handleSubmit(request => {
     />
     <v-text-field
       class="mb-3"
-      v-model="profileImageField.value.value"
-      :error-messages="profileImageField.errorMessage.value"
+      v-model="profileImageUrlField.value.value"
+      :error-messages="profileImageUrlField.errorMessage.value"
       placeholder="https://festa-go.site/image.png"
       variant="outlined"
-      label="아티스트 이미지 URL"
+      label="아티스트 프로필 이미지 URL"
+    />
+    <v-text-field
+      class="mb-3"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
+      placeholder="https://festa-go.site/image.png"
+      variant="outlined"
+      label="아티스트 백그라운드 이미지 URL"
     />
   </CreateForm>
 </template>
