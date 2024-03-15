@@ -9,30 +9,14 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import { UpdateSchoolRequest } from '@/api/spec/school/UpdateSchoolApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
-import { allTrue } from '@/utils/BooleanUtils.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminSchoolService.fetchOneSchool(parseInt(route.params.id as string)).then(response => {
-    const { id, name, domain, region, logoUrl, backgroundImageUrl } = response.data;
-    schoolId.value = id;
-    nameField.resetField({
-      value: name,
-    });
-    domainField.resetField({
-      value: domain,
-    });
-    regionField.resetField({
-      value: region,
-    });
-    logoUrlField.resetField({
-      value: logoUrl,
-    });
-    backgroundImageUrlField.resetField({
-      value: backgroundImageUrl,
-    });
+  schoolId.value = parseInt(route.params.id as string);
+  AdminSchoolService.fetchOneSchool(schoolId.value).then(response => {
+    resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
@@ -41,7 +25,7 @@ onMounted(() => {
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<UpdateSchoolRequest>({
+const { meta, resetForm, handleSubmit } = useForm<UpdateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';
@@ -77,34 +61,10 @@ const { handleSubmit, isFieldDirty } = useForm<UpdateSchoolRequest>({
 const onUpdateSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  if (allTrue(
-    !isFieldDirty('name'),
-    !isFieldDirty('domain'),
-    !isFieldDirty('region'),
-    !isFieldDirty('logoUrl'),
-    !isFieldDirty('backgroundImageUrl'),
-  )) {
-    snackbarStore.showError('아무것도 수정되지 않았습니다.');
-    return;
-  }
   AdminSchoolService.updateSchool(schoolId.value!, request).then(() => {
     loading.value = false;
     snackbarStore.showSuccess('학교가 수정되었습니다.');
-    nameField.resetField({
-      value: nameField.value.value,
-    });
-    domainField.resetField({
-      value: domainField.value.value,
-    });
-    regionField.resetField({
-      value: regionField.value.value,
-    });
-    logoUrlField.resetField({
-      value: logoUrlField.value.value,
-    });
-    backgroundImageUrlField.resetField({
-      value: backgroundImageUrlField.value.value,
-    });
+    resetForm({ values: request });
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
@@ -138,6 +98,7 @@ const loading = ref(false);
     :loading="loading"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
+    :is-touched="meta.dirty"
   >
     <v-text-field
       class="mb-3"

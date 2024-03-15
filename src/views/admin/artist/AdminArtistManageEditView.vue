@@ -9,25 +9,15 @@ import RouterPath from '@/router/RouterPath.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { UpdateArtistRequest } from '@/api/spec/artist/UpdateArtistApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
-import { allTrue } from '@/utils/BooleanUtils.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminArtistService.fetchOneArtist((parseInt(route.params.id as string))).then(response => {
+  artistId.value = parseInt(route.params.id as string);
+  AdminArtistService.fetchOneArtist(artistId.value).then(response => {
     // TODO 백엔드 아티스트 조회에 backgroundImageUrl을 추가해야함
-    const { id, name, profileImage } = response.data;
-    artistId.value = id;
-    nameField.resetField({
-      value: name,
-    });
-    profileImageField.resetField({
-      value: profileImage,
-    });
-    backgroundImageUrlField.resetField({
-      value: '',
-    });
+    resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminArtistManageListPage.path);
@@ -36,7 +26,7 @@ onMounted(() => {
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<UpdateArtistRequest>({
+const { meta, resetForm, handleSubmit } = useForm<UpdateArtistRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '아티스트 이름은 필수입니다.';
@@ -56,26 +46,10 @@ const { handleSubmit, isFieldDirty } = useForm<UpdateArtistRequest>({
 const onUpdateSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  if (allTrue(
-    !isFieldDirty('name'),
-    !isFieldDirty('profileImage'),
-    !isFieldDirty('backgroundImageUrl'),
-  )) {
-    snackbarStore.showError('아무것도 수정되지 않았습니다.');
-    return;
-  }
   AdminArtistService.updateArtist(artistId.value!, request).then(() => {
     loading.value = false;
     snackbarStore.showSuccess('아티스트가 수정되었습니다.');
-    nameField.resetField({
-      value: nameField.value.value,
-    });
-    profileImageField.resetField({
-      value: profileImageField.value.value,
-    });
-    backgroundImageUrlField.resetField({
-      value: backgroundImageUrlField.value.value,
-    });
+    resetForm({ values: request });
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
@@ -107,6 +81,7 @@ const loading = ref(false);
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
     :loading="loading"
+    :is-touched="meta.dirty"
   >
     <v-text-field
       class="mb-3"

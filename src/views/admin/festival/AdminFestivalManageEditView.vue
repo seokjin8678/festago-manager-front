@@ -10,28 +10,16 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { UpdateFestivalRequest } from '@/api/spec/festival/UpdateFestivalApiSpec.ts';
-import { allTrue } from '@/utils/BooleanUtils.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminFestivalService.fetchOneFestival((parseInt(route.params.id as string))).then(response => {
-    const { id, school, name, startDate, endDate, posterImageUrl } = response.data;
-    festivalId.value = id;
-    schoolName.value = school.name;
-    nameField.resetField({
-      value: name,
-    });
-    startDateField.resetField({
-      value: startDate,
-    });
-    endDateField.resetField({
-      value: endDate,
-    });
-    posterImageUrlField.resetField({
-      value: posterImageUrl,
-    });
+  festivalId.value = parseInt(route.params.id as string);
+  AdminFestivalService.fetchOneFestival(festivalId.value).then(response => {
+    const result = response.data;
+    schoolName.value = result.school.name;
+    resetForm({ values: result });
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
@@ -40,7 +28,7 @@ onMounted(() => {
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<UpdateFestivalRequest>({
+const { meta, resetForm, handleSubmit } = useForm<UpdateFestivalRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '축제 이름은 필수입니다.';
@@ -76,30 +64,10 @@ const posterImageUrlField = useField('posterImageUrl');
 const onUpdateSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  if (allTrue(
-    !isFieldDirty('name'),
-    !isFieldDirty('startDate'),
-    !isFieldDirty('endDate'),
-    !isFieldDirty('posterImageUrl'),
-  )) {
-    snackbarStore.showError('아무것도 수정되지 않았습니다.');
-    return;
-  }
   AdminFestivalService.updateFestival(festivalId.value!, request).then(() => {
     loading.value = false;
     snackbarStore.showSuccess('축제가 수정되었습니다.');
-    nameField.resetField({
-      value: nameField.value.value,
-    });
-    startDateField.resetField({
-      value: startDateField.value.value,
-    });
-    endDateField.resetField({
-      value: endDateField.value.value,
-    });
-    posterImageUrlField.resetField({
-      value: posterImageUrlField.value.value,
-    });
+    resetForm({ values: request });
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
@@ -126,6 +94,7 @@ function onDeleteSubmit() {
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
     :loading="loading"
+    :is-touched="meta.dirty"
   >
     <v-text-field
       class="mb-3"
