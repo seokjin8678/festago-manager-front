@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 const props = defineProps<{
   formTitle: string,
-  onUpdateSubmit: (e?: Event) => Promise<void | undefined>,
+  onUpdateSubmit: (e?: Event) => any,
   onDeleteSubmit: () => void,
   loading: boolean,
   isTouched: boolean

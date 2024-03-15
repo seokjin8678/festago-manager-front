@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 const props = defineProps<{
-  onSubmit: (e?: Event) => Promise<void | undefined>,
+  onSubmit: (e?: Event) => any,
   formTitle: string,
   loading: boolean
 }>();
