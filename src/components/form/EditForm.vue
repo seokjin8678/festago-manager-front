@@ -5,7 +5,8 @@ const props = defineProps<{
   formTitle: string,
   onUpdateSubmit: (e?: Event) => Promise<void | undefined>,
   onDeleteSubmit: () => void,
-  loading: boolean
+  loading: boolean,
+  isTouched: boolean
 }>();
 const invalidForm = ref(false);
 const showDeleteDialog = ref(false);
@@ -54,8 +55,8 @@ const showDeleteDialog = ref(false);
       </v-card-title>
       <slot></slot>
       <v-btn
-        :disabled="!invalidForm"
-        :loading="props.loading"
+        :disabled="!invalidForm || !props.isTouched"
+        :loading="loading"
         class="text-h6"
         type="submit"
         text="수정"
