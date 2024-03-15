@@ -13,7 +13,7 @@ import { AuthType } from '@/type/AuthType.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<LoginRequest>({
+const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
   validationSchema: {
     username(value: string) {
       if (!value) return '계정은 필수입니다.';
@@ -28,29 +28,26 @@ const { handleSubmit, handleReset } = useForm<LoginRequest>({
 const usernameField = useField('username');
 const passwordField = useField('password');
 const invalidForm = ref(false);
-const loading = ref(false);
 const passwordVisible = ref(false);
 
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AuthService.login(request).then(response => {
+const onSubmit = handleSubmit(async request => {
+  try {
+    const response = await AuthService.login(request);
     handleReset();
-    // TODO 백엔드 로그인 API가 완성되면 변경할 것
-    // const { accessToken, username, authType } = response.data;
     const { accessToken } = response.data;
-    const username = 'ADMIN'
+    const username = 'ADMIN';
     const authType = AuthType.ADMIN;
     ApiService.changeAccessToken(accessToken);
     authStore.login({ accessToken, username, authType });
-    router.push(RouterPath.Common.HomePage.path);
+
+    await router.push(RouterPath.Common.HomePage.path);
     snackbarStore.showSuccess(`${username}님, 환영합니다!`);
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       usernameField.setErrors(e.message);
       passwordField.setErrors(e.message);
     } else throw e;
-  });
+  }
 });
 
 </script>
@@ -100,7 +97,7 @@ const onSubmit = handleSubmit(request => {
       />
       <v-btn
         :disabled="!invalidForm"
-        :loading="loading"
+        :loading="isSubmitting"
         :block="true"
         class="my-4"
         color="blue"

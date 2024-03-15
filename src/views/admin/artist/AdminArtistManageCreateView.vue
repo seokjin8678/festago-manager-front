@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import { ref } from 'vue';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import { CreateArtistRequest } from '@/api/spec/artist/CreateArtistApiSpec.ts';
@@ -9,7 +8,7 @@ import FestagoError from '@/api/FestagoError.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
+const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '아티스트 이름은 필수입니다.';
@@ -29,16 +28,12 @@ const { handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
 const nameField = useField('name');
 const profileImageUrlField = useField('profileImage');
 const backgroundImageUrlField = useField('backgroundImageUrl');
-const loading = ref(false);
-
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminArtistService.createArtist(request).then(() => {
+const onSubmit = handleSubmit(async request => {
+  try {
+    await AdminArtistService.createArtist(request)
     handleReset();
-    loading.value = false;
     snackbarStore.showSuccess('아티스트가 생성되었습니다!');
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -46,14 +41,14 @@ const onSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 </script>
 
 <template>
   <CreateForm
     :on-submit="onSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
     form-title="아티스트 추가"
   >
     <v-text-field

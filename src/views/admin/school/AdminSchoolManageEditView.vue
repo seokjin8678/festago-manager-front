@@ -25,7 +25,7 @@ onMounted(() => {
   });
 });
 
-const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
+const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';
@@ -58,14 +58,12 @@ const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest
   },
 });
 
-const onUpdateSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminSchoolService.updateSchool(schoolId.value!, request).then(() => {
-    loading.value = false;
+const onUpdateSubmit = handleSubmit(async request => {
+  try {
+    await AdminSchoolService.updateSchool(schoolId.value!, request);
     snackbarStore.showSuccess('학교가 수정되었습니다.');
     resetForm({ values: request });
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -73,7 +71,7 @@ const onUpdateSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 
 function onDeleteSubmit() {
@@ -93,13 +91,12 @@ const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
 const logoUrlField = useField<string>('logoUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
-const loading = ref(false);
 </script>
 
 <template>
   <EditForm
     form-title="학교 수정/삭제"
-    :loading="loading"
+    :loading="isSubmitting"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
     :is-touched="meta.dirty"

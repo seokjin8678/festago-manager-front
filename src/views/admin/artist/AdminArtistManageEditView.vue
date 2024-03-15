@@ -26,7 +26,7 @@ onMounted(() => {
   });
 });
 
-const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateArtistRequest>({
+const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateArtistRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '아티스트 이름은 필수입니다.';
@@ -43,14 +43,12 @@ const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateArtistRequest
   },
 });
 
-const onUpdateSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminArtistService.updateArtist(artistId.value!, request).then(() => {
-    loading.value = false;
+const onUpdateSubmit = handleSubmit(async request => {
+  try {
+    await AdminArtistService.updateArtist(artistId.value!, request);
     snackbarStore.showSuccess('아티스트가 수정되었습니다.');
     resetForm({ values: request });
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -58,7 +56,7 @@ const onUpdateSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 
 function onDeleteSubmit() {
@@ -76,7 +74,6 @@ const artistId = ref<number>();
 const nameField = useField<string>('name');
 const profileImageField = useField<string>('profileImage');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
-const loading = ref(false);
 </script>
 
 <template>
@@ -84,7 +81,7 @@ const loading = ref(false);
     form-title="아티스트 수정/삭제"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
     :is-touched="meta.dirty"
   >
     <v-text-field
