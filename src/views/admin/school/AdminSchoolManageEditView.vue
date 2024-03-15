@@ -25,7 +25,7 @@ onMounted(() => {
   });
 });
 
-const { meta, resetForm, handleSubmit } = useForm<UpdateSchoolRequest>({
+const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';
@@ -67,7 +67,11 @@ const onUpdateSubmit = handleSubmit(request => {
     resetForm({ values: request });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
   });
 });

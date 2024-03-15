@@ -20,7 +20,7 @@ type Artist = {
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<CreateStageForm>({
+const { handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
   validationSchema: {
     startTime(value: string) {
       if (!value) return '공연 시작 시간은 필수입니다.';
@@ -76,7 +76,11 @@ const onSubmit = handleSubmit(form => {
     snackbarStore.showSuccess('공연이 생성되었습니다!');
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
   });
 });

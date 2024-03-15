@@ -10,7 +10,7 @@ import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<CreateFestivalRequest>({
+const { handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
   validationSchema: {
     schoolId(value: string) {
       if (!value) return '학교는 필수입니다.';
@@ -31,9 +31,9 @@ const { handleSubmit, handleReset } = useForm<CreateFestivalRequest>({
     },
     posterImageUrl(value: string) {
       if (!value) return '포스터 이미지 URL은 필수입니다.';
-      if (value.length >= 255) return '포스터 이미지 URL은 255글자 미만이어야 합니다.'
-      if (!value.startsWith("https://")) return '포스터 이미지 URL은 https://로 시작되어야 합니다.'
-      if (!/\.(png|jpg)$/.test(value)) return '포스터 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.'
+      if (value.length >= 255) return '포스터 이미지 URL은 255글자 미만이어야 합니다.';
+      if (!value.startsWith('https://')) return '포스터 이미지 URL은 https://로 시작되어야 합니다.';
+      if (!/\.(png|jpg)$/.test(value)) return '포스터 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
       return true;
     },
   },
@@ -53,13 +53,17 @@ const schoolSearchKeyword = ref('');
 const onSubmit = handleSubmit(request => {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  AdminFestivalService.createFestival(request).then(()=>{
+  AdminFestivalService.createFestival(request).then(() => {
     handleReset();
     loading.value = false;
     snackbarStore.showSuccess('축제가 생성되었습니다!');
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
   });
 });
