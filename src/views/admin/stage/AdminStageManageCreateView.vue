@@ -20,7 +20,7 @@ type Artist = {
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
+const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
   validationSchema: {
     startTime(value: string) {
       if (!value) return '공연 시작 시간은 필수입니다.';
@@ -35,7 +35,6 @@ const { handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
 const startTimeField = useField('startTime');
 const ticketOpenTimeField = useField('ticketOpenTime');
 
-const loading = ref(false);
 const fetchedArtists = ref<Artist[]>([]);
 const artists = ref(new Map<number, Artist>());
 const showArtistSelectDialog = ref(false);
@@ -62,19 +61,17 @@ function removeArtist(artist: Artist) {
   artists.value.delete(artist.id);
 }
 
-const onSubmit = handleSubmit(form => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminStageService.createStage({
-    festivalId: parseInt(route.params.id[0]),
-    startTime: form.startTime,
-    ticketOpenTime: form.ticketOpenTime,
-    artistIds: [...artists.value.keys()],
-  }).then(() => {
+const onSubmit = handleSubmit(async form => {
+  try {
+    await AdminStageService.createStage({
+      festivalId: parseInt(route.params.id[0]),
+      startTime: form.startTime,
+      ticketOpenTime: form.ticketOpenTime,
+      artistIds: [...artists.value.keys()],
+    });
     handleReset();
-    loading.value = false;
     snackbarStore.showSuccess('공연이 생성되었습니다!');
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -82,7 +79,7 @@ const onSubmit = handleSubmit(form => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 </script>
 
@@ -151,7 +148,7 @@ const onSubmit = handleSubmit(form => {
 
   <CreateForm
     :on-submit="onSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
     form-title="공연 추가"
   >
     <div>

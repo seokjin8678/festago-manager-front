@@ -10,7 +10,7 @@ import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
+const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
   validationSchema: {
     schoolId(value: string) {
       if (!value) return '학교는 필수입니다.';
@@ -46,18 +46,16 @@ const posterImageUrlField = useField('posterImageUrl');
 
 const schools = ref<FetchOneSchoolResponse[]>([]);
 const fakeSchoolName = ref<string>('');
-const loading = ref(false);
 const fetchSchoolsLoading = ref(false);
 const showSchoolSelectDialog = ref(false);
 const schoolSearchKeyword = ref('');
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminFestivalService.createFestival(request).then(() => {
+
+const onSubmit = handleSubmit(async request => {
+  try {
+    await AdminFestivalService.createFestival(request);
     handleReset();
-    loading.value = false;
     snackbarStore.showSuccess('축제가 생성되었습니다!');
-  }).catch(e => {
+  }catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -65,7 +63,7 @@ const onSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 
 function fetchSchools() {
@@ -156,7 +154,7 @@ function selectSchool(school: FetchOneSchoolResponse) {
   </v-dialog>
   <CreateForm
     :on-submit="onSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
     form-title="축제 추가"
   >
     <v-text-field

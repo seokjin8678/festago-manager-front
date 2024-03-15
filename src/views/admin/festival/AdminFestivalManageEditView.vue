@@ -28,7 +28,7 @@ onMounted(() => {
   });
 });
 
-const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateFestivalRequest>({
+const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateFestivalRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '축제 이름은 필수입니다.';
@@ -55,20 +55,17 @@ const { meta, resetForm, setErrors, handleSubmit } = useForm<UpdateFestivalReque
 
 const festivalId = ref<number>();
 const schoolName = ref<string>();
-const loading = ref(false);
 const nameField = useField('name');
 const startDateField = useField('startDate');
 const endDateField = useField('endDate');
 const posterImageUrlField = useField('posterImageUrl');
 
-const onUpdateSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminFestivalService.updateFestival(festivalId.value!, request).then(() => {
-    loading.value = false;
+const onUpdateSubmit = handleSubmit(async request => {
+  try {
+    await AdminFestivalService.updateFestival(festivalId.value!, request);
     snackbarStore.showSuccess('축제가 수정되었습니다.');
     resetForm({ values: request });
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -76,7 +73,7 @@ const onUpdateSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 
 function onDeleteSubmit() {
@@ -97,7 +94,7 @@ function onDeleteSubmit() {
     form-title="축제 수정/삭제"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
     :is-touched="meta.dirty"
   >
     <v-text-field

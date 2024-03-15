@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate';
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
-import { ref } from 'vue';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { CreateSchoolRequest } from '@/api/spec/school/CreateSchoolApiSpec.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
+const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';
@@ -50,16 +49,13 @@ const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
 const logoUrlField = useField<string>('logoUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
-const loading = ref(false);
 
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminSchoolService.createSchool(request).then(() => {
+const onSubmit = handleSubmit(async request => {
+  try {
+    await AdminSchoolService.createSchool(request);
     handleReset();
-    loading.value = false;
     snackbarStore.showSuccess('학교가 생성되었습니다!');
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
@@ -67,7 +63,7 @@ const onSubmit = handleSubmit(request => {
         snackbarStore.showError(e.message);
       }
     } else throw e;
-  });
+  }
 });
 </script>
 
@@ -75,7 +71,7 @@ const onSubmit = handleSubmit(request => {
   <CreateForm
     :on-submit="onSubmit"
     form-title="학교 추가"
-    :loading="loading"
+    :loading="isSubmitting"
   >
     <v-text-field
       class="mb-3"
