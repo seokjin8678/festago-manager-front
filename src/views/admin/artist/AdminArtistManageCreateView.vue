@@ -9,7 +9,7 @@ import FestagoError from '@/api/FestagoError.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<CreateArtistRequest>({
+const { handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '아티스트 이름은 필수입니다.';
@@ -40,7 +40,11 @@ const onSubmit = handleSubmit(request => {
     snackbarStore.showSuccess('아티스트가 생성되었습니다!');
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
   });
 });

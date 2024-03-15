@@ -17,10 +17,12 @@ axiosInstance.interceptors.response.use(value => value, error => {
       router.push('/login').then(() => {
         const snackbarStore = useSnackbarStore();
         const authStore = useAuthStore();
-
         snackbarStore.showError(response.data.message);
         authStore.logout();
       });
+    }
+    if (response.data.errorCode === 'INVALID_REQUEST_ARGUMENT') {
+      console.log(response.data.result);
     }
     return Promise.reject(new FestagoError(
       response.data.errorCode,

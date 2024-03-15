@@ -4,6 +4,7 @@ class FestagoError implements Error {
   message: string;
   status: number;
   result: any;
+  isValidError = () => this.errorCode === 'INVALID_REQUEST_ARGUMENT'
 
   constructor(errorCode: string, message: string, status: number, result: any) {
     this.errorCode = errorCode;

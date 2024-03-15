@@ -8,7 +8,7 @@ import { CreateSchoolRequest } from '@/api/spec/school/CreateSchoolApiSpec.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
+const { handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '대학교 이름은 필수입니다.';
@@ -25,17 +25,17 @@ const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
     },
     logoUrl(value: string) {
       if (value) {
-        if (value.length >= 255) return '로고 URL은 255글자 미만이어야 합니다.'
-        if (!value.startsWith("https://")) return '로고 URL은 https://로 시작되어야 합니다.'
-        if (!/\.(png|jpg)$/.test(value)) return '로고 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.'
+        if (value.length >= 255) return '로고 URL은 255글자 미만이어야 합니다.';
+        if (!value.startsWith('https://')) return '로고 URL은 https://로 시작되어야 합니다.';
+        if (!/\.(png|jpg)$/.test(value)) return '로고 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
       }
       return true;
     },
     backgroundImageUrl(value: string) {
       if (value) {
         if (value.length >= 255) return '백그라운드 이미지 URL은 255글자 미만이어야 합니다.';
-        if (!value.startsWith("https://")) return '백그라운드 이미지 URL은 https://로 시작되어야 합니다.'
-        if (!/\.(png|jpg)$/.test(value)) return '백그라운드 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.'
+        if (!value.startsWith('https://')) return '백그라운드 이미지 URL은 https://로 시작되어야 합니다.';
+        if (!/\.(png|jpg)$/.test(value)) return '백그라운드 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
       }
       return true;
     },
@@ -61,7 +61,11 @@ const onSubmit = handleSubmit(request => {
     snackbarStore.showSuccess('학교가 생성되었습니다!');
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
   });
 });
