@@ -18,7 +18,7 @@ onMounted(() => {
   festivalId.value = parseInt(route.params.id as string);
   AdminFestivalService.fetchOneFestival(festivalId.value).then(response => {
     const result = response.data;
-    schoolName.value = result.school.name;
+    schoolName.value = result.schoolName;
     resetForm({ values: result });
   }).catch(e => {
     if (e instanceof FestagoError) {

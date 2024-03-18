@@ -1,5 +1,32 @@
 <script setup lang="ts">
 import RouterPath from '@/router/RouterPath.ts';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { FetchOneFestivalResponse } from '@/api/spec/festival/FetchOneFestivalApiSpec.ts';
+import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
+import FestagoError from '@/api/FestagoError.ts';
+import { router } from '@/router';
+import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import { stringToDateString } from '@/utils/DateFormatUtil.ts';
+
+const route = useRoute();
+const snackbarStore = useSnackbarStore();
+
+onMounted(() => {
+  festivalId.value = parseInt(route.params.id as string);
+  AdminFestivalService.fetchOneFestival(festivalId.value).then(response => {
+    festival.value = response.data;
+  }).catch(e => {
+    if (e instanceof FestagoError) {
+      router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
+      snackbarStore.showError('해당 축제를 찾을 수 없습니다.');
+    } else throw e;
+  });
+});
+
+const festivalId = ref<number>();
+const festival = ref<FetchOneFestivalResponse>();
+
 </script>
 
 <template>
@@ -25,41 +52,49 @@ import RouterPath from '@/router/RouterPath.ts';
                   variant="outlined"
                   label="ID"
                   :readonly="true"
+                  :model-value="festival?.id"
                 />
                 <v-text-field
                   variant="outlined"
                   label="이름"
                   :readonly="true"
+                  :model-value="festival?.name"
                 />
                 <v-text-field
                   variant="outlined"
                   label="학교 이름"
                   :readonly="true"
+                  :model-value="festival?.schoolName"
                 />
                 <v-text-field
                   variant="outlined"
                   label="축제 시작일"
                   :readonly="true"
+                  :model-value="festival?.startDate"
                 />
                 <v-text-field
                   variant="outlined"
                   label="축제 종료일"
                   :readonly="true"
+                  :model-value="festival?.endDate"
                 />
                 <v-text-field
                   variant="outlined"
                   label="축제 포스터 URL"
                   :readonly="true"
+                  :model-value="festival?.posterImageUrl"
                 />
                 <v-text-field
                   variant="outlined"
                   label="생성일자"
                   :readonly="true"
+                  :model-value="stringToDateString(festival?.createdAt)"
                 />
                 <v-text-field
                   variant="outlined"
                   label="수정일자"
                   :readonly="true"
+                  :model-value="stringToDateString(festival?.updatedAt)"
                 />
               </div>
             </v-card-item>
