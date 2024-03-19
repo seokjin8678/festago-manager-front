@@ -1,6 +1,39 @@
 <script setup lang="ts">
 import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
+import RootAdminService from '@/api/admin/RootAdminService.ts';
+import FestagoError from '@/api/FestagoError.ts';
+
+function showServerBuildTime() {
+  RootAdminService.fetchServerBuildTime().then(response => {
+    alert(response.data);
+  });
+}
+
+function requestInfoLog() {
+  RootAdminService.logInfo().catch(e => {
+    if (e instanceof FestagoError) {
+      alert('Info 로그를 서버에 남겼습니다.');
+    } else throw e;
+  });
+}
+
+function requestWarnLog() {
+  RootAdminService.logWarn().catch(e => {
+    if (e instanceof FestagoError) {
+      alert('Warn 로그를 서버에 남겼습니다.');
+    } else throw e;
+  });
+}
+
+function requestErrorLog() {
+  RootAdminService.logError().catch(e => {
+    if (e instanceof FestagoError) {
+      alert('Error 로그를 서버에 남겼습니다.');
+    } else throw e;
+  });
+}
+
 </script>
 
 <template>
@@ -19,6 +52,7 @@ import RouterPath from '@/router/RouterPath.ts';
           <v-card
             class="py-2"
             variant="outlined"
+            @click="showServerBuildTime"
           >
             <v-card-item>
               <span class="mdi mdi-pencil-outline" />
@@ -30,6 +64,7 @@ import RouterPath from '@/router/RouterPath.ts';
           <v-card
             class="py-2"
             variant="outlined"
+            @click="requestInfoLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
@@ -41,6 +76,7 @@ import RouterPath from '@/router/RouterPath.ts';
           <v-card
             class="py-2"
             variant="outlined"
+            @click="requestWarnLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
@@ -52,6 +88,7 @@ import RouterPath from '@/router/RouterPath.ts';
           <v-card
             class="py-2"
             variant="outlined"
+            @click="requestErrorLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
