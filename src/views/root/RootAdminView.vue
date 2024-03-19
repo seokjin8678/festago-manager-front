@@ -3,6 +3,12 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import RootAdminService from '@/api/admin/RootAdminService.ts';
 import FestagoError from '@/api/FestagoError.ts';
+import { ref } from 'vue';
+import ConfirmDialog from '@/components/dialog/ConfirmDialog.vue';
+
+const showLogDialog = ref(false);
+const dialogAction = ref(() => {
+});
 
 function showServerBuildTime() {
   RootAdminService.fetchServerBuildTime().then(response => {
@@ -43,6 +49,12 @@ function requestErrorLog() {
     <h1 class="my-2">
       루트 어드민 관리 페이지
     </h1>
+    <ConfirmDialog
+      dialog-title="로그를 남길까요?"
+      confirm-text="네"
+      :confirm-action="dialogAction"
+      v-model="showLogDialog"
+    />
     <div>
       <h3 class="my-2 pt-5">
         디버깅 기능
@@ -64,7 +76,7 @@ function requestErrorLog() {
           <v-card
             class="py-2"
             variant="outlined"
-            @click="requestInfoLog"
+            @click="showLogDialog = true; dialogAction = requestInfoLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
@@ -76,7 +88,7 @@ function requestErrorLog() {
           <v-card
             class="py-2"
             variant="outlined"
-            @click="requestWarnLog"
+            @click="showLogDialog = true; dialogAction = requestWarnLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
@@ -88,7 +100,7 @@ function requestErrorLog() {
           <v-card
             class="py-2"
             variant="outlined"
-            @click="requestErrorLog"
+            @click="showLogDialog = true; dialogAction = requestErrorLog"
           >
             <v-card-item>
               <span class="mdi mdi-alert-outline" />
