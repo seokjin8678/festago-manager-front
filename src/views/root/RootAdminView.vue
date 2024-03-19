@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { router } from '@/router';
+import RouterPath from '@/router/RouterPath.ts';
 </script>
 
 <template>
@@ -67,6 +69,7 @@
           <v-card
             class="py-2"
             variant="outlined"
+            @click="router.push(RouterPath.Admin.AdminAccountCreatePage.path)"
           >
             <v-card-item>
               <span class="mdi mdi-plus-box-multiple-outline" />

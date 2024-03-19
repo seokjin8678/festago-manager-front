@@ -15,6 +15,7 @@ import AdminFestivalManageListView from '@/views/admin/festival/AdminFestivalMan
 import AdminFestivalManageEditView from '@/views/admin/festival/AdminFestivalManageEditView.vue';
 import AdminFestivalManageDetailView from '@/views/admin/festival/AdminFestivalManageDetailView.vue';
 import AdminStageManageCreateView from '@/views/admin/stage/AdminStageManageCreateView.vue';
+import AdminAccountCreateView from '@/views/admin/root/AdminAccountCreateView.vue';
 
 const RouterPath = {
   Common: {
@@ -41,6 +42,11 @@ const RouterPath = {
       path: '/root',
       name: 'rootAdminPage',
       component: RootAdminView,
+    },
+    AdminAccountCreatePage: {
+      path: '/root/admin/create',
+      name: 'adminAccountCreatePage',
+      component: AdminAccountCreateView,
     },
     AdminMyPage: {
       path: '/admin/my-page',
