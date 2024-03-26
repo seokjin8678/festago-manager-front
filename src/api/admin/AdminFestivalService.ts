@@ -9,6 +9,9 @@ import FetchFestivalsApiSpec, { FetchFestivalsResponse } from '@/api/spec/festiv
 import FetchOneFestivalApiSpec, { FetchOneFestivalResponse } from '@/api/spec/festival/FetchOneFestivalApiSpec.ts';
 import UpdateFestivalApiSpec, { UpdateFestivalRequest } from '@/api/spec/festival/UpdateFestivalApiSpec.ts';
 import DeleteFestivalApiSpec from '@/api/spec/festival/DeleteFestivalApiSpec.ts';
+import FetchFestivalStagesApiSpec, {
+  FetchFestivalStagesResponse,
+} from '@/api/spec/festival/FetchFestivalStagesApiSpec.ts';
 
 const AdminFestivalService = {
   createFestival(request: CreateFestivalRequest) {
@@ -31,6 +34,9 @@ const AdminFestivalService = {
   },
   deleteFestival(festivalId: number) {
     return ApiService.request(DeleteFestivalApiSpec(festivalId));
+  },
+  fetchFestivalStages(festivalId: number) {
+    return ApiService.request<FetchFestivalStagesResponse>(FetchFestivalStagesApiSpec(festivalId));
   },
 };
 

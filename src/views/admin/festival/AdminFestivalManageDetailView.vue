@@ -8,6 +8,7 @@ import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { stringToDateString } from '@/utils/DateFormatUtil.ts';
+import { FetchFestivalStagesResponse } from '@/api/spec/festival/FetchFestivalStagesApiSpec.ts';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -22,10 +23,14 @@ onMounted(() => {
       snackbarStore.showError('해당 축제를 찾을 수 없습니다.');
     } else throw e;
   });
+  AdminFestivalService.fetchFestivalStages(festivalId.value).then(response => {
+    stages.value = response.data;
+  });
 });
 
 const festivalId = ref<number>();
 const festival = ref<FetchOneFestivalResponse>();
+const stages = ref<FetchFestivalStagesResponse>([]);
 
 </script>
 
@@ -119,15 +124,13 @@ const festival = ref<FetchOneFestivalResponse>();
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>2077-06-30T18:00:00</td>
-              <td>2077-06-30T18:00:00</td>
-              <td>장기하,아이유,에픽하이,장기하,아이유,에픽하이</td>
-            </tr>
-            <tr>
-              <td>2077-06-30T18:00:00</td>
-              <td>2077-06-30T18:00:00</td>
-              <td>장기하,아이유,에픽하이</td>
+            <tr
+              v-for="stage in stages"
+              :key="stage.id"
+            >
+              <td>{{ stringToDateString(stage.startDateTime) }}</td>
+              <td>{{ stringToDateString(stage.ticketOpenTime) }}</td>
+              <td>{{ stage.artists.map(artist => artist.name).join(', ') }}</td>
             </tr>
             </tbody>
           </v-table>
