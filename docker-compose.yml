@@ -1,0 +1,6 @@
+services:
+  front:
+    container_name: front
+    image: front
+    ports:
+      - 3000:3000
