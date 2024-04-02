@@ -14,7 +14,7 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArt
       if (!value) return '아티스트 이름은 필수입니다.';
       return true;
     },
-    profileImage(value: string) {
+    profileImageUrl(value: string) {
       if (!value) return '프로필 이미지 URL은 필수입니다.';
       return true;
     },
@@ -26,7 +26,7 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArt
 });
 
 const nameField = useField('name');
-const profileImageUrlField = useField('profileImage');
+const profileImageUrlField = useField('profileImageUrl');
 const backgroundImageUrlField = useField('backgroundImageUrl');
 const onSubmit = handleSubmit(async request => {
   try {

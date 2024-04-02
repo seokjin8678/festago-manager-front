@@ -2,7 +2,7 @@ import ApiSpec from '@/api/spec/ApiSpec.ts';
 
 export type CreateArtistRequest = {
   name: string,
-  profileImage: string,
+  profileImageUrl: string,
   backgroundImageUrl: string
 }
 

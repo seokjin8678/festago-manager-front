@@ -32,7 +32,7 @@ const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<Updat
       if (!value) return '아티스트 이름은 필수입니다.';
       return true;
     },
-    profileImage(value: string) {
+    profileImageUrl(value: string) {
       if (!value) return '프로필 이미지 URL은 필수입니다.';
       return true;
     },
@@ -72,7 +72,7 @@ function onDeleteSubmit() {
 
 const artistId = ref<number>();
 const nameField = useField<string>('name');
-const profileImageField = useField<string>('profileImage');
+const profileImageUrlField = useField<string>('profileImageUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 </script>
 
@@ -101,8 +101,8 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
     />
     <v-text-field
       class="mb-3"
-      v-model="profileImageField.value.value"
-      :error-messages="profileImageField.errorMessage.value"
+      v-model="profileImageUrlField.value.value"
+      :error-messages="profileImageUrlField.errorMessage.value"
       placeholder="https://festa-go.site/profile-image.png"
       variant="outlined"
       label="아티스트 프로필 이미지 URL"
