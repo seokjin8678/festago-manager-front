@@ -7,13 +7,12 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  accessToken: string,
   username: string,
   authType: AuthType
 }
 
 const LoginApiSpec: ApiSpec = {
-  url: '/admin/api/login',
+  url: '/admin/api/v1/auth/login',
   method: 'POST',
 };
 

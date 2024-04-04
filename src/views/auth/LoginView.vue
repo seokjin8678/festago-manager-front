@@ -3,13 +3,11 @@ import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { ref } from 'vue';
 import { router } from '@/router';
 import AuthService from '@/api/auth/AuthService.ts';
-import ApiService from '@/api';
 import FestagoError from '@/api/FestagoError.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
-import { AuthType } from '@/type/AuthType.ts';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
@@ -34,11 +32,8 @@ const onSubmit = handleSubmit(async request => {
   try {
     const response = await AuthService.login(request);
     handleReset();
-    const { accessToken } = response.data;
-    const username = 'ADMIN';
-    const authType = AuthType.ADMIN;
-    ApiService.changeAccessToken(accessToken);
-    authStore.login({ accessToken, username, authType });
+    const { username, authType } = response.data;
+    authStore.login({ username, authType });
 
     await router.push(RouterPath.Common.HomePage.path);
     snackbarStore.showSuccess(`${username}님, 환영합니다!`);
