@@ -7,7 +7,6 @@ const AuthService = {
     return ApiService.request<LoginResponse>(LoginApiSpec, request);
   },
   logout() {
-    ApiService.changeAccessToken('');
     return ApiService.request<LogoutResponse>(LogoutApiSpec);
   },
 };

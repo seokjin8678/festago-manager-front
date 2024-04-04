@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { AuthType } from '@/type/AuthType.ts';
-import ApiService from '@/api';
 
 export const useAuthStore = defineStore('auth', () => {
-  const accessToken = ref('');
   const username = ref('');
   const authType = ref<AuthType>(AuthType.UNASSIGNED);
+  const tokenExpirationTime = ref(0);
 
   const isAdmin = computed(() => {
     return authType.value === AuthType.ADMIN || authType.value === AuthType.ROOT;
@@ -16,28 +15,32 @@ export const useAuthStore = defineStore('auth', () => {
     return authType.value !== AuthType.UNASSIGNED;
   });
 
+  const isTokenExpired = computed(() => {
+    return tokenExpirationTime.value <= Date.now();
+  });
+
   function login(dto: {
-    accessToken: string,
     username: string,
     authType: AuthType
   }) {
-    accessToken.value = dto.accessToken;
     username.value = dto.username;
     authType.value = dto.authType;
+    tokenExpirationTime.value = Date.now() + 6 * 60 * 60 * 1000; // 6시간
   }
 
   function logout() {
-    accessToken.value = '';
     username.value = '';
     authType.value = AuthType.UNASSIGNED;
+    tokenExpirationTime.value = 0;
   }
 
   return {
-    accessToken,
     username,
     authType,
+    tokenExpirationTime,
     isAdmin,
     isLogin,
+    isTokenExpired,
     login,
     logout,
   };
@@ -46,7 +49,9 @@ export const useAuthStore = defineStore('auth', () => {
     storage: localStorage,
     afterRestore(_context) {
       const authStore = useAuthStore();
-      ApiService.changeAccessToken(authStore.accessToken);
+      if (authStore.isTokenExpired) {
+        authStore.logout();
+      }
     },
   },
 });

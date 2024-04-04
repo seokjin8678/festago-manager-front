@@ -10,6 +10,20 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+// TODO 리프레쉬 토큰 구현해야함
+axiosInstance.interceptors.request.use(value => {
+  const authStore = useAuthStore();
+  if (authStore.isLogin && authStore.isTokenExpired) {
+    router.push('/login').then(() => {
+      const snackbarStore = useSnackbarStore();
+      snackbarStore.showError('로그인 토큰이 만료되었습니다.');
+      authStore.logout();
+    });
+    throw new Error('로그인 토큰이 만료되었습니다.')
+  }
+  return value;
+})
+
 axiosInstance.interceptors.response.use(value => value, error => {
   const response = error.response;
   if (response) {
@@ -52,10 +66,6 @@ const ApiService = {
     const { url, method } = spec;
     const apiAction = apiActions[method];
     return apiAction(url, data);
-  },
-
-  changeAccessToken(accessToken: string) {
-    axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   },
 };
 

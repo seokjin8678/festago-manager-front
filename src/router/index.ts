@@ -15,7 +15,8 @@ export const router = createRouter({
 });
 router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
-  if (!authStore.isLogin) {
+  if (!authStore.isLogin || authStore.isTokenExpired) {
+    authStore.logout();
     if (to.path === '/login') {
       return next();
     }
