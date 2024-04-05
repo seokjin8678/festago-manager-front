@@ -42,8 +42,15 @@ const fetchArtistsLoading = ref(false);
 const artistSearchKeyword = ref('');
 
 function fetchArtists() {
-  AdminArtistService.fetchArtists().then(response => {
-    fetchedArtists.value = response.data.map(artist => (
+  AdminArtistService.fetchArtists({
+    page: 1,
+    itemsPerPage: 10,
+    sortBy: [],
+  }, {
+    searchKeyword: artistSearchKeyword.value,
+    searchFilter: 'name',
+  }).then(response => {
+    fetchedArtists.value = response.data.content.map(artist => (
       { id: artist.id, name: artist.name }
     ));
   });
