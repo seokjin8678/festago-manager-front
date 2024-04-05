@@ -1,10 +1,10 @@
 import ApiSpec from '@/api/spec/ApiSpec.ts';
+import { FetchOneArtistResponse } from '@/api/spec/artist/FetchOneArtistApiSpec.ts';
 
 export type FetchArtistsResponse = {
-  id: number,
-  name: string,
-  profileImage: string
-}[]
+  content: FetchOneArtistResponse[],
+  totalElements: number
+}
 
 const FetchArtistsApiSpec: ApiSpec = {
   url: '/admin/api/v1/artists',
