@@ -16,7 +16,6 @@ const snackbarStore = useSnackbarStore();
 onMounted(() => {
   artistId.value = parseInt(route.params.id as string);
   AdminArtistService.fetchOneArtist(artistId.value).then(response => {
-    // TODO 백엔드 아티스트 조회에 backgroundImageUrl을 추가해야함
     resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
