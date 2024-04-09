@@ -44,7 +44,7 @@ const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSch
   },
 });
 
-const socialMediaTypeField = useField<string>('socialMediaType');
+const socialMediaTypeField = useField<SocialMediaType>('socialMediaType');
 const nameField = useField<string>('name');
 const logoUrlField = useField<string>('logoUrl');
 const urlField = useField<string>('url');
