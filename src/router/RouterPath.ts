@@ -16,6 +16,10 @@ import AdminFestivalManageEditView from '@/views/admin/festival/AdminFestivalMan
 import AdminFestivalManageDetailView from '@/views/admin/festival/AdminFestivalManageDetailView.vue';
 import AdminStageManageCreateView from '@/views/admin/stage/AdminStageManageCreateView.vue';
 import AdminAccountCreateView from '@/views/admin/root/AdminAccountCreateView.vue';
+import AdminSchoolManageDetailView from '@/views/admin/school/AdminSchoolManageDetailView.vue';
+import AdminSchoolSocialMediaManageCreateView
+  from '@/views/admin/school/socialmedia/AdminSchoolSocialMediaManageCreateView.vue';
+import AdminSocialMediaManageEditView from '@/views/admin/socialmedia/AdminSocialMediaManageEditView.vue';
 
 const RouterPath = {
   Common: {
@@ -53,6 +57,11 @@ const RouterPath = {
       name: 'adminMyPage',
       component: AdminMyPageView,
     },
+    AdminSchoolManageDetailView: {
+      path: '/admin/schools/:id',
+      name: 'AdminSchoolManageDetailPage',
+      component: AdminSchoolManageDetailView,
+    },
     AdminSchoolManageListPage: {
       path: '/admin/schools',
       name: 'adminSchoolManageListPage',
@@ -67,6 +76,11 @@ const RouterPath = {
       path: '/admin/schools/:id/edit',
       name: 'adminSchoolManageEditPage',
       component: AdminSchoolManageEditView,
+    },
+    AdminSchoolSocialMediaManageCreateView: {
+      path: '/admin/schools/:id/socialmedia/create',
+      name: 'AdminSchoolSocialMediaManageCreatePage',
+      component: AdminSchoolSocialMediaManageCreateView,
     },
     AdminArtistManageCreatePage: {
       path: '/admin/artist/create', // 명시적으로 단수형 사용
@@ -107,6 +121,11 @@ const RouterPath = {
       path: '/admin/festivals/:id/stage/create',
       name: 'adminStageManageCreatePage',
       component: AdminStageManageCreateView,
+    },
+    AdminSocialMediaManageEditView: {
+      path: '/admin/socialmedias/:id/edit',
+      name: 'AdminSocialMediaManageEditPage',
+      component: AdminSocialMediaManageEditView,
     },
   },
   School: {
