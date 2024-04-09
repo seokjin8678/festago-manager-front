@@ -13,7 +13,7 @@ const tableHeaders = [
   { title: '이름', key: 'name' },
   { title: '도메인', key: 'domain' },
   { title: '지역', key: 'region' },
-  { title: '수정/삭제', key: 'actions', sortable: false },
+  { title: '상세', key: 'actions', sortable: false },
 ];
 const searchFilters = [
   { title: 'ID', value: 'id' },
@@ -67,7 +67,7 @@ function fetch(paging: PagingRequest) {
       :fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
-      :detail-page-router-name="RouterPath.Admin.AdminSchoolManageEditPage.name"
+      :detail-page-router-name="RouterPath.Admin.AdminSchoolManageDetailView.name"
     />
   </v-card>
 </template>
