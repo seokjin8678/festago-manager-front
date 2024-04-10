@@ -10,6 +10,8 @@ import { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { FetchSocialMediasResponse } from '@/api/spec/socialmedia/FetchSocialMediasApiSpec.ts';
 import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
+import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -45,53 +47,14 @@ onMounted(() => {
     <div>
       <v-row>
         <v-col :cols="5">
-          <h3 class="my-2 pt-5">
-            학교 정보
-          </h3>
-          <v-card>
-            <v-card-item
-              class="px-8 py-2"
-            >
-              <div class="py-2">
-                <v-text-field
-                  variant="outlined"
-                  label="ID"
-                  :readonly="true"
-                  :model-value="school?.id"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="이름"
-                  :readonly="true"
-                  :model-value="school?.name"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="도메인"
-                  :readonly="true"
-                  :model-value="school?.domain"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="지역"
-                  :readonly="true"
-                  :model-value="school?.region"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="로고 URL"
-                  :readonly="true"
-                  :model-value="school?.logoUrl"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="백그라운드 이미지 URL"
-                  :readonly="true"
-                  :model-value="school?.backgroundImageUrl"
-                />
-              </div>
-            </v-card-item>
-          </v-card>
+          <ReadonlyForm title="학교 정보">
+            <ReadonlyField label="ID" :value="school?.id" />
+            <ReadonlyField label="이름" :value="school?.name" />
+            <ReadonlyField label="도메인" :value="school?.domain" />
+            <ReadonlyField label="지역" :value="school?.region" />
+            <ReadonlyField label="로고 URL" :value="school?.logoUrl" />
+            <ReadonlyField label="백그라운드 이미지 URL" :value="school?.backgroundImageUrl" />
+          </ReadonlyForm>
         </v-col>
         <v-col :cols="7">
           <h3 class="my-2 pt-5">

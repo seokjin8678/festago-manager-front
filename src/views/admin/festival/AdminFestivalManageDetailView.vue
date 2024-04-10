@@ -9,6 +9,8 @@ import { router } from '@/router';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { stringToDateString } from '@/utils/DateFormatUtil.ts';
 import { FetchFestivalStagesResponse } from '@/api/spec/festival/FetchFestivalStagesApiSpec.ts';
+import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -45,65 +47,16 @@ const stages = ref<FetchFestivalStagesResponse>([]);
     <div>
       <v-row>
         <v-col :cols="5">
-          <h3 class="my-2 pt-5">
-            축제 정보
-          </h3>
-          <v-card>
-            <v-card-item
-              class="px-8 py-2"
-            >
-              <div class="py-2">
-                <v-text-field
-                  variant="outlined"
-                  label="ID"
-                  :readonly="true"
-                  :model-value="festival?.id"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="이름"
-                  :readonly="true"
-                  :model-value="festival?.name"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="학교 이름"
-                  :readonly="true"
-                  :model-value="festival?.schoolName"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="축제 시작일"
-                  :readonly="true"
-                  :model-value="festival?.startDate"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="축제 종료일"
-                  :readonly="true"
-                  :model-value="festival?.endDate"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="축제 포스터 URL"
-                  :readonly="true"
-                  :model-value="festival?.posterImageUrl"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="생성일자"
-                  :readonly="true"
-                  :model-value="stringToDateString(festival?.createdAt)"
-                />
-                <v-text-field
-                  variant="outlined"
-                  label="수정일자"
-                  :readonly="true"
-                  :model-value="stringToDateString(festival?.updatedAt)"
-                />
-              </div>
-            </v-card-item>
-          </v-card>
+          <ReadonlyForm title="축제 정보">
+            <ReadonlyField label="ID" :value="festival?.id" />
+            <ReadonlyField label="이름" :value="festival?.name" />
+            <ReadonlyField label="학교 이름" :value="festival?.schoolName" />
+            <ReadonlyField label="축제 시작일" :value="festival?.startDate" />
+            <ReadonlyField label="축제 종료일" :value="festival?.endDate" />
+            <ReadonlyField label="축제 포스터 URL" :value="festival?.posterImageUrl" />
+            <ReadonlyField label="생성일자" :value="festival?.createdAt" />
+            <ReadonlyField label="수정일자" :value="festival?.updatedAt" />
+          </ReadonlyForm>
         </v-col>
         <v-col :cols="7">
           <h3 class="my-2 pt-5">
