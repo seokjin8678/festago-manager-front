@@ -13,6 +13,8 @@ import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
 import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import SimpleTable from '@/components/table/SimpleTable.vue';
+import ActionTab from '@/components/tab/ActionTab.vue';
+import ActionButton from '@/components/tab/ActionButton.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -45,82 +47,56 @@ onMounted(() => {
       학교 상세 페이지
     </h1>
 
-    <div>
-      <v-row>
-        <v-col :cols="5">
-          <ReadonlyForm title="학교 정보">
-            <ReadonlyField label="ID" :value="school?.id" />
-            <ReadonlyField label="이름" :value="school?.name" />
-            <ReadonlyField label="도메인" :value="school?.domain" />
-            <ReadonlyField label="지역" :value="school?.region" />
-            <ReadonlyField label="로고 URL" :value="school?.logoUrl" />
-            <ReadonlyField label="백그라운드 이미지 URL" :value="school?.backgroundImageUrl" />
-          </ReadonlyForm>
-        </v-col>
-        <v-col :cols="7">
-          <SimpleTable
-            title="소셜미디어 목록"
-            :thead="['ID', '소셜미디어 타입', '이름', '수정/삭제']"
-          >
-            <tr v-for="socialMedia in socialMedias">
-              <td>{{ socialMedia.id }}</td>
-              <td>{{ socialMedia.socialMediaType }}</td>
-              <td>{{ socialMedia.name }}</td>
-              <td>
-                <v-icon
-                  class="mr-2"
-                  icon="mdi-pencil"
-                  color="grey-darken-3"
-                  @click="$router.push({
+    <v-row>
+      <v-col :cols="5">
+        <ReadonlyForm title="학교 정보">
+          <ReadonlyField label="ID" :value="school?.id" />
+          <ReadonlyField label="이름" :value="school?.name" />
+          <ReadonlyField label="도메인" :value="school?.domain" />
+          <ReadonlyField label="지역" :value="school?.region" />
+          <ReadonlyField label="로고 URL" :value="school?.logoUrl" />
+          <ReadonlyField label="백그라운드 이미지 URL" :value="school?.backgroundImageUrl" />
+        </ReadonlyForm>
+      </v-col>
+      <v-col :cols="7">
+        <SimpleTable
+          title="소셜미디어 목록"
+          :thead="['ID', '소셜미디어 타입', '이름', '수정/삭제']"
+        >
+          <tr v-for="socialMedia in socialMedias">
+            <td>{{ socialMedia.id }}</td>
+            <td>{{ socialMedia.socialMediaType }}</td>
+            <td>{{ socialMedia.name }}</td>
+            <td>
+              <v-icon
+                class="mr-2"
+                icon="mdi-pencil"
+                color="grey-darken-3"
+                @click="$router.push({
                     name: RouterPath.Admin.AdminSocialMediaManageEditView.name,
                     params: { id: socialMedia.id }
                   })"
-                />
-              </td>
-            </tr>
-          </SimpleTable>
-        </v-col>
-      </v-row>
-    </div>
+              />
+            </td>
+          </tr>
+        </SimpleTable>
+      </v-col>
+    </v-row>
 
-    <div>
-      <h3 class="my-2 pt-5">
-        학교 관리
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="$router.push(RouterPath.Admin.AdminSchoolManageEditPage)"
-          >
-            <v-card-item>
-              <span class="mdi mdi-pencil-outline" />
-              학교 수정/삭제
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+    <ActionTab title="학교 관리">
+      <ActionButton
+        name="학교 수정/삭제"
+        icon="mdi-pencil-outline"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageEditPage)"
+      />
+    </ActionTab>
 
-    <div>
-      <h3 class="my-2 pt-5">
-        소셜미디어 관리
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreateView)"
-          >
-            <v-card-item>
-              <span class="mdi mdi-plus-box-multiple-outline" />
-              소셜미디어 추가
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+    <ActionTab title="소셜미디어 관리">
+      <ActionButton
+        name="소셜미디어 추가"
+        icon="mdi-plus-box-multiple-outline"
+        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreateView)"
+      />
+    </ActionTab>
   </v-container>
 </template>

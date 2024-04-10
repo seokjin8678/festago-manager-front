@@ -12,6 +12,8 @@ import { FetchFestivalStagesResponse } from '@/api/spec/festival/FetchFestivalSt
 import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import SimpleTable from '@/components/table/SimpleTable.vue';
+import ActionTab from '@/components/tab/ActionTab.vue';
+import ActionButton from '@/components/tab/ActionButton.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -45,84 +47,51 @@ const stages = ref<FetchFestivalStagesResponse>([]);
       축제 상세 페이지
     </h1>
 
-    <div>
-      <v-row>
-        <v-col :cols="5">
-          <ReadonlyForm title="축제 정보">
-            <ReadonlyField label="ID" :value="festival?.id" />
-            <ReadonlyField label="이름" :value="festival?.name" />
-            <ReadonlyField label="학교 이름" :value="festival?.schoolName" />
-            <ReadonlyField label="축제 시작일" :value="festival?.startDate" />
-            <ReadonlyField label="축제 종료일" :value="festival?.endDate" />
-            <ReadonlyField label="축제 포스터 URL" :value="festival?.posterImageUrl" />
-            <ReadonlyField label="생성일자" :value="festival?.createdAt" />
-            <ReadonlyField label="수정일자" :value="festival?.updatedAt" />
-          </ReadonlyForm>
-        </v-col>
-        <v-col :cols="7">
-          <SimpleTable
-            title="공연 정보"
-            :thead="['시작시간', '티켓 오픈 시간', '아티스트 목록']"
-          >
-            <tr v-for="stage in stages">
-              <td>{{ stringToDateString(stage.startDateTime) }}</td>
-              <td>{{ stringToDateString(stage.ticketOpenTime) }}</td>
-              <td>{{ stage.artists.map(artist => artist.name).join(', ') }}</td>
-            </tr>
-          </SimpleTable>
-        </v-col>
-      </v-row>
-    </div>
+    <v-row>
+      <v-col :cols="5">
+        <ReadonlyForm title="축제 정보">
+          <ReadonlyField label="ID" :value="festival?.id" />
+          <ReadonlyField label="이름" :value="festival?.name" />
+          <ReadonlyField label="학교 이름" :value="festival?.schoolName" />
+          <ReadonlyField label="축제 시작일" :value="festival?.startDate" />
+          <ReadonlyField label="축제 종료일" :value="festival?.endDate" />
+          <ReadonlyField label="축제 포스터 URL" :value="festival?.posterImageUrl" />
+          <ReadonlyField label="생성일자" :value="festival?.createdAt" />
+          <ReadonlyField label="수정일자" :value="festival?.updatedAt" />
+        </ReadonlyForm>
+      </v-col>
+      <v-col :cols="7">
+        <SimpleTable
+          title="공연 정보"
+          :thead="['시작시간', '티켓 오픈 시간', '아티스트 목록']"
+        >
+          <tr v-for="stage in stages">
+            <td>{{ stringToDateString(stage.startDateTime) }}</td>
+            <td>{{ stringToDateString(stage.ticketOpenTime) }}</td>
+            <td>{{ stage.artists.map(artist => artist.name).join(', ') }}</td>
+          </tr>
+        </SimpleTable>
+      </v-col>
+    </v-row>
 
-    <div>
-      <h3 class="my-2 pt-5">
-        축제 관리
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="$router.push(RouterPath.Admin.AdminFestivalManageEditPage)"
-          >
-            <v-card-item>
-              <span class="mdi mdi-pencil-outline" />
-              축제 수정/삭제
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+    <ActionTab title="축제 관리">
+      <ActionButton
+        name="축제 수정/삭제"
+        icon="mdi-pencil-outline"
+        @action="$router.push(RouterPath.Admin.AdminFestivalManageEditPage)"
+      />
+    </ActionTab>
 
-    <div>
-      <h3 class="my-2 pt-5">
-        공연 관리
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="$router.push(RouterPath.Admin.AdminStageManageCreatePage)"
-          >
-            <v-card-item>
-              <span class="mdi mdi-plus-box-multiple-outline" />
-              공연 추가
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-pencil-outline" />
-              공연 수정/삭제
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+    <ActionTab title="공연 관리">
+      <ActionButton
+        name="공연 추가"
+        icon="mdi-plus-box-multiple-outline"
+        @action="$router.push(RouterPath.Admin.AdminStageManageCreatePage)"
+      />
+      <ActionButton
+        name="공연 수정/삭제"
+        icon="mdi-pencil-outline"
+      />
+    </ActionTab>
   </v-container>
 </template>
