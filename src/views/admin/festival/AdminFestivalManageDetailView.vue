@@ -11,6 +11,7 @@ import { stringToDateString } from '@/utils/DateFormatUtil.ts';
 import { FetchFestivalStagesResponse } from '@/api/spec/festival/FetchFestivalStagesApiSpec.ts';
 import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import SimpleTable from '@/components/table/SimpleTable.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -59,34 +60,16 @@ const stages = ref<FetchFestivalStagesResponse>([]);
           </ReadonlyForm>
         </v-col>
         <v-col :cols="7">
-          <h3 class="my-2 pt-5">
-            공연 정보
-          </h3>
-          <v-table>
-            <thead>
-            <tr>
-              <th id="startTime">
-                시작 시간
-              </th>
-              <th id="ticketOpenTime">
-                티켓 오픈 시간
-              </th>
-              <th id="artists">
-                아티스트 목록
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-              v-for="stage in stages"
-              :key="stage.id"
-            >
+          <SimpleTable
+            title="공연 정보"
+            :thead="['시작시간', '티켓 오픈 시간', '아티스트 목록']"
+          >
+            <tr v-for="stage in stages">
               <td>{{ stringToDateString(stage.startDateTime) }}</td>
               <td>{{ stringToDateString(stage.ticketOpenTime) }}</td>
               <td>{{ stage.artists.map(artist => artist.name).join(', ') }}</td>
             </tr>
-            </tbody>
-          </v-table>
+          </SimpleTable>
         </v-col>
       </v-row>
     </div>

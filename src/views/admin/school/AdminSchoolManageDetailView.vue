@@ -12,6 +12,7 @@ import { FetchSocialMediasResponse } from '@/api/spec/socialmedia/FetchSocialMed
 import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
 import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import SimpleTable from '@/components/table/SimpleTable.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -57,31 +58,11 @@ onMounted(() => {
           </ReadonlyForm>
         </v-col>
         <v-col :cols="7">
-          <h3 class="my-2 pt-5">
-            소셜미디어 목록
-          </h3>
-          <v-table>
-            <thead>
-            <tr>
-              <th id="id">
-                ID
-              </th>
-              <th id="socialMediaType">
-                소셜미디어 타입
-              </th>
-              <th id="name">
-                이름
-              </th>
-              <th id="edit">
-                수정/삭제
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr
-              v-for="socialMedia in socialMedias"
-              :key="socialMedia.id"
-            >
+          <SimpleTable
+            title="소셜미디어 목록"
+            :thead="['ID', '소셜미디어 타입', '이름', '수정/삭제']"
+          >
+            <tr v-for="socialMedia in socialMedias">
               <td>{{ socialMedia.id }}</td>
               <td>{{ socialMedia.socialMediaType }}</td>
               <td>{{ socialMedia.name }}</td>
@@ -97,8 +78,7 @@ onMounted(() => {
                 />
               </td>
             </tr>
-            </tbody>
-          </v-table>
+          </SimpleTable>
         </v-col>
       </v-row>
     </div>
