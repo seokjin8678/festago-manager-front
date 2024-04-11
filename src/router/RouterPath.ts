@@ -77,7 +77,7 @@ const RouterPath = {
       name: 'adminSchoolManageEditPage',
       component: AdminSchoolManageEditView,
     },
-    AdminSchoolSocialMediaManageCreateView: {
+    AdminSchoolSocialMediaManageCreatePage: {
       path: '/admin/schools/:id/socialmedia/create',
       name: 'AdminSchoolSocialMediaManageCreatePage',
       component: AdminSchoolSocialMediaManageCreateView,

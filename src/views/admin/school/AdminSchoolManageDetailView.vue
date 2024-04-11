@@ -95,7 +95,7 @@ onMounted(() => {
       <ActionButton
         name="소셜미디어 추가"
         icon="mdi-plus-box-multiple-outline"
-        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreateView)"
+        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreatePage)"
       />
     </ActionTab>
   </v-container>
