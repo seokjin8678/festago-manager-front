@@ -12,7 +12,7 @@ import { PagingRequest } from '@/api/PagingRequest.ts';
 const tableHeaders = [
   { title: 'ID', key: 'id' },
   { title: '이름', key: 'name' },
-  { title: '수정/삭제', key: 'actions', sortable: false },
+  { title: '상세', key: 'actions', sortable: false },
 ];
 const searchFilters = [
   { title: 'ID', value: 'id' },
@@ -66,7 +66,7 @@ function fetch(paging: PagingRequest) {
       :fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
-      :detail-page-router-name="RouterPath.Admin.AdminArtistManageEditPage.name"
+      :detail-page-router-name="RouterPath.Admin.AdminArtistManageDetailPage.name"
     />
   </v-card>
 </template>

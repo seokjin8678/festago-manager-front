@@ -20,6 +20,9 @@ import AdminSchoolManageDetailView from '@/views/admin/school/AdminSchoolManageD
 import AdminSchoolSocialMediaManageCreateView
   from '@/views/admin/school/socialmedia/AdminSchoolSocialMediaManageCreateView.vue';
 import AdminSocialMediaManageEditView from '@/views/admin/socialmedia/AdminSocialMediaManageEditView.vue';
+import AdminArtistManageDetailView from '@/views/admin/artist/AdminArtistManageDetailView.vue';
+import AdminArtistSocialMediaManageCreateView
+  from '@/views/admin/artist/socialmedia/AdminArtistSocialMediaManageCreateView.vue';
 
 const RouterPath = {
   Common: {
@@ -96,6 +99,16 @@ const RouterPath = {
       path: '/admin/artists/:id/edit',
       name: 'adminArtistManageEditPage',
       component: AdminArtistManageEditView,
+    },
+    AdminArtistManageDetailPage: {
+      path: '/admin/artists/:id',
+      name: 'adminArtistManageDetailPage',
+      component: AdminArtistManageDetailView,
+    },
+    AdminArtistSocialMediaManageCreatePage: {
+      path: '/admin/artists/:id/socialmedia/create',
+      name: 'AdminArtistSocialMediaManageCreatePage',
+      component: AdminArtistSocialMediaManageCreateView,
     },
     AdminFestivalManageCreatePage: {
       path: '/admin/festival/create', // 명시적으로 단수형 사용
