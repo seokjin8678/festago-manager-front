@@ -1,38 +1,38 @@
 <script setup lang="ts">
 
-import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import RouterPath from '@/router/RouterPath.ts';
 import { onMounted, Ref, ref } from 'vue';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
-import RouterPath from '@/router/RouterPath.ts';
-import { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.ts';
-import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
-import { FetchSocialMediasResponse } from '@/api/spec/socialmedia/FetchSocialMediasApiSpec.ts';
 import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
-import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
+import { useRoute } from 'vue-router';
+import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import AdminArtistService from '@/api/admin/AdminArtistService.ts';
+import { FetchOneArtistResponse } from '@/api/spec/artist/FetchOneArtistApiSpec.ts';
+import { FetchSocialMediasResponse } from '@/api/spec/socialmedia/FetchSocialMediasApiSpec.ts';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
 import SimpleTable from '@/components/table/SimpleTable.vue';
-import ActionTab from '@/components/tab/ActionTab.vue';
 import ActionButton from '@/components/tab/ActionButton.vue';
+import ActionTab from '@/components/tab/ActionTab.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
-const schoolId = ref<number>();
-const school = ref<FetchOneSchoolResponse>();
+const artistId = ref<number>();
+const artist = ref<FetchOneArtistResponse>();
 const socialMedias: Ref<FetchSocialMediasResponse> = ref([]);
 
 onMounted(() => {
-  schoolId.value = parseInt(route.params.id as string);
-  AdminSchoolService.fetchOneSchool(schoolId.value).then(response => {
-    school.value = response.data;
+  artistId.value = parseInt(route.params.id as string);
+  AdminArtistService.fetchOneArtist(artistId.value).then(response => {
+    artist.value = response.data;
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
-      snackbarStore.showError('해당 학교를 찾을 수 없습니다.');
+      router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+      snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
-  AdminSocialMediaService.fetchSchoolSocialMedias(schoolId.value).then(response => {
+  AdminSocialMediaService.fetchArtistSocialMedias(artistId.value).then(response => {
     socialMedias.value = response.data;
   });
 });
@@ -44,18 +44,16 @@ onMounted(() => {
     class="pa-10 ma-10 pt-0"
   >
     <h1 class="my-2">
-      학교 상세 페이지
+      아티스트 상세 페이지
     </h1>
 
     <v-row>
       <v-col :cols="5">
-        <ReadonlyForm title="학교 정보">
-          <ReadonlyField label="ID" :value="school?.id" />
-          <ReadonlyField label="이름" :value="school?.name" />
-          <ReadonlyField label="도메인" :value="school?.domain" />
-          <ReadonlyField label="지역" :value="school?.region" />
-          <ReadonlyField label="로고 URL" :value="school?.logoUrl" />
-          <ReadonlyField label="백그라운드 이미지 URL" :value="school?.backgroundImageUrl" />
+        <ReadonlyForm title="아티스트 정보">
+          <ReadonlyField label="ID" :value="artist?.id" />
+          <ReadonlyField label="이름" :value="artist?.name" />
+          <ReadonlyField label="도메인" :value="artist?.profileImageUrl" />
+          <ReadonlyField label="지역" :value="artist?.backgroundImageUrl" />
         </ReadonlyForm>
       </v-col>
       <v-col :cols="7">
@@ -83,11 +81,11 @@ onMounted(() => {
       </v-col>
     </v-row>
 
-    <ActionTab title="학교 관리">
+    <ActionTab title="아티스트 관리">
       <ActionButton
-        name="학교 수정/삭제"
+        name="아티스트 수정/삭제"
         icon="mdi-pencil-outline"
-        @click="$router.push(RouterPath.Admin.AdminSchoolManageEditPage)"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageEditPage)"
       />
     </ActionTab>
 
@@ -95,7 +93,7 @@ onMounted(() => {
       <ActionButton
         name="소셜미디어 추가"
         icon="mdi-plus-box-multiple-outline"
-        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreatePage)"
+        @click="$router.push(RouterPath.Admin.AdminArtistSocialMediaManageCreatePage)"
       />
     </ActionTab>
   </v-container>

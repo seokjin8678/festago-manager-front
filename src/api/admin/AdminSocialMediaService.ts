@@ -25,6 +25,9 @@ const AdminSocialMediaService = {
   fetchSchoolSocialMedias(schoolId: number) {
     return ApiService.request<FetchSocialMediasResponse>(FetchSocialMediasApiSpec(schoolId, OwnerType.SCHOOL));
   },
+  fetchArtistSocialMedias(artistId: number) {
+    return ApiService.request<FetchSocialMediasResponse>(FetchSocialMediasApiSpec(artistId, OwnerType.ARTIST));
+  },
   createSocialMedia(request: CreateSocialMediaRequest) {
     return ApiService.request<CreateSocialMediaResponse>(CreateSocialMediaApiSpec, request);
   },
