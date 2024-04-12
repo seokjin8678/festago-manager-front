@@ -28,7 +28,7 @@ onMounted(() => {
     school.value = response.data;
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
+      router.push(RouterPath.Admin.AdminFestivalManageListView.path);
       snackbarStore.showError('해당 학교를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -87,7 +87,7 @@ onMounted(() => {
       <ActionButton
         name="학교 수정/삭제"
         icon="mdi-pencil-outline"
-        @click="$router.push(RouterPath.Admin.AdminSchoolManageEditPage)"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageEditView)"
       />
     </ActionTab>
 
@@ -95,7 +95,7 @@ onMounted(() => {
       <ActionButton
         name="소셜미디어 추가"
         icon="mdi-plus-box-multiple-outline"
-        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreatePage)"
+        @click="$router.push(RouterPath.Admin.AdminSchoolSocialMediaManageCreateView)"
       />
     </ActionTab>
   </v-container>

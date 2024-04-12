@@ -35,7 +35,7 @@ const onSubmit = handleSubmit(async request => {
     const { username, authType } = response.data;
     authStore.login({ username, authType });
 
-    await router.push(RouterPath.Common.HomePage.path);
+    await router.push(RouterPath.Common.HomeView.path);
     snackbarStore.showSuccess(`${username}님, 환영합니다!`);
   } catch (e) {
     if (e instanceof FestagoError) {

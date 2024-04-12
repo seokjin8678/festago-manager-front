@@ -19,18 +19,18 @@ const menus = ref([]);
     <v-list-item
       prepend-icon="mdi-home-city"
       title="홈"
-      @click="$router.push(RouterPath.Common.HomePage.path)"
+      @click="$router.push(RouterPath.Common.HomeView.path)"
     />
     <v-list-item
       prepend-icon="mdi-shield-crown-outline"
       title="루트 어드민 관리"
-      @click="$router.push(RouterPath.Admin.RootAdminPage.path)"
+      @click="$router.push(RouterPath.Admin.RootAdminView.path)"
       v-if="authStore.authType === AuthType.ROOT"
     />
     <v-list-item
       prepend-icon="mdi-account"
       title="내 정보"
-      @click="$router.push(RouterPath.Admin.AdminMyPage.path)"
+      @click="$router.push(RouterPath.Admin.AdminMyPageView.path)"
     />
     <v-list-group>
       <template v-slot:activator="{ props }">
@@ -42,11 +42,11 @@ const menus = ref([]);
       </template>
       <v-list-item
         title="학교 추가"
-        @click="$router.push(RouterPath.Admin.AdminSchoolManageCreatePage.path)"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageCreateView.path)"
       />
       <v-list-item
         title="학교 목록"
-        @click="$router.push(RouterPath.Admin.AdminSchoolManageListPage.path)"
+        @click="$router.push(RouterPath.Admin.AdminSchoolManageListView.path)"
       />
     </v-list-group>
     <v-list-group>
@@ -59,11 +59,11 @@ const menus = ref([]);
       </template>
       <v-list-item
         title="아티스트 추가"
-        @click="$router.push(RouterPath.Admin.AdminArtistManageCreatePage.path)"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageCreateView.path)"
       />
       <v-list-item
         title="아티스트 목록"
-        @click="$router.push(RouterPath.Admin.AdminArtistManageListPage.path)"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageListView.path)"
       />
     </v-list-group>
     <v-list-group>
@@ -76,11 +76,11 @@ const menus = ref([]);
       </template>
       <v-list-item
         title="축제 추가"
-        @click="$router.push(RouterPath.Admin.AdminFestivalManageCreatePage.path)"
+        @click="$router.push(RouterPath.Admin.AdminFestivalManageCreateView.path)"
       />
       <v-list-item
         title="축제 목록"
-        @click="$router.push(RouterPath.Admin.AdminFestivalManageListPage.path)"
+        @click="$router.push(RouterPath.Admin.AdminFestivalManageListView.path)"
       />
     </v-list-group>
   </v-list>

@@ -19,7 +19,7 @@ onMounted(() => {
     resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+      router.push(RouterPath.Admin.AdminArtistManageListView.path);
       snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -61,7 +61,7 @@ const onUpdateSubmit = handleSubmit(async request => {
 function onDeleteSubmit() {
   AdminArtistService.deleteArtist(artistId.value!).then(() => {
     snackbarStore.showSuccess('아티스트가 삭제되었습니다.');
-    router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+    router.push(RouterPath.Admin.AdminArtistManageListView.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);

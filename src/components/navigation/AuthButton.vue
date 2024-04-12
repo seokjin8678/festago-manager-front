@@ -11,7 +11,7 @@ const snackbarStore = useSnackbarStore();
 function logout() {
   AuthService.logout().then(() => {
     authStore.logout();
-    router.push(RouterPath.Auth.LoginPage.path);
+    router.push(RouterPath.Auth.LoginView.path);
     snackbarStore.showSuccess('로그아웃 되었습니다.')
   });
 }
@@ -22,7 +22,7 @@ function logout() {
     v-if="!authStore.isLogin"
     class="text-button"
     prepend-icon="mdi-login"
-    @click="$router.push(RouterPath.Auth.LoginPage.path)"
+    @click="$router.push(RouterPath.Auth.LoginView.path)"
   >
     로그인
   </v-btn>

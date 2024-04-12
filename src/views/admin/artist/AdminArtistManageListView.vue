@@ -66,7 +66,7 @@ function fetch(paging: PagingRequest) {
       :fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
-      :detail-page-router-name="RouterPath.Admin.AdminArtistManageDetailPage.name"
+      :detail-page-router-name="RouterPath.Admin.AdminArtistManageDetailView.name"
     />
   </v-card>
 </template>

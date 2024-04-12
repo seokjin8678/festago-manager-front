@@ -15,7 +15,7 @@ const authStore = useAuthStore();
       <v-list-item
         prepend-icon="mdi-login"
         title="로그인이 필요합니다."
-        @click="$router.push(RouterPath.Auth.LoginPage)"
+        @click="$router.push(RouterPath.Auth.LoginView)"
       />
     </v-list>
     <AdminDrawerItems v-else-if="authStore.isAdmin" />
