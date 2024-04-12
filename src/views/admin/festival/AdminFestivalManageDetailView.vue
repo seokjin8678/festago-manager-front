@@ -63,12 +63,23 @@ const stages = ref<FetchFestivalStagesResponse>([]);
       <v-col :cols="7">
         <SimpleTable
           title="공연 정보"
-          :thead="['시작시간', '티켓 오픈 시간', '아티스트 목록']"
+          :thead="['시작시간', '티켓 오픈 시간', '아티스트 목록', '수정/삭제']"
         >
           <tr v-for="stage in stages">
             <td>{{ stringToDateString(stage.startDateTime) }}</td>
             <td>{{ stringToDateString(stage.ticketOpenTime) }}</td>
             <td>{{ stage.artists.map(artist => artist.name).join(', ') }}</td>
+            <td>
+              <v-icon
+                class="mr-2"
+                icon="mdi-pencil"
+                color="grey-darken-3"
+                @click="$router.push({
+                    name: RouterPath.Admin.AdminStageManageEditPage.name,
+                    params: { id: stage.id }
+                  })"
+              />
+            </td>
           </tr>
         </SimpleTable>
       </v-col>
@@ -87,10 +98,6 @@ const stages = ref<FetchFestivalStagesResponse>([]);
         name="공연 추가"
         icon="mdi-plus-box-multiple-outline"
         @action="$router.push(RouterPath.Admin.AdminStageManageCreatePage)"
-      />
-      <ActionButton
-        name="공연 수정/삭제"
-        icon="mdi-pencil-outline"
       />
     </ActionTab>
   </v-container>

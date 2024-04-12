@@ -23,6 +23,7 @@ import AdminSocialMediaManageEditView from '@/views/admin/socialmedia/AdminSocia
 import AdminArtistManageDetailView from '@/views/admin/artist/AdminArtistManageDetailView.vue';
 import AdminArtistSocialMediaManageCreateView
   from '@/views/admin/artist/socialmedia/AdminArtistSocialMediaManageCreateView.vue';
+import AdminStageManageEditView from '@/views/admin/stage/AdminStageManageEditView.vue';
 
 const RouterPath = {
   Common: {
@@ -134,6 +135,11 @@ const RouterPath = {
       path: '/admin/festivals/:id/stage/create',
       name: 'adminStageManageCreatePage',
       component: AdminStageManageCreateView,
+    },
+    AdminStageManageEditPage: {
+      path: '/admin/stages/:id/edit',
+      name: 'adminStageManagedEditPage',
+      component: AdminStageManageEditView,
     },
     AdminSocialMediaManageEditView: {
       path: '/admin/socialmedias/:id/edit',
