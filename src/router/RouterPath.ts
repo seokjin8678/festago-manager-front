@@ -27,130 +27,130 @@ import AdminStageManageEditView from '@/views/admin/stage/AdminStageManageEditVi
 
 const RouterPath = {
   Common: {
-    HomePage: {
+    HomeView: {
       path: '/',
-      name: 'homePage',
+      name: 'HomeView',
       component: HomeView,
     },
-    NotFoundHandler: {
+    NotFoundView: {
       path: '/:pathMatch(.*)*',
-      name: 'notFound',
+      name: 'NotFoundView',
       component: NotFoundView,
     },
   },
   Auth: {
-    LoginPage: {
+    LoginView: {
       path: '/login',
-      name: 'loginPage',
+      name: 'LoginView',
       component: LoginView,
     },
   },
   Admin: {
-    RootAdminPage: {
+    RootAdminView: {
       path: '/root',
-      name: 'rootAdminPage',
+      name: 'RootAdminView',
       component: RootAdminView,
     },
-    AdminAccountCreatePage: {
+    AdminAccountCreateView: {
       path: '/root/admin/create',
-      name: 'adminAccountCreatePage',
+      name: 'AdminAccountCreateView',
       component: AdminAccountCreateView,
     },
-    AdminMyPage: {
+    AdminMyPageView: {
       path: '/admin/my-page',
-      name: 'adminMyPage',
+      name: 'AdminMyPageView',
       component: AdminMyPageView,
     },
     AdminSchoolManageDetailView: {
       path: '/admin/schools/:id',
-      name: 'AdminSchoolManageDetailPage',
+      name: 'AdminSchoolManageDetailView',
       component: AdminSchoolManageDetailView,
     },
-    AdminSchoolManageListPage: {
+    AdminSchoolManageListView: {
       path: '/admin/schools',
-      name: 'adminSchoolManageListPage',
+      name: 'AdminSchoolManageListView',
       component: AdminSchoolManageListView,
     },
-    AdminSchoolManageCreatePage: {
+    AdminSchoolManageCreateView: {
       path: '/admin/school/create',  // 명시적으로 단수형 사용
-      name: 'adminSchoolManageCreatePage',
+      name: 'AdminSchoolManageCreateView',
       component: AdminSchoolManageCreateView,
     },
-    AdminSchoolManageEditPage: {
+    AdminSchoolManageEditView: {
       path: '/admin/schools/:id/edit',
-      name: 'adminSchoolManageEditPage',
+      name: 'AdminSchoolManageEditView',
       component: AdminSchoolManageEditView,
     },
-    AdminSchoolSocialMediaManageCreatePage: {
+    AdminSchoolSocialMediaManageCreateView: {
       path: '/admin/schools/:id/socialmedia/create',
-      name: 'AdminSchoolSocialMediaManageCreatePage',
+      name: 'AdminSchoolSocialMediaManageCreateView',
       component: AdminSchoolSocialMediaManageCreateView,
     },
-    AdminArtistManageCreatePage: {
+    AdminArtistManageCreateView: {
       path: '/admin/artist/create', // 명시적으로 단수형 사용
-      name: 'adminArtistManageCreatePage',
+      name: 'AdminArtistManageCreateView',
       component: AdminArtistManageCreateView,
     },
-    AdminArtistManageListPage: {
+    AdminArtistManageListView: {
       path: '/admin/artists',
-      name: 'adminArtistManageListPage',
+      name: 'AdminArtistManageListView',
       component: AdminArtistManageListView,
     },
-    AdminArtistManageEditPage: {
+    AdminArtistManageEditView: {
       path: '/admin/artists/:id/edit',
-      name: 'adminArtistManageEditPage',
+      name: 'AdminArtistManageEditView',
       component: AdminArtistManageEditView,
     },
-    AdminArtistManageDetailPage: {
+    AdminArtistManageDetailView: {
       path: '/admin/artists/:id',
-      name: 'adminArtistManageDetailPage',
+      name: 'AdminArtistManageDetailView',
       component: AdminArtistManageDetailView,
     },
-    AdminArtistSocialMediaManageCreatePage: {
+    AdminArtistSocialMediaManageCreateView: {
       path: '/admin/artists/:id/socialmedia/create',
-      name: 'AdminArtistSocialMediaManageCreatePage',
+      name: 'AdminArtistSocialMediaManageCreateView',
       component: AdminArtistSocialMediaManageCreateView,
     },
-    AdminFestivalManageCreatePage: {
+    AdminFestivalManageCreateView: {
       path: '/admin/festival/create', // 명시적으로 단수형 사용
-      name: 'adminFestivalManageCreatePage',
+      name: 'AdminFestivalManageCreateView',
       component: AdminFestivalManageCreateView,
     },
-    AdminFestivalManageListPage: {
+    AdminFestivalManageListView: {
       path: '/admin/festivals',
-      name: 'adminFestivalManageListPage',
+      name: 'AdminFestivalManageListView',
       component: AdminFestivalManageListView,
     },
     AdminFestivalManageDetailView: {
       path: '/admin/festivals/:id',
-      name: 'adminFestivalManageDetailPage',
+      name: 'AdminFestivalManageDetailView',
       component: AdminFestivalManageDetailView,
     },
-    AdminFestivalManageEditPage: {
+    AdminFestivalManageEditView: {
       path: '/admin/festivals/:id/edit',
-      name: 'adminFestivalManageEditPage',
+      name: 'AdminFestivalManageEditView',
       component: AdminFestivalManageEditView,
     },
-    AdminStageManageCreatePage: {
+    AdminStageManageCreateView: {
       path: '/admin/festivals/:id/stage/create',
-      name: 'adminStageManageCreatePage',
+      name: 'AdminStageManageCreateView',
       component: AdminStageManageCreateView,
     },
-    AdminStageManageEditPage: {
+    AdminStageManageEditView: {
       path: '/admin/stages/:id/edit',
-      name: 'adminStageManagedEditPage',
+      name: 'AdminStageManageEditView',
       component: AdminStageManageEditView,
     },
     AdminSocialMediaManageEditView: {
       path: '/admin/socialmedias/:id/edit',
-      name: 'AdminSocialMediaManageEditPage',
+      name: 'AdminSocialMediaManageEditView',
       component: AdminSocialMediaManageEditView,
     },
   },
   School: {
-    SchoolFestivalManagePage: {
+    SchoolFestivalManageView: {
       path: '/school/festivals',
-      name: 'schoolFestivalManagePage',
+      name: 'SchoolFestivalManageView',
       component: SchoolFestivalManageView,
     },
   },

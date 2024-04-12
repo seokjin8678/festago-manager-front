@@ -28,7 +28,7 @@ onMounted(() => {
     artist.value = response.data;
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+      router.push(RouterPath.Admin.AdminArtistManageListView.path);
       snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -85,7 +85,7 @@ onMounted(() => {
       <ActionButton
         name="아티스트 수정/삭제"
         icon="mdi-pencil-outline"
-        @click="$router.push(RouterPath.Admin.AdminArtistManageEditPage)"
+        @click="$router.push(RouterPath.Admin.AdminArtistManageEditView)"
       />
     </ActionTab>
 
@@ -93,7 +93,7 @@ onMounted(() => {
       <ActionButton
         name="소셜미디어 추가"
         icon="mdi-plus-box-multiple-outline"
-        @click="$router.push(RouterPath.Admin.AdminArtistSocialMediaManageCreatePage)"
+        @click="$router.push(RouterPath.Admin.AdminArtistSocialMediaManageCreateView)"
       />
     </ActionTab>
   </v-container>

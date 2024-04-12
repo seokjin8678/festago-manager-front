@@ -22,7 +22,7 @@ onMounted(() => {
     resetForm({ values: result });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
+      router.push(RouterPath.Admin.AdminFestivalManageListView.path);
       snackbarStore.showError('해당 축제를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -79,7 +79,7 @@ const onUpdateSubmit = handleSubmit(async request => {
 function onDeleteSubmit() {
   AdminFestivalService.deleteFestival(festivalId.value!).then(() => {
     snackbarStore.showSuccess('축제가 삭제되었습니다.');
-    router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
+    router.push(RouterPath.Admin.AdminFestivalManageListView.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);

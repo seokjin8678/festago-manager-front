@@ -24,7 +24,7 @@ onMounted(() => {
     festival.value = response.data;
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminFestivalManageListPage.path);
+      router.push(RouterPath.Admin.AdminFestivalManageListView.path);
       snackbarStore.showError('해당 축제를 찾을 수 없습니다.');
     } else throw e;
   });
@@ -75,7 +75,7 @@ const stages = ref<FetchFestivalStagesResponse>([]);
                 icon="mdi-pencil"
                 color="grey-darken-3"
                 @click="$router.push({
-                    name: RouterPath.Admin.AdminStageManageEditPage.name,
+                    name: RouterPath.Admin.AdminStageManageEditView.name,
                     params: { id: stage.id }
                   })"
               />
@@ -89,7 +89,7 @@ const stages = ref<FetchFestivalStagesResponse>([]);
       <ActionButton
         name="축제 수정/삭제"
         icon="mdi-pencil-outline"
-        @action="$router.push(RouterPath.Admin.AdminFestivalManageEditPage)"
+        @action="$router.push(RouterPath.Admin.AdminFestivalManageEditView)"
       />
     </ActionTab>
 
@@ -97,7 +97,7 @@ const stages = ref<FetchFestivalStagesResponse>([]);
       <ActionButton
         name="공연 추가"
         icon="mdi-plus-box-multiple-outline"
-        @action="$router.push(RouterPath.Admin.AdminStageManageCreatePage)"
+        @action="$router.push(RouterPath.Admin.AdminStageManageCreateView)"
       />
     </ActionTab>
   </v-container>

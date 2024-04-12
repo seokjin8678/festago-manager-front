@@ -22,7 +22,7 @@ onMounted(() => {
     resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
+      router.push(RouterPath.Admin.AdminSchoolManageListView.path);
       snackbarStore.showError('해당 소셜미디어를 찾을 수 없습니다.');
     } else throw e;
   });
