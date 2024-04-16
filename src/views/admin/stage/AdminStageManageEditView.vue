@@ -9,10 +9,13 @@ import { useField, useForm } from 'vee-validate';
 import AdminStageService from '@/api/admin/AdminStageService.ts';
 import EditForm from '@/components/form/EditForm.vue';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
+import { toTypedSchema } from '@vee-validate/zod';
+import { number, object, string } from 'zod';
 
 type UpdateStageForm = {
-  startDateTime: string,
+  startTime: string,
   ticketOpenTime: string,
+  artistIds: number[],
 }
 
 type Artist = {
@@ -31,8 +34,9 @@ onMounted(() => {
     const stageResponse = response.data;
     resetForm({
       values: {
-        startDateTime: stageResponse.startDateTime,
+        startTime: stageResponse.startDateTime,
         ticketOpenTime: stageResponse.ticketOpenTime,
+        artistIds: stageResponse.artists.map(it => it.id),
       },
     });
     stageResponse.artists.forEach(it => artists.value.set(it.id, it));
@@ -44,20 +48,17 @@ onMounted(() => {
   });
 });
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateStageForm>({
-  validationSchema: {
-    startDateTime(value: string) {
-      if (!value) return '공연 시작 시간은 필수입니다.';
-      return true;
-    },
-    ticketOpenTime(value: string) {
-      if (!value) return '티켓 오픈 시간은 필수입니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      startTime: string().min(1),
+      ticketOpenTime: string().min(1),
+      artistIds: number().array(),
+    }),
+  ),
 });
-const startDateTimeField = useField('startDateTime');
+const startTimeField = useField('startTime');
 const ticketOpenTimeField = useField('ticketOpenTime');
-const artistsField = useField<boolean>('_artists');
+const artistIdsField = useField<number[]>('artistIds');
 const fetchedArtists = ref<Artist[]>([]);
 const showArtistSelectDialog = ref(false);
 const fetchArtistsLoading = ref(false);
@@ -78,27 +79,23 @@ function fetchArtists() {
   });
 }
 
-function putArtist(artist: Artist) {
+const putArtist = (artist: Artist) => {
   if (artists.value.has(artist.id)) {
     snackbarStore.showError('이미 등록된 아티스트 입니다.');
-  } else {
-    artists.value.set(artist.id, artist);
-    artistsField.value.value = true;
+    return;
   }
-}
+  artists.value.set(artist.id, artist);
+  artistIdsField.value.value.push(artist.id);
+};
 
 const removeArtist = (artist: Artist) => {
   artists.value.delete(artist.id);
-  artistsField.value.value = true;
+  artistIdsField.value.value = [...artists.value.keys()];
 };
 
 const onUpdateSubmit = handleSubmit(async form => {
   try {
-    await AdminStageService.updateStage(stageId.value!, {
-      startTime: form.startDateTime,
-      ticketOpenTime: form.ticketOpenTime,
-      artistIds: [...artists.value.keys()],
-    });
+    await AdminStageService.updateStage(stageId.value!, form);
     resetForm({ values: form });
     snackbarStore.showSuccess('공연이 수정되었습니다.');
   } catch (e) {
@@ -221,8 +218,8 @@ function onDeleteSubmit() {
     <v-text-field
       class="mb-3"
       type="datetime-local"
-      v-model="startDateTimeField.value.value"
-      :error-messages="startDateTimeField.errorMessage.value"
+      v-model="startTimeField.value.value"
+      :error-messages="startTimeField.errorMessage.value"
       variant="outlined"
       label="공연 시작 시간"
     />
