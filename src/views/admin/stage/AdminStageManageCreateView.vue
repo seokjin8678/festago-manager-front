@@ -31,8 +31,8 @@ const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSta
     }),
   ),
 });
-const startTimeField = useField('startTime');
-const ticketOpenTimeField = useField('ticketOpenTime');
+const startTimeField = useField<string>('startTime');
+const ticketOpenTimeField = useField<string>('ticketOpenTime');
 
 const artists = ref(new Map<number, Artist>());
 const showArtistSelectDialog = ref(false);

@@ -39,11 +39,11 @@ const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFes
     },
   },
 });
-const nameField = useField('name');
-const schoolIdField = useField('schoolId');
-const startDateField = useField('startDate');
-const endDateField = useField('endDate');
-const posterImageUrlField = useField('posterImageUrl');
+const nameField = useField<string>('name');
+const schoolIdField = useField<number>('schoolId');
+const startDateField = useField<string>('startDate');
+const endDateField = useField<string>('endDate');
+const posterImageUrlField = useField<string>('posterImageUrl');
 
 const schools = ref<FetchOneSchoolResponse[]>([]);
 const fakeSchoolName = ref<string>('');

@@ -57,8 +57,8 @@ const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<Updat
     }),
   ),
 });
-const startTimeField = useField('startTime');
-const ticketOpenTimeField = useField('ticketOpenTime');
+const startTimeField = useField<string>('startTime');
+const ticketOpenTimeField = useField<string>('ticketOpenTime');
 const artistIdsField = useField<number[]>('artistIds');
 const showArtistSelectDialog = ref(false);
 

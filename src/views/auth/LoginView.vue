@@ -25,8 +25,8 @@ const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
     },
   },
 });
-const usernameField = useField('username');
-const passwordField = useField('password');
+const usernameField = useField<string>('username');
+const passwordField = useField<string>('password');
 const invalidForm = ref(false);
 
 const onSubmit = handleSubmit(async request => {

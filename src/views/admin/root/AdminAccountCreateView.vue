@@ -30,9 +30,9 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateAdm
   },
 });
 
-const usernameField = useField('username');
-const passwordField = useField('password');
-const confirmPasswordField = useField('confirmPassword');
+const usernameField = useField<string>('username');
+const passwordField = useField<string>('password');
+const confirmPasswordField = useField<string>('confirmPassword');
 const onSubmit = handleSubmit(async request => {
   if (passwordField.value.value !== confirmPasswordField.value.value) {
     passwordField.setErrors('비밀번호와 확인 비밀번호가 맞지 않습니다.');

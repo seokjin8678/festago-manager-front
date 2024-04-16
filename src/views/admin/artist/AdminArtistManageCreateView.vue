@@ -26,9 +26,9 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArt
   },
 });
 
-const nameField = useField('name');
-const profileImageUrlField = useField('profileImageUrl');
-const backgroundImageUrlField = useField('backgroundImageUrl');
+const nameField = useField<string>('name');
+const profileImageUrlField = useField<string>('profileImageUrl');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 const onSubmit = handleSubmit(async request => {
   try {
     await AdminArtistService.createArtist(request)

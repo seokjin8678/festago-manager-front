@@ -57,10 +57,10 @@ const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<Updat
 
 const festivalId = ref<number>();
 const schoolName = ref<string>();
-const nameField = useField('name');
-const startDateField = useField('startDate');
-const endDateField = useField('endDate');
-const posterImageUrlField = useField('posterImageUrl');
+const nameField = useField<string>('name');
+const startDateField = useField<string>('startDate');
+const endDateField = useField<string>('endDate');
+const posterImageUrlField = useField<string>('posterImageUrl');
 
 const onUpdateSubmit = handleSubmit(async request => {
   try {

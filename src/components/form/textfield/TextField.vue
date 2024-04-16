@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const model = defineModel<string | number>('v-model', { required: true });
+const model = defineModel<string | number>({ required: true });
 
 interface Props {
   label: string,
