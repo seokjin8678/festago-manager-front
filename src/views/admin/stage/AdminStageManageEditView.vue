@@ -8,16 +8,15 @@ import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import AdminStageService from '@/api/admin/AdminStageService.ts';
 import EditForm from '@/components/form/EditForm.vue';
-import AdminArtistService from '@/api/admin/AdminArtistService.ts';
+import { toTypedSchema } from '@vee-validate/zod';
+import { number, object, string } from 'zod';
+import ArtistSearchDialog, { Artist } from '@/components/dialog/ArtistSelectDialog.vue';
+import ArtistsField from '@/components/form/textfield/ArtistsField.vue';
 
 type UpdateStageForm = {
-  startDateTime: string,
+  startTime: string,
   ticketOpenTime: string,
-}
-
-type Artist = {
-  id: number,
-  name: string
+  artistIds: number[],
 }
 
 const route = useRoute();
@@ -31,8 +30,9 @@ onMounted(() => {
     const stageResponse = response.data;
     resetForm({
       values: {
-        startDateTime: stageResponse.startDateTime,
+        startTime: stageResponse.startDateTime,
         ticketOpenTime: stageResponse.ticketOpenTime,
+        artistIds: stageResponse.artists.map(it => it.id),
       },
     });
     stageResponse.artists.forEach(it => artists.value.set(it.id, it));
@@ -44,61 +44,26 @@ onMounted(() => {
   });
 });
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateStageForm>({
-  validationSchema: {
-    startDateTime(value: string) {
-      if (!value) return '공연 시작 시간은 필수입니다.';
-      return true;
-    },
-    ticketOpenTime(value: string) {
-      if (!value) return '티켓 오픈 시간은 필수입니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      startTime: string({
+        required_error: '공연 시작 시간은 필수입니다.',
+      }),
+      ticketOpenTime: string({
+        required_error: '티켓 오픈 시간은 필수입니다.',
+      }),
+      artistIds: number().array(),
+    }),
+  ),
 });
-const startDateTimeField = useField('startDateTime');
+const startTimeField = useField('startTime');
 const ticketOpenTimeField = useField('ticketOpenTime');
-const artistsField = useField<boolean>('_artists');
-const fetchedArtists = ref<Artist[]>([]);
+const artistIdsField = useField<number[]>('artistIds');
 const showArtistSelectDialog = ref(false);
-const fetchArtistsLoading = ref(false);
-const artistSearchKeyword = ref('');
-
-function fetchArtists() {
-  AdminArtistService.fetchArtists({
-    page: 1,
-    itemsPerPage: 10,
-    sortBy: [],
-  }, {
-    searchKeyword: artistSearchKeyword.value,
-    searchFilter: 'name',
-  }).then(response => {
-    fetchedArtists.value = response.data.content.map(artist => (
-      { id: artist.id, name: artist.name }
-    ));
-  });
-}
-
-function putArtist(artist: Artist) {
-  if (artists.value.has(artist.id)) {
-    snackbarStore.showError('이미 등록된 아티스트 입니다.');
-  } else {
-    artists.value.set(artist.id, artist);
-    artistsField.value.value = true;
-  }
-}
-
-const removeArtist = (artist: Artist) => {
-  artists.value.delete(artist.id);
-  artistsField.value.value = true;
-};
 
 const onUpdateSubmit = handleSubmit(async form => {
   try {
-    await AdminStageService.updateStage(stageId.value!, {
-      startTime: form.startDateTime,
-      ticketOpenTime: form.ticketOpenTime,
-      artistIds: [...artists.value.keys()],
-    });
+    await AdminStageService.updateStage(stageId.value!, form);
     resetForm({ values: form });
     snackbarStore.showSuccess('공연이 수정되었습니다.');
   } catch (e) {
@@ -112,7 +77,7 @@ const onUpdateSubmit = handleSubmit(async form => {
   }
 });
 
-function onDeleteSubmit() {
+const onDeleteSubmit = () => {
   AdminStageService.deleteStage(stageId.value!).then(() => {
     snackbarStore.showSuccess('공연이 삭제되었습니다.');
     router.back();
@@ -121,72 +86,16 @@ function onDeleteSubmit() {
       snackbarStore.showError(e.message);
     } else throw e;
   });
-}
+};
 
 </script>
 
 <template>
-  <v-dialog
-    v-model="showArtistSelectDialog"
-    max-width="500"
-  >
-    <v-card class="pa-5">
-      <v-card-title class="text-h5 text-center">
-        아티스트 선택
-      </v-card-title>
-      <v-row :no-gutters="true" align="center">
-        <v-col :cols="10">
-          <v-text-field
-            class="pa-2 ma-2"
-            v-model="artistSearchKeyword"
-            label="아티스트 이름"
-            prepend-inner-icon="mdi-magnify"
-            :single-line="true"
-            variant="outlined"
-            :hide-details="true"
-            maxLength="50"
-          />
-        </v-col>
-        <v-col :cols="2">
-          <v-btn
-            :loading="fetchArtistsLoading"
-            :disabled="!(!!(artistSearchKeyword))"
-            class="py-7 text-h6"
-            color="blue"
-            variant="flat"
-            :block="true"
-            text="검색"
-            @click="fetchArtists"
-          />
-        </v-col>
-      </v-row>
-
-      <v-table class="text-center">
-        <thead>
-        <tr>
-          <th id="name" class="text-center">
-            이름
-          </th>
-          <th id="selectBtn" class="text-center" />
-        </tr>
-        </thead>
-        <tbody>
-        <tr
-          v-for="artist in fetchedArtists"
-          :key="artist.id"
-        >
-          <td>{{ artist.name }}</td>
-          <td>
-            <v-btn
-              @click="putArtist(artist)"
-              text="선택"
-            />
-          </td>
-        </tr>
-        </tbody>
-      </v-table>
-    </v-card>
-  </v-dialog>
+  <ArtistSearchDialog
+    v-model:artists="artists"
+    v-model:show-dialog="showArtistSelectDialog"
+    @append-callback="artist => artistIdsField.value.value.push(artist.id)"
+  />
   <EditForm
     form-title="공연 수정/삭제"
     :loading="isSubmitting"
@@ -194,35 +103,17 @@ function onDeleteSubmit() {
     :on-delete-submit="onDeleteSubmit"
     :is-touched="meta.dirty"
   >
-    <div>
-      <p class="ml-2 ma-1 text-subtitle-2 text-grey-darken-2">아티스트 목록</p>
-      <v-card
-        class="pa-6 mb-6"
-        variant="outlined"
-        @click="showArtistSelectDialog = true"
-      >
-        <v-row>
-          <v-col
-            v-for="artist in artists.values()"
-            :key="artist.id"
-            class="py-1 pe-0"
-            cols="auto"
-          >
-            <v-chip
-              :closable="true"
-              @click:close="removeArtist(artist)"
-            >
-              {{ artist.name }}
-            </v-chip>
-          </v-col>
-        </v-row>
-      </v-card>
-    </div>
+    <ArtistsField
+      :artists="artists"
+      :error-messages="artistIdsField.errorMessage.value"
+      @remove-callback="_ => artistIdsField.value.value = [...artists.keys()]"
+      @click="showArtistSelectDialog = true"
+    />
     <v-text-field
       class="mb-3"
       type="datetime-local"
-      v-model="startDateTimeField.value.value"
-      :error-messages="startDateTimeField.errorMessage.value"
+      v-model="startTimeField.value.value"
+      :error-messages="startTimeField.errorMessage.value"
       variant="outlined"
       label="공연 시작 시간"
     />
