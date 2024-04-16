@@ -9,6 +9,8 @@ import RouterPath from '@/router/RouterPath.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { UpdateArtistRequest } from '@/api/spec/artist/UpdateArtistApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -83,36 +85,24 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
     :loading="isSubmitting"
     :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="artistId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
+    <ReadonlyField label="ID" :value="artistId"/>
+    <TextField
+      label="아티스트 이름"
+      placeholder="아티스트 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      placeholder="아티스트 이름"
-      variant="outlined"
-      label="아티스트 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="아티스트 프로필 이미지 URL"
+      placeholder="https://image.com/profile-image.png"
       v-model="profileImageUrlField.value.value"
       :error-messages="profileImageUrlField.errorMessage.value"
-      placeholder="https://festa-go.site/profile-image.png"
-      variant="outlined"
-      label="아티스트 프로필 이미지 URL"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="아티스트 백그라운드 이미지 URL"
+      placeholder="https://image.com/background-image.png"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
-      placeholder="https://festa-go.site/background-image.png"
-      variant="outlined"
-      label="아티스트 백그라운드 이미지 URL"
     />
   </EditForm>
 </template>

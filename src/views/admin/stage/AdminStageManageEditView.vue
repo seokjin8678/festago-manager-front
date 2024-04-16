@@ -12,6 +12,7 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { number, object, string } from 'zod';
 import ArtistSearchDialog, { Artist } from '@/components/dialog/ArtistSelectDialog.vue';
 import ArtistsField from '@/components/form/textfield/ArtistsField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 type UpdateStageForm = {
   startTime: string,
@@ -109,21 +110,17 @@ const onDeleteSubmit = () => {
       @remove-callback="_ => artistIdsField.value.value = [...artists.keys()]"
       @click="showArtistSelectDialog = true"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="공연 시작 시간"
       type="datetime-local"
       v-model="startTimeField.value.value"
       :error-messages="startTimeField.errorMessage.value"
-      variant="outlined"
-      label="공연 시작 시간"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="티켓 오픈 시간"
       type="datetime-local"
       v-model="ticketOpenTimeField.value.value"
       :error-messages="ticketOpenTimeField.errorMessage.value"
-      variant="outlined"
-      label="티켓 오픈 시간"
     />
   </EditForm>
 </template>

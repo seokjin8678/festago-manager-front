@@ -6,6 +6,7 @@ import { CreateArtistRequest } from '@/api/spec/artist/CreateArtistApiSpec.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
@@ -51,29 +52,23 @@ const onSubmit = handleSubmit(async request => {
     :loading="isSubmitting"
     form-title="아티스트 추가"
   >
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="아티스트 이름"
+      placeholder="아티스트 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      placeholder="아티스트 이름"
-      variant="outlined"
-      label="아티스트 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="아티스트 프로필 이미지 URL"
+      placeholder="https://image.com/profile-image.png"
       v-model="profileImageUrlField.value.value"
       :error-messages="profileImageUrlField.errorMessage.value"
-      placeholder="https://festa-go.site/image.png"
-      variant="outlined"
-      label="아티스트 프로필 이미지 URL"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="아티스트 백그라운드 이미지 URL"
+      placeholder="https://image.com/background-image.png"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
-      placeholder="https://festa-go.site/image.png"
-      variant="outlined"
-      label="아티스트 백그라운드 이미지 URL"
     />
   </CreateForm>
 </template>

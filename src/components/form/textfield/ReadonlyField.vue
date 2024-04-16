@@ -8,6 +8,7 @@ const props = defineProps<{
 
 <template>
   <v-text-field
+    class="mb-3"
     :label="props.label"
     :model-value="value"
     variant="outlined"

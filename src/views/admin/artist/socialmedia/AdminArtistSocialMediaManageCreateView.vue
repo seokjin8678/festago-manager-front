@@ -8,6 +8,8 @@ import FestagoError from '@/api/FestagoError.ts';
 import { useRoute } from 'vue-router';
 import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
+import SelectField from '@/components/form/textfield/SelectField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 type CreateArtistSocialMediaForm = {
   socialMediaType: SocialMediaType,
@@ -80,37 +82,26 @@ const onSubmit = handleSubmit(async form => {
     :loading="isSubmitting"
     form-title="아티스트 소셜미디어 추가"
   >
-    <v-select
-      class="mb-3"
+    <SelectField
+      label="소셜 미디어 타입"
       :items="Object.values(SocialMediaType)"
       v-model="socialMediaTypeField.value.value"
       :error-messages="socialMediaTypeField.errorMessage.value"
-      variant="outlined"
-      label="소셜 미디어 타입"
     />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <TextField
+      label="이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      variant="outlined"
-      label="이름"
     />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <TextField
+      label="로고 URL"
       v-model="logoUrlField.value.value"
       :error-messages="logoUrlField.errorMessage.value"
-      variant="outlined"
-      label="로고 URL"
     />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <TextField
+      label="URL"
       v-model="urlField.value.value"
       :error-messages="urlField.errorMessage.value"
-      variant="outlined"
-      label="URL"
     />
   </CreateForm>
 </template>

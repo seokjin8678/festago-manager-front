@@ -2,11 +2,12 @@
 
 import CreateForm from '@/components/form/CreateForm.vue';
 import { useField, useForm } from 'vee-validate';
-import { ref } from 'vue';
 import { CreateAdminAccountRequest } from '@/api/spec/admin/CreateAdminAccountApiSpec.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import RootAdminService from '@/api/admin/RootAdminService.ts';
+import TextField from '@/components/form/textfield/TextField.vue';
+import PasswordField from '@/components/form/textfield/PasswordField.vue';
 
 const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateAdminAccountRequest>({
@@ -28,9 +29,6 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateAdm
     },
   },
 });
-
-const passwordVisible = ref(false);
-const confirmPasswordVisible = ref(false);
 
 const usernameField = useField('username');
 const passwordField = useField('password');
@@ -64,33 +62,21 @@ const onSubmit = handleSubmit(async request => {
     :loading="isSubmitting"
     form-title="어드민 계정 생성"
   >
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="계정"
       v-model="usernameField.value.value"
       :error-messages="usernameField.errorMessage.value"
       placeholder="계정"
-      variant="outlined"
-      label="계정"
     />
-    <v-text-field
-      class="mb-3"
-      :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-      :type="passwordVisible ? 'text' : 'password'"
+    <PasswordField
+      label="비밀번호"
       v-model="passwordField.value.value"
       :error-messages="passwordField.errorMessage.value"
-      variant="outlined"
-      label="비밀번호"
-      @click:append-inner="passwordVisible = !passwordVisible"
     />
-    <v-text-field
-      class="mb-3"
-      :append-inner-icon="confirmPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-      :type="confirmPasswordVisible ? 'text' : 'password'"
+    <PasswordField
+      label="비밀번호 확인"
       v-model="confirmPasswordField.value.value"
       :error-messages="confirmPasswordField.errorMessage.value"
-      variant="outlined"
-      label="비밀번호 확인"
-      @click:append-inner="confirmPasswordVisible = !confirmPasswordVisible"
     />
   </CreateForm>
 </template>

@@ -10,6 +10,8 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { UpdateFestivalRequest } from '@/api/spec/festival/UpdateFestivalApiSpec.ts';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -97,50 +99,31 @@ function onDeleteSubmit() {
     :loading="isSubmitting"
     :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="festivalId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="학교"
-      :model-value="schoolName"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
+    <ReadonlyField label="ID" :value="festivalId" />
+    <ReadonlyField label="학교" :value="schoolName" />
+    <TextField
+      label="축제 이름"
+      placeholder="축제 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      variant="outlined"
-      label="이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 시작일"
       type="date"
       v-model="startDateField.value.value"
       :error-messages="startDateField.errorMessage.value"
-      variant="outlined"
-      label="축제 시작일"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 종료일"
       type="date"
       v-model="endDateField.value.value"
       :error-messages="endDateField.errorMessage.value"
-      variant="outlined"
-      label="축제 종료일"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 포스터 이미지 URL"
+      placeholder="https://image.com/festival-poseter.png"
       v-model="posterImageUrlField.value.value"
       :error-messages="posterImageUrlField.errorMessage.value"
-      placeholder="https://image.com/festival-poseter.png"
-      variant="outlined"
-      label="축제 포스터 이미지 URL"
     />
   </EditForm>
 </template>
