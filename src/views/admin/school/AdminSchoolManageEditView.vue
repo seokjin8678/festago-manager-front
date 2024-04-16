@@ -9,6 +9,10 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import { UpdateSchoolRequest } from '@/api/spec/school/UpdateSchoolApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
+import { Region } from '@/type/school/Region.ts';
+import SelectField from '@/components/form/textfield/SelectField.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -101,52 +105,36 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
     :on-delete-submit="onDeleteSubmit"
     :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="schoolId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
+    <ReadonlyField label="ID" :value="schoolId" />
+    <TextField
+      label="대학교 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
       placeholder="XX대학교"
-      variant="outlined"
-      label="대학교 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="학교 도메인"
       v-model="domainField.value.value"
       :error-messages="domainField.errorMessage.value"
       placeholder="school.ac.kr"
-      variant="outlined"
-      label="학교 도메인"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="로고 URL (선택)"
       v-model="logoUrlField.value.value"
       :error-messages="logoUrlField.errorMessage.value"
       placeholder="https://image.com/logo.png"
-      variant="outlined"
-      label="로고 URL (선택)"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="백그라운드 이미지 URL (선택)"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
       placeholder="https://image.com/backgroundImage.png"
-      variant="outlined"
-      label="백그라운드 이미지 URL (선택)"
     />
-    <v-select
-      class="mb-3"
+    <SelectField
+      label="지역"
+      :items="Object.values(Region)"
       v-model="regionField.value.value"
       :error-messages="regionField.errorMessage.value"
-      :items="['서울', '대구', '부산', '인천', '광주', '대전', '울산', '세종', '경기', '강원', '충북', '충남', '전북', '전남', '경북', '경남', '제주']"
-      variant="outlined"
-      label="지역"
     />
   </EditForm>
 </template>

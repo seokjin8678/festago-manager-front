@@ -11,6 +11,8 @@ import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
 import { UpdateSocialMediaRequest } from '@/api/spec/socialmedia/UpdateSocialMediaApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
 import { FetchOneSocialMediaResponse } from '@/api/spec/socialmedia/FetchOneSocialMediaApiSpec.ts';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -93,50 +95,23 @@ function onDeleteSubmit() {
     :on-delete-submit="onDeleteSubmit"
     :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="socialMediaId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="Owner ID"
-      :model-value="socialMedia?.ownerId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="Owner type"
-      :model-value="socialMedia?.ownerType"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <ReadonlyField label="ID" :value="socialMediaId" />
+    <ReadonlyField label="Owner ID" :value="socialMedia?.ownerId" />
+    <ReadonlyField label="Owner type" :value="socialMedia?.ownerType" />
+    <TextField
+      label="이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      variant="outlined"
-      label="이름"
     />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <TextField
+      label="로고 URL"
       v-model="logoUrlField.value.value"
       :error-messages="logoUrlField.errorMessage.value"
-      variant="outlined"
-      label="로고 URL"
     />
-    <v-text-field
-      class="mb-3"
-      type="text"
+    <TextField
+      label="URL"
       v-model="urlField.value.value"
       :error-messages="urlField.errorMessage.value"
-      variant="outlined"
-      label="URL"
     />
   </EditForm>
 </template>

@@ -8,6 +8,8 @@ import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
+import TextField from '@/components/form/textfield/TextField.vue';
+import PasswordField from '@/components/form/textfield/PasswordField.vue';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
@@ -23,10 +25,9 @@ const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
     },
   },
 });
-const usernameField = useField('username');
-const passwordField = useField('password');
+const usernameField = useField<string>('username');
+const passwordField = useField<string>('password');
 const invalidForm = ref(false);
-const passwordVisible = ref(false);
 
 const onSubmit = handleSubmit(async request => {
   try {
@@ -63,33 +64,24 @@ const onSubmit = handleSubmit(async request => {
       v-model="invalidForm"
       @submit.prevent="onSubmit"
     >
-      <p class="text-subtitle-1 text-medium-emphasis">
-        계정
-      </p>
-      <v-text-field
+      <p class="text-subtitle-1 text-medium-emphasis">계정</p>
+      <TextField
+        label=""
         v-model="usernameField.value.value"
         :error-messages="usernameField.errorMessage.value"
-        density="compact"
-        placeholder="ID를 입력해주세요."
         prepend-inner-icon="mdi-account-outline"
-        variant="outlined"
-        maxlength="50"
+        placeholder="ID를 입력해주세요."
       />
-      <p class="text-subtitle-1 text-medium-emphasis mt-1">
-        비밀번호
-      </p>
-      <v-text-field
+
+      <p class="text-subtitle-1 text-medium-emphasis mt-1">비밀번호</p>
+      <PasswordField
+        label=""
         v-model="passwordField.value.value"
         :error-messages="passwordField.errorMessage.value"
-        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="passwordVisible ? 'text' : 'password'"
-        density="compact"
-        placeholder="비밀번호를 입력해주세요."
         prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        maxlength="50"
-        @click:append-inner="passwordVisible = !passwordVisible"
+        placeholder="비밀번호를 입력해주세요."
       />
+
       <v-btn
         :disabled="!invalidForm"
         :loading="isSubmitting"

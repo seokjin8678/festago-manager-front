@@ -8,6 +8,7 @@ import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { CreateFestivalRequest } from '@/api/spec/festival/CreateFestivalApiSpec.ts';
 import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
@@ -38,11 +39,11 @@ const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFes
     },
   },
 });
-const nameField = useField('name');
-const schoolIdField = useField('schoolId');
-const startDateField = useField('startDate');
-const endDateField = useField('endDate');
-const posterImageUrlField = useField('posterImageUrl');
+const nameField = useField<string>('name');
+const schoolIdField = useField<number>('schoolId');
+const startDateField = useField<string>('startDate');
+const endDateField = useField<string>('endDate');
+const posterImageUrlField = useField<string>('posterImageUrl');
 
 const schools = ref<FetchOneSchoolResponse[]>([]);
 const fakeSchoolName = ref<string>('');
@@ -170,37 +171,29 @@ function selectSchool(school: FetchOneSchoolResponse) {
       type="text"
       hidden="hidden"
     >
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 이름"
+      placeholder="축제 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      placeholder="축제 이름"
-      variant="outlined"
-      label="축제 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 시작일"
       type="date"
       v-model="startDateField.value.value"
       :error-messages="startDateField.errorMessage.value"
-      variant="outlined"
-      label="축제 시작일"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 종료일"
       type="date"
       v-model="endDateField.value.value"
       :error-messages="endDateField.errorMessage.value"
-      variant="outlined"
-      label="축제 종료일"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="축제 포스터 이미지 URL"
+      placeholder="https://image.com/festival-poseter.png"
       v-model="posterImageUrlField.value.value"
       :error-messages="posterImageUrlField.errorMessage.value"
-      placeholder="https://image.com/festival-poseter.png"
-      variant="outlined"
-      label="축제 포스터 이미지 URL"
     />
   </CreateForm>
 </template>
