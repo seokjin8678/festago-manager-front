@@ -5,6 +5,8 @@ import RootAdminService from '@/api/admin/RootAdminService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { ref } from 'vue';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog.vue';
+import ActionButton from '@/components/tab/ActionButton.vue';
+import ActionTab from '@/components/tab/ActionTab.vue';
 
 const showLogDialog = ref(false);
 const dialogAction = ref(() => {
@@ -55,145 +57,67 @@ function requestErrorLog() {
       :confirm-action="dialogAction"
       v-model="showLogDialog"
     />
-    <div>
-      <h3 class="my-2 pt-5">
-        디버깅 기능
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="showServerBuildTime"
-          >
-            <v-card-item>
-              <span class="mdi mdi-pencil-outline" />
-              서버 빌드 시간 조회
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="showLogDialog = true; dialogAction = requestInfoLog"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              INFO 로그 생성
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="showLogDialog = true; dialogAction = requestWarnLog"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              WARN 로그 생성
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="showLogDialog = true; dialogAction = requestErrorLog"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              ERROR 로그 생성
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
 
-      <h3 class="my-2 pt-5">
-        어드민 계정 기능
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-            @click="router.push(RouterPath.Admin.AdminAccountCreateView.path)"
-          >
-            <v-card-item>
-              <span class="mdi mdi-plus-box-multiple-outline" />
-              어드민 계정 생성
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-format-list-bulleted" />
-              어드민 계정 목록
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
+    <ActionTab title="디버깅 기능">
+      <ActionButton
+        name="서버 빌드 시간 조회"
+        icon="mdi-clock-outline"
+        @click="showServerBuildTime"
+      />
+      <ActionButton
+        name="INFO 로그 생성"
+        icon="mdi-alert-outline"
+        @click="showLogDialog = true; dialogAction = requestInfoLog"
+      />
+      <ActionButton
+        name="WARN 로그 생성"
+        icon="mdi-alert-outline"
+        @click="showLogDialog = true; dialogAction = requestWarnLog"
+      />
+      <ActionButton
+        name="ERROR 로그 생성"
+        icon="mdi-alert-outline"
+        @click="showLogDialog = true; dialogAction = requestErrorLog"
+      />
+    </ActionTab>
 
-      <h3 class="my-2 pt-5">
-        축제 관리 기능
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              모든 FestivalQueryInfo 재갱신
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              특정 FestivalQueryInfo 재갱신
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
+    <ActionTab title="어드민 계정 기능">
+      <ActionButton
+        name="어드민 계정 생성"
+        icon="mdi-account-plus-outline"
+        @click="router.push(RouterPath.Admin.AdminAccountCreateView.path)"
+      />
+      <ActionButton
+        name="어드민 계정 목록"
+        icon="mdi-format-list-bulleted"
+        @click="console.log('WIP')"
+      />
+    </ActionTab>
 
-      <h3 class="my-2 pt-5">
-        공연 관리 기능
-      </h3>
-      <v-row>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              모든 StageQueryInfo 재갱신
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col :cols="3">
-          <v-card
-            class="py-2"
-            variant="outlined"
-          >
-            <v-card-item>
-              <span class="mdi mdi-alert-outline" />
-              특정 StageQueryInfo 재갱신
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </div>
+    <ActionTab title="축제 관리 기능">
+      <ActionButton
+        name="모든 FestivalQueryInfo 재갱신"
+        icon="mdi-refresh"
+        @click="console.log('WIP')"
+      />
+      <ActionButton
+        name="특정 FestivalQueryInfo 재갱신"
+        icon="mdi-refresh"
+        @click="console.log('WIP')"
+      />
+    </ActionTab>
+
+    <ActionTab title="공연 관리 기능">
+      <ActionButton
+        name="모든 StageQueryInfo 재갱신"
+        icon="mdi-refresh"
+        @click="console.log('WIP')"
+      />
+      <ActionButton
+        name="특정 StageQueryInfo 재갱신"
+        icon="mdi-refresh"
+        @click="console.log('WIP')"
+      />
+    </ActionTab>
   </v-container>
 </template>
