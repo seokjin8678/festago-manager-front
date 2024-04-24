@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
     :error-messages="props.errorMessages"
     :items="props.items"
     variant="outlined"
-    label="지역"
+    :label="props.label"
   />
 </template>
 
