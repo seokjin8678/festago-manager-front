@@ -53,9 +53,9 @@ const stages = ref<FetchFestivalStagesResponse>([]);
           <ReadonlyField label="ID" :value="festival?.id" />
           <ReadonlyField label="이름" :value="festival?.name" />
           <ReadonlyField label="학교 이름" :value="festival?.schoolName" />
-          <ReadonlyField label="축제 시작일" :value="festival?.startDate" />
-          <ReadonlyField label="축제 종료일" :value="festival?.endDate" />
-          <ReadonlyField label="축제 포스터 URL" :value="festival?.posterImageUrl" />
+          <ReadonlyField label="시작일" :value="festival?.startDate" />
+          <ReadonlyField label="종료일" :value="festival?.endDate" />
+          <ReadonlyField label="포스터 이미지 URL" :value="festival?.posterImageUrl" />
           <ReadonlyField label="생성일자" :value="festival?.createdAt" />
           <ReadonlyField label="수정일자" :value="festival?.updatedAt" />
         </ReadonlyForm>

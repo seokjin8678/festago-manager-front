@@ -87,19 +87,19 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
   >
     <ReadonlyField label="ID" :value="artistId"/>
     <TextField
-      label="아티스트 이름"
+      label="이름"
       placeholder="아티스트 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
     />
     <TextField
-      label="아티스트 프로필 이미지 URL"
+      label="프로필 이미지 URL"
       placeholder="https://image.com/profile-image.png"
       v-model="profileImageUrlField.value.value"
       :error-messages="profileImageUrlField.errorMessage.value"
     />
     <TextField
-      label="아티스트 백그라운드 이미지 URL"
+      label="백그라운드 이미지 URL"
       placeholder="https://image.com/background-image.png"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
