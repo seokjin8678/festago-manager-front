@@ -52,8 +52,8 @@ onMounted(() => {
         <ReadonlyForm title="아티스트 정보">
           <ReadonlyField label="ID" :value="artist?.id" />
           <ReadonlyField label="이름" :value="artist?.name" />
-          <ReadonlyField label="도메인" :value="artist?.profileImageUrl" />
-          <ReadonlyField label="지역" :value="artist?.backgroundImageUrl" />
+          <ReadonlyField label="프로필 이미지 URL" :value="artist?.profileImageUrl" />
+          <ReadonlyField label="백그라운드 이미지 URL" :value="artist?.backgroundImageUrl" />
         </ReadonlyForm>
       </v-col>
       <v-col :cols="7">
