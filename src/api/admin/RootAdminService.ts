@@ -6,6 +6,7 @@ import FetchServerBuildTimeApiSpec, {
 import LogInfoApiSpec from '@/api/spec/admin/LogInfoApiSpec.ts';
 import LogWarnApiSpec from '@/api/spec/admin/LogWarnApiSpec.ts';
 import LogErrorApiSpec from '@/api/spec/admin/LogErrorApiSpec.ts';
+import CreateMockFestivalsApiSpec from '@/api/spec/admin/CreateMockFestivalsApiSpec.ts';
 
 const RootAdminService = {
   createAdminAccount(request: CreateAdminAccountRequest) {
@@ -23,6 +24,9 @@ const RootAdminService = {
   logError() {
     return ApiService.request(LogErrorApiSpec);
   },
+  createMockFestivals() {
+    return ApiService.request(CreateMockFestivalsApiSpec);
+  }
 };
 
 export default RootAdminService;
