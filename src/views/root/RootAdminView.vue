@@ -7,7 +7,10 @@ import { ref } from 'vue';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog.vue';
 import ActionButton from '@/components/tab/ActionButton.vue';
 import ActionTab from '@/components/tab/ActionTab.vue';
+import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 
+const snackbarStore = useSnackbarStore();
+const dialogTitle = ref('');
 const showLogDialog = ref(false);
 const dialogAction = ref(() => {
 });
@@ -18,28 +21,56 @@ function showServerBuildTime() {
   });
 }
 
-function requestInfoLog() {
-  RootAdminService.logInfo().catch(e => {
-    if (e instanceof FestagoError) {
-      alert('Info 로그를 서버에 남겼습니다.');
-    } else throw e;
-  });
+function setDialogActionInfoLog() {
+  showLogDialog.value = true;
+  dialogTitle.value = 'INFO 로그를 남길까요?';
+  dialogAction.value = () => {
+    RootAdminService.logInfo().catch(e => {
+      if (e instanceof FestagoError) {
+        alert('Info 로그를 서버에 남겼습니다.');
+      } else throw e;
+    });
+  };
 }
 
-function requestWarnLog() {
-  RootAdminService.logWarn().catch(e => {
-    if (e instanceof FestagoError) {
-      alert('Warn 로그를 서버에 남겼습니다.');
-    } else throw e;
-  });
+function setDialogActionWarnLog() {
+  showLogDialog.value = true;
+  dialogTitle.value = 'WARN 로그를 남길까요?';
+  dialogAction.value = () => {
+    RootAdminService.logWarn().catch(e => {
+      if (e instanceof FestagoError) {
+        alert('Warn 로그를 서버에 남겼습니다.');
+      } else throw e;
+    });
+  };
 }
 
-function requestErrorLog() {
-  RootAdminService.logError().catch(e => {
-    if (e instanceof FestagoError) {
-      alert('Error 로그를 서버에 남겼습니다.');
-    } else throw e;
-  });
+function setDialogActionErrorLog() {
+  showLogDialog.value = true;
+  dialogTitle.value = 'ERROR 로그를 남길까요?';
+  dialogAction.value = () => {
+    RootAdminService.logError().catch(e => {
+      if (e instanceof FestagoError) {
+        alert('Error 로그를 서버에 남겼습니다.');
+      } else throw e;
+    });
+  };
+}
+
+function setDialogActionCreateMockFestivals() {
+  showLogDialog.value = true;
+  dialogTitle.value = 'Mock 축제 데이터를 추가 할까요?';
+  dialogAction.value = () => {
+    RootAdminService.createMockFestivals().then(() => {
+      snackbarStore.showSuccess('Mock 축제 데이터가 추가되었습니다!');
+    }).catch(e => {
+      if (e instanceof FestagoError) {
+        snackbarStore.showError(e.message);
+      } else throw e;
+    });
+    alert('Mock 축제 데이터 추가를 요청했습니다. (해당 작업은 몇 초 소요됩니다.)');
+    showLogDialog.value = false;
+  };
 }
 
 </script>
@@ -52,7 +83,7 @@ function requestErrorLog() {
       루트 어드민 관리 페이지
     </h1>
     <ConfirmDialog
-      dialog-title="로그를 남길까요?"
+      :dialog-title="dialogTitle"
       confirm-text="네"
       :confirm-action="dialogAction"
       v-model="showLogDialog"
@@ -67,17 +98,17 @@ function requestErrorLog() {
       <ActionButton
         name="INFO 로그 생성"
         icon="mdi-alert-outline"
-        @click="showLogDialog = true; dialogAction = requestInfoLog"
+        @click="setDialogActionInfoLog"
       />
       <ActionButton
         name="WARN 로그 생성"
         icon="mdi-alert-outline"
-        @click="showLogDialog = true; dialogAction = requestWarnLog"
+        @click="setDialogActionWarnLog"
       />
       <ActionButton
         name="ERROR 로그 생성"
         icon="mdi-alert-outline"
-        @click="showLogDialog = true; dialogAction = requestErrorLog"
+        @click="setDialogActionErrorLog"
       />
     </ActionTab>
 
@@ -104,6 +135,11 @@ function requestErrorLog() {
         name="특정 FestivalQueryInfo 재갱신"
         icon="mdi-refresh"
         @click="console.log('WIP')"
+      />
+      <ActionButton
+        name="Mock 축제 데이터 추가"
+        icon="mdi-plus-box-multiple-outline"
+        @click="setDialogActionCreateMockFestivals"
       />
     </ActionTab>
 
