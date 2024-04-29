@@ -54,7 +54,7 @@ const urlField = useField<string>('url');
 const onSubmit = handleSubmit(async form => {
   try {
     await AdminSocialMediaService.createSocialMedia({
-      ownerId: parseInt(route.params.id[0]),
+      ownerId: parseInt(route.params.id as string),
       ownerType: OwnerType.ARTIST,
       socialMediaType: form.socialMediaType,
       name: form.name,

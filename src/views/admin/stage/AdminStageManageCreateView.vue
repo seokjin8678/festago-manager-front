@@ -40,7 +40,7 @@ const showArtistSelectDialog = ref(false);
 const onSubmit = handleSubmit(async form => {
   try {
     await AdminStageService.createStage({
-      festivalId: parseInt(route.params.id[0]),
+      festivalId: parseInt(route.params.id as string),
       startTime: form.startTime,
       ticketOpenTime: form.ticketOpenTime,
       artistIds: [...artists.value.keys()],
