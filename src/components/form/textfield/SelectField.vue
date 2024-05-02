@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const model = defineModel<string | number>( { required: true });
+const model = defineModel<string | number | undefined>( { required: true });
 
 interface Props {
   label: string,
