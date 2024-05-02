@@ -10,6 +10,8 @@ import SelectField from '@/components/form/textfield/SelectField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
+import { ref } from 'vue';
+import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
 
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
   validationSchema: toTypedSchema(
@@ -45,6 +47,27 @@ const regionField = useField<string>('region');
 const logoUrlField = useField<string>('logoUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 
+const showImageUploadDialog = ref(false);
+const uploadDialogTitle = ref('');
+const uploadCallback = ref((_: string) => {
+});
+
+function uploadLogoUri() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '로고 이미지 업로드';
+  uploadCallback.value = uploadUri => {
+    logoUrlField.value.value = uploadUri;
+  };
+}
+
+function uploadBackgroundImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '백그라운드 이미지 업로드';
+  uploadCallback.value = uploadUri => {
+    backgroundImageUrlField.value.value = uploadUri;
+  };
+}
+
 const onSubmit = handleSubmit(async request => {
   try {
     await AdminSchoolService.createSchool(request);
@@ -63,6 +86,11 @@ const onSubmit = handleSubmit(async request => {
 </script>
 
 <template>
+  <ImageUploadDialog
+    v-model="showImageUploadDialog"
+    :title="uploadDialogTitle"
+    @upload-callback="uploadCallback"
+  />
   <CreateForm
     :on-submit="onSubmit"
     form-title="학교 추가"
@@ -85,12 +113,16 @@ const onSubmit = handleSubmit(async request => {
       v-model="logoUrlField.value.value"
       :error-messages="logoUrlField.errorMessage.value"
       placeholder="https://image.com/logo.png"
+      :readonly="true"
+      @click="uploadLogoUri"
     />
     <TextField
       label="백그라운드 이미지 URL (선택)"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
       placeholder="https://image.com/backgroundImage.png"
+      :readonly="true"
+      @click="uploadBackgroundImage"
     />
     <SelectField
       label="지역"
