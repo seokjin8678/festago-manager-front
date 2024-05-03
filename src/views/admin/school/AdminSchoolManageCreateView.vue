@@ -52,7 +52,7 @@ const uploadDialogTitle = ref('');
 const uploadCallback = ref((_: string) => {
 });
 
-function uploadLogoUri() {
+function uploadLogoImage() {
   showImageUploadDialog.value = true;
   uploadDialogTitle.value = '로고 이미지 업로드';
   uploadCallback.value = uploadUri => {
@@ -114,7 +114,7 @@ const onSubmit = handleSubmit(async request => {
       :error-messages="logoUrlField.errorMessage.value"
       placeholder="https://image.com/logo.png"
       :readonly="true"
-      @click="uploadLogoUri"
+      @click="uploadLogoImage"
     />
     <TextField
       label="백그라운드 이미지 URL (선택)"
