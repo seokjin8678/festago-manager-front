@@ -33,6 +33,7 @@ function uploadImage() {
     emits('uploadCallback', res.data.uploadUri);
     images.value.splice(0);
     snackbarStore.showSuccess('이미지가 업로드 되었습니다!');
+    showDialog.value = false;
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
