@@ -9,7 +9,7 @@ export interface LogoutResponse {
 }
 
 const LogoutApiSpec: ApiSpec = {
-  url: '/admin/api/logout',
+  url: '/admin/api/v1/auth/logout',
   method: 'GET',
 };
 

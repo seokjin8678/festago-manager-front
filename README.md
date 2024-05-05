@@ -1,18 +1,27 @@
-# Vue 3 + TypeScript + Vite
+# 페스타고 관리자 페이지
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+[페스타고](https://github.com/woowacourse-teams/2023-festa-go) 어플리케이션의 관리자 전용 페이지 입니다.
 
-## Recommended IDE Setup
+## 개발 언어, 프레임워크
+Vue 3 + TypeScript + Vite
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 실행 방법
 
-## Type Support For `.vue` Imports in TS
+### 1. VITE_API_URL 경로 수정
+```yml
+# ./env.development
+# 예시
+VITE_API_URL = localhost:8080/
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+### 2. Docker build & run 
+```bash
+docker build -t front .
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+docker compose up -d 
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+### 2-1. node, npm 설치가 되어 있다면
+`npm install` 의존성 설치 뒤 (한 번만)
+
+`npm run dev` 실행

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 const props = defineProps<{
-  onSubmit: (e?: Event) => Promise<void | undefined>,
+  onSubmit: (e?: Event) => any,
   formTitle: string,
   loading: boolean
 }>();
@@ -16,7 +16,7 @@ const invalidForm = ref(false);
     @submit.prevent="props.onSubmit"
   >
     <v-card
-      class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
+      class="mx-auto pa-3 pa-md-15 py-8 my-16 w-75"
       max-width="800"
       min-width="350"
       elevation="4"

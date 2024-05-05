@@ -2,7 +2,8 @@ import ApiSpec from '@/api/spec/ApiSpec.ts';
 
 export type UpdateArtistRequest = {
   name: string,
-  profileImage: string
+  profileImageUrl: string,
+  backgroundImageUrl: string
 }
 
 export type UpdateArtistResponse = {

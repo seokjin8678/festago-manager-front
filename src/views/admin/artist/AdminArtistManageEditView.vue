@@ -9,68 +9,61 @@ import RouterPath from '@/router/RouterPath.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { UpdateArtistRequest } from '@/api/spec/artist/UpdateArtistApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminArtistService.fetchOneArtist((parseInt(route.params.id as string))).then(response => {
-    const { id, name, profileImage } = response.data;
-    artistId.value = id;
-    nameField.resetField({
-      value: name,
-    });
-    profileImageField.resetField({
-      value: profileImage,
-    });
+  artistId.value = parseInt(route.params.id as string);
+  AdminArtistService.fetchOneArtist(artistId.value).then(response => {
+    resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+      router.push(RouterPath.Admin.AdminArtistManageListView.path);
       snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<UpdateArtistRequest>({
+const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateArtistRequest>({
   validationSchema: {
     name(value: string) {
       if (!value) return '아티스트 이름은 필수입니다.';
       return true;
     },
-    profileImage(value: string) {
-      if (!value) return '이미지 URL은 필수입니다.';
+    profileImageUrl(value: string) {
+      if (!value) return '프로필 이미지 URL은 필수입니다.';
+      return true;
+    },
+    backgroundImageUrl(value: string) {
+      if (!value) return '백그라운드 이미지 URL은 필수입니다.';
       return true;
     },
   },
 });
 
-const onUpdateSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  if (!isFieldDirty('name') && !isFieldDirty('profileImage')) {
-    snackbarStore.showError('아무것도 수정되지 않았습니다.');
-    return;
-  }
-  AdminArtistService.updateArtist(artistId.value!, request).then(() => {
-    loading.value = false;
+const onUpdateSubmit = handleSubmit(async request => {
+  try {
+    await AdminArtistService.updateArtist(artistId.value!, request);
     snackbarStore.showSuccess('아티스트가 수정되었습니다.');
-    nameField.resetField({
-      value: nameField.value.value,
-    });
-    profileImageField.resetField({
-      value: profileImageField.value.value,
-    });
-  }).catch(e => {
+    resetForm({ values: request });
+  } catch (e) {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
-  });
+  }
 });
 
 function onDeleteSubmit() {
   AdminArtistService.deleteArtist(artistId.value!).then(() => {
     snackbarStore.showSuccess('아티스트가 삭제되었습니다.');
-    router.push(RouterPath.Admin.AdminArtistManageListPage.path);
+    router.push(RouterPath.Admin.AdminArtistManageListView.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
@@ -80,8 +73,8 @@ function onDeleteSubmit() {
 
 const artistId = ref<number>();
 const nameField = useField<string>('name');
-const profileImageField = useField<string>('profileImage');
-const loading = ref(false);
+const profileImageUrlField = useField<string>('profileImageUrl');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 </script>
 
 <template>
@@ -89,30 +82,27 @@ const loading = ref(false);
     form-title="아티스트 수정/삭제"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
-    :loading="loading"
+    :loading="isSubmitting"
+    :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="artistId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
+    <ReadonlyField label="ID" :value="artistId"/>
+    <TextField
+      label="이름"
+      placeholder="아티스트 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
-      placeholder="아티스트 이름"
-      variant="outlined"
-      label="아티스트 이름"
     />
-    <v-text-field
-      class="mb-3"
-      v-model="profileImageField.value.value"
-      :error-messages="profileImageField.errorMessage.value"
-      placeholder="https://festa-go.site/image.png"
-      variant="outlined"
-      label="아티스트 이미지 URL"
+    <TextField
+      label="프로필 이미지 URL"
+      placeholder="https://image.com/profile-image.png"
+      v-model="profileImageUrlField.value.value"
+      :error-messages="profileImageUrlField.errorMessage.value"
+    />
+    <TextField
+      label="백그라운드 이미지 URL"
+      placeholder="https://image.com/background-image.png"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
     />
   </EditForm>
 </template>

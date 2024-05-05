@@ -9,78 +9,77 @@ import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
 import { UpdateSchoolRequest } from '@/api/spec/school/UpdateSchoolApiSpec.ts';
 import EditForm from '@/components/form/EditForm.vue';
+import { Region } from '@/type/school/Region.ts';
+import SelectField from '@/components/form/textfield/SelectField.vue';
+import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object, string } from 'zod';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
-  AdminSchoolService.fetchOneSchool(parseInt(route.params.id as string)).then(response => {
-    const { id, name, domain, region } = response.data;
-    schoolId.value = id;
-    nameField.resetField({
-      value: name,
-    });
-    domainField.resetField({
-      value: domain,
-    });
-    regionField.resetField({
-      value: region,
-    });
+  schoolId.value = parseInt(route.params.id as string);
+  AdminSchoolService.fetchOneSchool(schoolId.value).then(response => {
+    resetForm({ values: response.data });
   }).catch(e => {
     if (e instanceof FestagoError) {
-      router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
+      router.push(RouterPath.Admin.AdminSchoolManageListView.path);
       snackbarStore.showError('해당 학교를 찾을 수 없습니다.');
     } else throw e;
   });
 });
 
-const { handleSubmit, isFieldDirty } = useForm<UpdateSchoolRequest>({
-  validationSchema: {
-    name(value: string) {
-      if (!value) return '대학교 이름은 필수입니다.';
-      return true;
-    },
-    domain(value: string) {
-      if (!value) return '도메인은 필수입니다.';
-      return true;
-    },
-    region(value: string) {
-      if (!value) return '지역은 필수입니다.';
-      return true;
-    },
-  },
+const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
+  validationSchema: toTypedSchema(
+    object({
+      name: string({
+        required_error: '대학교 이름은 필수입니다.',
+      })
+      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
+      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
+      domain: string({
+        required_error: '도메인은 필수입니다.',
+      })
+      .min(5, '도메인은 5글자 이상이어야 합니다.')
+      .regex(/^[^.].*\..+$/, '도메인의 형식은 school.ac.kr과 같아야 합니다.')
+      .regex(/^[a-zA-Z.]+$/, '도메인은 영문으로만 구성되어야 합니다.'),
+      logoUrl: string()
+      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      backgroundImageUrl: string()
+      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      region: string({
+        required_error: '지역은 필수입니다.',
+      }),
+    }),
+  ),
 });
 
-const onUpdateSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  if (!isFieldDirty('name') && !isFieldDirty('domain') && !isFieldDirty('region')) {
-    snackbarStore.showError('아무것도 수정되지 않았습니다.');
-    return;
-  }
-  AdminSchoolService.updateSchool(schoolId.value!, request).then(() => {
-    loading.value = false;
+const onUpdateSubmit = handleSubmit(async request => {
+  try {
+    await AdminSchoolService.updateSchool(schoolId.value!, request);
     snackbarStore.showSuccess('학교가 수정되었습니다.');
-    nameField.resetField({
-      value: nameField.value.value,
-    });
-    domainField.resetField({
-      value: domainField.value.value,
-    });
-    regionField.resetField({
-      value: regionField.value.value,
-    });
-  }).catch(e => {
+    resetForm({ values: request });
+  } catch (e) {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
-  });
+  }
 });
 
 function onDeleteSubmit() {
   AdminSchoolService.deleteSchool(schoolId.value!).then(() => {
     snackbarStore.showSuccess('학교가 삭제되었습니다.');
-    router.push(RouterPath.Admin.AdminSchoolManageListPage.path);
+    router.push(RouterPath.Admin.AdminSchoolManageListView.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
       snackbarStore.showError(e.message);
@@ -92,46 +91,48 @@ const schoolId = ref<number>();
 const nameField = useField<string>('name');
 const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
-const loading = ref(false);
+const logoUrlField = useField<string>('logoUrl');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 </script>
 
 <template>
   <EditForm
     form-title="학교 수정/삭제"
-    :loading="loading"
+    :loading="isSubmitting"
     :on-update-submit="onUpdateSubmit"
     :on-delete-submit="onDeleteSubmit"
+    :is-touched="meta.dirty"
   >
-    <v-text-field
-      class="mb-3"
-      variant="outlined"
-      label="ID"
-      :model-value="schoolId"
-      :readonly="true"
-    />
-    <v-text-field
-      class="mb-3"
+    <ReadonlyField label="ID" :value="schoolId" />
+    <TextField
+      label="대학교 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
       placeholder="XX대학교"
-      variant="outlined"
-      label="대학교 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="학교 도메인"
       v-model="domainField.value.value"
       :error-messages="domainField.errorMessage.value"
       placeholder="school.ac.kr"
-      variant="outlined"
-      label="학교 도메인"
     />
-    <v-select
-      class="mb-3"
+    <TextField
+      label="로고 URL (선택)"
+      v-model="logoUrlField.value.value"
+      :error-messages="logoUrlField.errorMessage.value"
+      placeholder="https://image.com/logo.png"
+    />
+    <TextField
+      label="백그라운드 이미지 URL (선택)"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
+      placeholder="https://image.com/backgroundImage.png"
+    />
+    <SelectField
+      label="지역"
+      :items="Object.values(Region)"
       v-model="regionField.value.value"
       :error-messages="regionField.errorMessage.value"
-      :items="['서울', '대구', '부산']"
-      variant="outlined"
-      label="지역"
     />
   </EditForm>
 </template>

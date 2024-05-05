@@ -1,51 +1,65 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate';
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
-import { ref } from 'vue';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { CreateSchoolRequest } from '@/api/spec/school/CreateSchoolApiSpec.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
+import { Region } from '@/type/school/Region.ts';
+import SelectField from '@/components/form/textfield/SelectField.vue';
+import TextField from '@/components/form/textfield/TextField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object, string } from 'zod';
 
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<CreateSchoolRequest>({
-  validationSchema: {
-    name(value: string) {
-      if (!value) return '대학교 이름은 필수입니다.';
-      if (value.length < 5) return '대학교의 이름은 5글자 이상이어야 합니다.';
-      if (!value.endsWith('학교')) return '대학교의 이름은 "학교"로 끝나야 합니다.';
-      return true;
-    },
-    domain(value: string) {
-      if (!value) return '도메인은 필수입니다.';
-      if (value.length < 5) return '도메인은 5글자 이상이어야 합니다.';
-      if (!/^[^.].*\..+$/.test(value)) return '도메인의 형식은 school.ac.kr과 같아야 합니다.';
-      if (!/^[a-zA-Z.]+$/.test(value)) return '도메인은 영문으로만 구성되어야 합니다.';
-      return true;
-    },
-    region(value: string) {
-      if (!value) return '지역은 필수입니다.';
-      return true;
-    },
-  },
+const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
+  validationSchema: toTypedSchema(
+    object({
+      name: string({
+        required_error: '대학교 이름은 필수입니다.',
+      })
+      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
+      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
+      domain: string({
+        required_error: '도메인은 필수입니다.',
+      })
+      .min(5, '도메인은 5글자 이상이어야 합니다.')
+      .regex(/^[^.].*\..+$/, '도메인의 형식은 school.ac.kr과 같아야 합니다.')
+      .regex(/^[a-zA-Z.]+$/, '도메인은 영문으로만 구성되어야 합니다.'),
+      logoUrl: string()
+      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      backgroundImageUrl: string()
+      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      region: string({
+        required_error: '지역은 필수입니다.',
+      }),
+    }),
+  ),
 });
-const nameField = useField('name');
-const domainField = useField('domain');
+const nameField = useField<string>('name');
+const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
-const loading = ref(false);
+const logoUrlField = useField<string>('logoUrl');
+const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AdminSchoolService.createSchool(request).then(() => {
+const onSubmit = handleSubmit(async request => {
+  try {
+    await AdminSchoolService.createSchool(request);
     handleReset();
-    loading.value = false;
     snackbarStore.showSuccess('학교가 생성되었습니다!');
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      if (e.isValidError()) {
+        setErrors(e.result);
+      } else {
+        snackbarStore.showError(e.message);
+      }
     } else throw e;
-  });
+  }
 });
 </script>
 
@@ -53,31 +67,37 @@ const onSubmit = handleSubmit(request => {
   <CreateForm
     :on-submit="onSubmit"
     form-title="학교 추가"
-    :loading="loading"
+    :loading="isSubmitting"
   >
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="대학교 이름"
       v-model="nameField.value.value"
       :error-messages="nameField.errorMessage.value"
       placeholder="XX대학교"
-      variant="outlined"
-      label="대학교 이름"
     />
-    <v-text-field
-      class="mb-3"
+    <TextField
+      label="학교 도메인"
       v-model="domainField.value.value"
       :error-messages="domainField.errorMessage.value"
       placeholder="school.ac.kr"
-      variant="outlined"
-      label="학교 도메인"
     />
-    <v-select
-      class="mb-3"
+    <TextField
+      label="로고 URL (선택)"
+      v-model="logoUrlField.value.value"
+      :error-messages="logoUrlField.errorMessage.value"
+      placeholder="https://image.com/logo.png"
+    />
+    <TextField
+      label="백그라운드 이미지 URL (선택)"
+      v-model="backgroundImageUrlField.value.value"
+      :error-messages="backgroundImageUrlField.errorMessage.value"
+      placeholder="https://image.com/backgroundImage.png"
+    />
+    <SelectField
+      label="지역"
+      :items="Object.values(Region)"
       v-model="regionField.value.value"
       :error-messages="regionField.errorMessage.value"
-      :items="['서울', '대구', '부산']"
-      variant="outlined"
-      label="지역"
     />
   </CreateForm>
 </template>

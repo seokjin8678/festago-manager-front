@@ -3,17 +3,17 @@ import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { ref } from 'vue';
 import { router } from '@/router';
 import AuthService from '@/api/auth/AuthService.ts';
-import ApiService from '@/api';
 import FestagoError from '@/api/FestagoError.ts';
 import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
-import { AuthType } from '@/type/AuthType.ts';
+import TextField from '@/components/form/textfield/TextField.vue';
+import PasswordField from '@/components/form/textfield/PasswordField.vue';
 
 const authStore = useAuthStore();
 const snackbarStore = useSnackbarStore();
-const { handleSubmit, handleReset } = useForm<LoginRequest>({
+const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
   validationSchema: {
     username(value: string) {
       if (!value) return '계정은 필수입니다.';
@@ -25,32 +25,25 @@ const { handleSubmit, handleReset } = useForm<LoginRequest>({
     },
   },
 });
-const usernameField = useField('username');
-const passwordField = useField('password');
+const usernameField = useField<string>('username');
+const passwordField = useField<string>('password');
 const invalidForm = ref(false);
-const loading = ref(false);
-const passwordVisible = ref(false);
 
-const onSubmit = handleSubmit(request => {
-  loading.value = true;
-  setTimeout(() => (loading.value = false), 1000);
-  AuthService.login(request).then(response => {
+const onSubmit = handleSubmit(async request => {
+  try {
+    const response = await AuthService.login(request);
     handleReset();
-    // TODO 백엔드 로그인 API가 완성되면 변경할 것
-    // const { accessToken, username, authType } = response.data;
-    const { accessToken } = response.data;
-    const username = 'ADMIN'
-    const authType = AuthType.ADMIN;
-    ApiService.changeAccessToken(accessToken);
-    authStore.login({ accessToken, username, authType });
-    router.push(RouterPath.Common.HomePage.path);
+    const { username, authType } = response.data;
+    authStore.login({ username, authType });
+
+    await router.push(RouterPath.Common.HomeView.path);
     snackbarStore.showSuccess(`${username}님, 환영합니다!`);
-  }).catch(e => {
+  } catch (e) {
     if (e instanceof FestagoError) {
       usernameField.setErrors(e.message);
       passwordField.setErrors(e.message);
     } else throw e;
-  });
+  }
 });
 
 </script>
@@ -71,36 +64,27 @@ const onSubmit = handleSubmit(request => {
       v-model="invalidForm"
       @submit.prevent="onSubmit"
     >
-      <p class="text-subtitle-1 text-medium-emphasis">
-        계정
-      </p>
-      <v-text-field
+      <p class="text-subtitle-1 text-medium-emphasis">계정</p>
+      <TextField
+        label=""
         v-model="usernameField.value.value"
         :error-messages="usernameField.errorMessage.value"
-        density="compact"
-        placeholder="ID를 입력해주세요."
         prepend-inner-icon="mdi-account-outline"
-        variant="outlined"
-        maxlength="50"
+        placeholder="ID를 입력해주세요."
       />
-      <p class="text-subtitle-1 text-medium-emphasis mt-1">
-        비밀번호
-      </p>
-      <v-text-field
+
+      <p class="text-subtitle-1 text-medium-emphasis mt-1">비밀번호</p>
+      <PasswordField
+        label=""
         v-model="passwordField.value.value"
         :error-messages="passwordField.errorMessage.value"
-        :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="passwordVisible ? 'text' : 'password'"
-        density="compact"
-        placeholder="비밀번호를 입력해주세요."
         prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        maxlength="50"
-        @click:append-inner="passwordVisible = !passwordVisible"
+        placeholder="비밀번호를 입력해주세요."
       />
+
       <v-btn
         :disabled="!invalidForm"
-        :loading="loading"
+        :loading="isSubmitting"
         :block="true"
         class="my-4"
         color="blue"

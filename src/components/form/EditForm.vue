@@ -3,9 +3,10 @@ import { ref } from 'vue';
 
 const props = defineProps<{
   formTitle: string,
-  onUpdateSubmit: (e?: Event) => Promise<void | undefined>,
+  onUpdateSubmit: (e?: Event) => any,
   onDeleteSubmit: () => void,
-  loading: boolean
+  loading: boolean,
+  isTouched: boolean
 }>();
 const invalidForm = ref(false);
 const showDeleteDialog = ref(false);
@@ -44,7 +45,7 @@ const showDeleteDialog = ref(false);
     @submit.prevent="onUpdateSubmit"
   >
     <v-card
-      class="mx-auto pa-3 pa-md-15 py-8 mt-16 w-75"
+      class="mx-auto pa-3 pa-md-15 py-8 my-16 w-75"
       max-width="800"
       min-width="350"
       elevation="4"
@@ -54,8 +55,8 @@ const showDeleteDialog = ref(false);
       </v-card-title>
       <slot></slot>
       <v-btn
-        :disabled="!invalidForm"
-        :loading="props.loading"
+        :disabled="!invalidForm || !props.isTouched"
+        :loading="loading"
         class="text-h6"
         type="submit"
         text="수정"

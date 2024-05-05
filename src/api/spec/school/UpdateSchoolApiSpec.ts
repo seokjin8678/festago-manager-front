@@ -4,6 +4,8 @@ export type UpdateSchoolRequest = {
   name: string,
   domain: string,
   region: string,
+  logoUrl: string,
+  backgroundImageUrl: string,
 }
 
 export type UpdateSchoolResponse = {

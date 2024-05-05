@@ -9,10 +9,12 @@ export type FetchOneSchoolResponse = {
   domain: string,
   name: string,
   region: string,
+  logoUrl: string,
+  backgroundImageUrl: string
 }
 
 const FetchOneSchoolApiSpec = (schoolId: number): ApiSpec => ({
-  url: `/api/v1/schools/${schoolId}`,
+  url: `/admin/api/v1/schools/${schoolId}`,
   method: 'GET',
 });
 

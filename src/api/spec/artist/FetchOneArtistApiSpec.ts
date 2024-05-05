@@ -7,7 +7,8 @@ export type FetchOneArtistRequest = {
 export type FetchOneArtistResponse = {
   id: number,
   name: string,
-  profileImage: string
+  profileImageUrl: string,
+  backgroundImageUrl: string,
 }
 
 const FetchOneArtistApiSpec = (artistId: number): ApiSpec => ({

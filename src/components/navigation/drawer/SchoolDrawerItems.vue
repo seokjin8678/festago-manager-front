@@ -17,12 +17,12 @@ const authStore = useAuthStore();
       <v-list-item
         prepend-icon="mdi-home-city"
         title="홈"
-        @click="$router.push(RouterPath.Common.HomePage.path)"
+        @click="$router.push(RouterPath.Common.HomeView.path)"
       />
       <v-list-item
         prepend-icon="mdi-account-group-outline"
         title="축제 관리"
-        @click="$router.push(RouterPath.School.SchoolFestivalManagePage.path)"
+        @click="$router.push(RouterPath.School.SchoolFestivalManageView.path)"
       />
     </v-list>
   </v-list-item>
