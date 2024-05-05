@@ -43,6 +43,12 @@ function uploadImage() {
   });
 }
 
+const rules = [(files: File[]) => {
+  if (!files || files.length == 0) return true; // image is optional
+  if (files[0].size > 5_000_000) return '이미지의 크기는 5MB 까지 가능합니다.'
+  return true;
+}];
+
 </script>
 
 <template>
@@ -53,9 +59,12 @@ function uploadImage() {
     <v-card class="pa-5">
       <v-card-title class="text-h5 text-center">{{ props.title }}</v-card-title>
       <v-file-input
-        label="File input"
+        label="이미지 파일 업로드"
         :show-size="true"
         v-model="images"
+        prepend-icon="mdi-file-image-outline"
+        accept="image/png, image/jpeg"
+        :rules="rules"
       />
       <v-btn
         @click="uploadImage"
