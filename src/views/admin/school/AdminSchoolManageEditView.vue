@@ -13,6 +13,8 @@ import { Region } from '@/type/school/Region.ts';
 import SelectField from '@/components/form/textfield/SelectField.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object, string } from 'zod';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -30,36 +32,32 @@ onMounted(() => {
 });
 
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
-  validationSchema: {
-    name(value: string) {
-      if (!value) return '대학교 이름은 필수입니다.';
-      return true;
-    },
-    domain(value: string) {
-      if (!value) return '도메인은 필수입니다.';
-      return true;
-    },
-    logoUrl(value: string) {
-      if (value) {
-        if (value.length >= 255) return '로고 URL은 255글자 미만이어야 합니다.';
-        if (!value.startsWith('https://')) return '로고 URL은 https://로 시작되어야 합니다.';
-        if (!/\.(png|jpg)$/.test(value)) return '로고 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
-      }
-      return true;
-    },
-    backgroundImageUrl(value: string) {
-      if (value) {
-        if (value.length >= 255) return '백그라운드 이미지 URL은 255글자 미만이어야 합니다.';
-        if (!value.startsWith('https://')) return '백그라운드 이미지 URL은 https://로 시작되어야 합니다.';
-        if (!/\.(png|jpg)$/.test(value)) return '백그라운드 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
-      }
-      return true;
-    },
-    region(value: string) {
-      if (!value) return '지역은 필수입니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      name: string({
+        required_error: '대학교 이름은 필수입니다.',
+      })
+      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
+      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
+      domain: string({
+        required_error: '도메인은 필수입니다.',
+      })
+      .min(5, '도메인은 5글자 이상이어야 합니다.')
+      .regex(/^[^.].*\..+$/, '도메인의 형식은 school.ac.kr과 같아야 합니다.')
+      .regex(/^[a-zA-Z.]+$/, '도메인은 영문으로만 구성되어야 합니다.'),
+      logoUrl: string()
+      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      backgroundImageUrl: string()
+      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      region: string({
+        required_error: '지역은 필수입니다.',
+      }),
+    }),
+  ),
 });
 
 const onUpdateSubmit = handleSubmit(async request => {
