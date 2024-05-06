@@ -6,7 +6,7 @@ import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
 import AdminSocialMediaService from '@/api/admin/AdminSocialMediaService.ts';
 import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { FetchOneArtistResponse } from '@/api/spec/artist/FetchOneArtistApiSpec.ts';
 import { FetchSocialMediasResponse } from '@/api/spec/socialmedia/FetchSocialMediasApiSpec.ts';
@@ -17,7 +17,6 @@ import ActionButton from '@/components/tab/ActionButton.vue';
 import ActionTab from '@/components/tab/ActionTab.vue';
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 const artistId = ref<number>();
 const artist = ref<FetchOneArtistResponse>();
 const socialMedias: Ref<FetchSocialMediasResponse> = ref([]);
@@ -29,7 +28,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminArtistManageListView.path);
-      snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
+      Toast.error('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
   AdminSocialMediaService.fetchArtistSocialMedias(artistId.value).then(response => {

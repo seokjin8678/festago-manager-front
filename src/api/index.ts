@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import FestagoError from '@/api/FestagoError.ts';
 import ApiSpec from '@/api/spec/ApiSpec.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { router } from '@/router';
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 
@@ -15,23 +15,21 @@ axiosInstance.interceptors.request.use(value => {
   const authStore = useAuthStore();
   if (authStore.isLogin && authStore.isTokenExpired) {
     router.push('/login').then(() => {
-      const snackbarStore = useSnackbarStore();
-      snackbarStore.showError('로그인 토큰이 만료되었습니다.');
+      Toast.error('로그인 토큰이 만료되었습니다.');
       authStore.logout();
     });
-    throw new Error('로그인 토큰이 만료되었습니다.')
+    throw new Error('로그인 토큰이 만료되었습니다.');
   }
   return value;
-})
+});
 
 axiosInstance.interceptors.response.use(value => value, error => {
   const response = error.response;
   if (response) {
     if (response.status == 401) {
       router.push('/login').then(() => {
-        const snackbarStore = useSnackbarStore();
         const authStore = useAuthStore();
-        snackbarStore.showError(response.data.message);
+        Toast.error(response.data.message);
         authStore.logout();
       });
     }

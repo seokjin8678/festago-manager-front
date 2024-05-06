@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { useField, useForm } from 'vee-validate';
 import { CreateArtistRequest } from '@/api/spec/artist/CreateArtistApiSpec.ts';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
@@ -10,7 +10,6 @@ import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
 
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
   validationSchema: toTypedSchema(
     object({
@@ -38,13 +37,13 @@ const onSubmit = handleSubmit(async request => {
   try {
     await AdminArtistService.createArtist(request);
     handleReset();
-    snackbarStore.showSuccess('아티스트가 생성되었습니다!');
+    Toast.success('아티스트가 생성되었습니다!');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

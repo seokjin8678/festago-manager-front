@@ -2,7 +2,7 @@
 import CreateForm from '@/components/form/CreateForm.vue';
 import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { useRoute } from 'vue-router';
 import AdminStageService from '@/api/admin/AdminStageService.ts';
 import FestagoError from '@/api/FestagoError.ts';
@@ -18,7 +18,6 @@ type CreateStageForm = {
 }
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
   validationSchema: toTypedSchema(
     object({
@@ -47,13 +46,13 @@ const onSubmit = handleSubmit(async form => {
     });
     handleReset();
     artists.value.clear();
-    snackbarStore.showSuccess('공연이 생성되었습니다!');
+    Toast.success('공연이 생성되었습니다!');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

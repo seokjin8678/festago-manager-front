@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { onMounted, ref } from 'vue';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
@@ -15,9 +14,9 @@ import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
+import Toast from '@/utils/Toast.ts';
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   socialMediaId.value = parseInt(route.params.id as string);
@@ -27,7 +26,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminSchoolManageListView.path);
-      snackbarStore.showError('해당 소셜미디어를 찾을 수 없습니다.');
+      Toast.error('해당 소셜미디어를 찾을 수 없습니다.');
     } else throw e;
   });
 });
@@ -61,14 +60,14 @@ const urlField = useField<string>('url');
 const onUpdateSubmit = handleSubmit(async request => {
   try {
     await AdminSocialMediaService.updateSocialMedia(socialMediaId.value!, request);
-    snackbarStore.showSuccess('소셜미디어가 수정되었습니다.');
+    Toast.success('소셜미디어가 수정되었습니다.');
     resetForm({ values: request });
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }
@@ -76,11 +75,11 @@ const onUpdateSubmit = handleSubmit(async request => {
 
 function onDeleteSubmit() {
   AdminSocialMediaService.deleteSocialMedia(socialMediaId.value!).then(() => {
-    snackbarStore.showSuccess('소셜미디어가 삭제되었습니다.');
+    Toast.success('소셜미디어가 삭제되었습니다.');
     router.back();
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      Toast.error(e.message);
     } else throw e;
   });
 }
