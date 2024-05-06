@@ -7,23 +7,28 @@ import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object, string } from 'zod';
 
 const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
-  validationSchema: {
-    name(value: string) {
-      if (!value) return '아티스트 이름은 필수입니다.';
-      return true;
-    },
-    profileImageUrl(value: string) {
-      if (!value) return '프로필 이미지 URL은 필수입니다.';
-      return true;
-    },
-    backgroundImageUrl(value: string) {
-      if (!value) return '백그라운드 이미지 URL은 필수입니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      name: string({
+        required_error: '아티스트 이름은 필수입니다.',
+      }),
+      profileImageUrl: string({
+        required_error: '프로필 이미지 URL은 필수입니다.',
+      })
+      .max(255, '프로필 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '프로필 이미지 URL은 https://로 시작되어야 합니다.'),
+      backgroundImageUrl: string({
+        required_error: '백그라운드 이미지 URL은 필수입니다.',
+      })
+      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.'),
+    }),
+  ),
 });
 
 const nameField = useField<string>('name');
@@ -31,7 +36,7 @@ const profileImageUrlField = useField<string>('profileImageUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 const onSubmit = handleSubmit(async request => {
   try {
-    await AdminArtistService.createArtist(request)
+    await AdminArtistService.createArtist(request);
     handleReset();
     snackbarStore.showSuccess('아티스트가 생성되었습니다!');
   } catch (e) {
