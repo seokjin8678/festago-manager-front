@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
 import RouterPath from '@/router/RouterPath.ts';
@@ -15,7 +15,6 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   artistId.value = parseInt(route.params.id as string);
@@ -24,7 +23,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminArtistManageListView.path);
-      snackbarStore.showError('해당 아티스트를 찾을 수 없습니다.');
+      Toast.error('해당 아티스트를 찾을 수 없습니다.');
     } else throw e;
   });
 });
@@ -52,14 +51,14 @@ const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<Updat
 const onUpdateSubmit = handleSubmit(async request => {
   try {
     await AdminArtistService.updateArtist(artistId.value!, request);
-    snackbarStore.showSuccess('아티스트가 수정되었습니다.');
+    Toast.success('아티스트가 수정되었습니다.');
     resetForm({ values: request });
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }
@@ -67,11 +66,11 @@ const onUpdateSubmit = handleSubmit(async request => {
 
 function onDeleteSubmit() {
   AdminArtistService.deleteArtist(artistId.value!).then(() => {
-    snackbarStore.showSuccess('아티스트가 삭제되었습니다.');
+    Toast.success('아티스트가 삭제되었습니다.');
     router.push(RouterPath.Admin.AdminArtistManageListView.path);
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      Toast.error(e.message);
     } else throw e;
   });
 }

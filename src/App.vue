@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import Navigation from '@/components/navigation/Navigation.vue';
-import Snackbar from '@/components/snackbar/Snackbar.vue';
+import 'vuetify-sonner/style.css';
+import { VSonner } from 'vuetify-sonner';
 </script>
 
 <template>
   <v-app id="container">
     <Navigation />
+    <VSonner />
     <v-main>
       <router-view />
     </v-main>
-    <Snackbar />
   </v-app>
 </template>

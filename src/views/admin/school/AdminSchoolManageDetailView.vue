@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { onMounted, Ref, ref } from 'vue';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
@@ -17,7 +17,6 @@ import ActionTab from '@/components/tab/ActionTab.vue';
 import ActionButton from '@/components/tab/ActionButton.vue';
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 const schoolId = ref<number>();
 const school = ref<FetchOneSchoolResponse>();
 const socialMedias: Ref<FetchSocialMediasResponse> = ref([]);
@@ -29,7 +28,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminFestivalManageListView.path);
-      snackbarStore.showError('해당 학교를 찾을 수 없습니다.');
+      Toast.error('해당 학교를 찾을 수 없습니다.');
     } else throw e;
   });
   AdminSocialMediaService.fetchSchoolSocialMedias(schoolId.value).then(response => {

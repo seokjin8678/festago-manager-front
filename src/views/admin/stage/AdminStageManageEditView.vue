@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
 import { useRoute } from 'vue-router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { useField, useForm } from 'vee-validate';
 import AdminStageService from '@/api/admin/AdminStageService.ts';
 import EditForm from '@/components/form/EditForm.vue';
@@ -21,7 +21,6 @@ type UpdateStageForm = {
 }
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 const stageId = ref<number>();
 const artists = ref(new Map<number, Artist>());
 
@@ -40,7 +39,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.back();
-      snackbarStore.showError('해당 공연을 찾을 수 없습니다.');
+      Toast.error('해당 공연을 찾을 수 없습니다.');
     } else throw e;
   });
 });
@@ -66,13 +65,13 @@ const onUpdateSubmit = handleSubmit(async form => {
   try {
     await AdminStageService.updateStage(stageId.value!, form);
     resetForm({ values: form });
-    snackbarStore.showSuccess('공연이 수정되었습니다.');
+    Toast.success('공연이 수정되었습니다.');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }
@@ -80,11 +79,11 @@ const onUpdateSubmit = handleSubmit(async form => {
 
 const onDeleteSubmit = () => {
   AdminStageService.deleteStage(stageId.value!).then(() => {
-    snackbarStore.showSuccess('공연이 삭제되었습니다.');
+    Toast.success('공연이 삭제되었습니다.');
     router.back();
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      Toast.error(e.message);
     } else throw e;
   });
 };

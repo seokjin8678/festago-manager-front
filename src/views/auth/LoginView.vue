@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { router } from '@/router';
 import AuthService from '@/api/auth/AuthService.ts';
 import FestagoError from '@/api/FestagoError.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { useField, useForm } from 'vee-validate';
 import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
@@ -12,7 +12,6 @@ import TextField from '@/components/form/textfield/TextField.vue';
 import PasswordField from '@/components/form/textfield/PasswordField.vue';
 
 const authStore = useAuthStore();
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
   validationSchema: {
     username(value: string) {
@@ -37,7 +36,7 @@ const onSubmit = handleSubmit(async request => {
     authStore.login({ username, authType });
 
     await router.push(RouterPath.Common.HomeView.path);
-    snackbarStore.showSuccess(`${username}님, 환영합니다!`);
+    Toast.success(`${username}님, 환영합니다!`);
   } catch (e) {
     if (e instanceof FestagoError) {
       usernameField.setErrors(e.message);
