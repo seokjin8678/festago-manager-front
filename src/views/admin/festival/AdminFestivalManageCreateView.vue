@@ -19,8 +19,7 @@ const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFes
       name: string({
         required_error: '축제 이름은 필수입니다.',
       })
-      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
-      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
+      .min(5, '축제 이름은 5글자 이상이어야 합니다.'),
       startDate: string({
         required_error: '시작일은 필수입니다.',
       }),
