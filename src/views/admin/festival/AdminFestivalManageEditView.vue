@@ -12,6 +12,8 @@ import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { UpdateFestivalRequest } from '@/api/spec/festival/UpdateFestivalApiSpec.ts';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object, string } from 'zod';
 
 const route = useRoute();
 const snackbarStore = useSnackbarStore();
@@ -31,28 +33,25 @@ onMounted(() => {
 });
 
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateFestivalRequest>({
-  validationSchema: {
-    name(value: string) {
-      if (!value) return '축제 이름은 필수입니다.';
-      if (value.length < 5) return '축제 이름은 5글자 이상이어야 합니다.';
-      return true;
-    },
-    startDate(value: string) {
-      if (!value) return '시작일은 필수입니다.';
-      return true;
-    },
-    endDate(value: string) {
-      if (!value) return '종료일은 필수입니다.';
-      return true;
-    },
-    posterImageUrl(value: string) {
-      if (!value) return '포스터 이미지 URL은 필수입니다.';
-      if (value.length >= 255) return '포스터 이미지 URL은 255글자 미만이어야 합니다.';
-      if (!value.startsWith('https://')) return '포스터 이미지 URL은 https://로 시작되어야 합니다.';
-      if (!/\.(png|jpg)$/.test(value)) return '포스터 이미지 URL은 png,jpg와 같은 이미지 파일으로 끝나야 합니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      name: string({
+        required_error: '축제 이름은 필수입니다.',
+      })
+      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
+      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
+      startDate: string({
+        required_error: '시작일은 필수입니다.',
+      }),
+      endDate: string({
+        required_error: '종료일은 필수입니다.',
+      }),
+      posterImageUrl: string()
+      .max(255, '포스터 이미지 URL은 255글자 미만이어야 합니다.')
+      .startsWith('https://', '포스터 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+    }),
+  ),
 });
 
 const festivalId = ref<number>();
