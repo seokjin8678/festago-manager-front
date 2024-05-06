@@ -7,9 +7,8 @@ import { ref } from 'vue';
 import ConfirmDialog from '@/components/dialog/ConfirmDialog.vue';
 import ActionButton from '@/components/tab/ActionButton.vue';
 import ActionTab from '@/components/tab/ActionTab.vue';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 
-const snackbarStore = useSnackbarStore();
 const dialogTitle = ref('');
 const showLogDialog = ref(false);
 const dialogAction = ref(() => {
@@ -62,10 +61,10 @@ function setDialogActionCreateMockFestivals() {
   dialogTitle.value = 'Mock 축제 데이터를 추가 할까요?';
   dialogAction.value = () => {
     RootAdminService.createMockFestivals().then(() => {
-      snackbarStore.showSuccess('Mock 축제 데이터가 추가되었습니다!');
+      Toast.success('Mock 축제 데이터가 추가되었습니다!');
     }).catch(e => {
       if (e instanceof FestagoError) {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       } else throw e;
     });
     alert('Mock 축제 데이터 추가를 요청했습니다. (해당 작업은 몇 초 소요됩니다.)');

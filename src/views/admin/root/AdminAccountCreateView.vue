@@ -3,13 +3,12 @@
 import CreateForm from '@/components/form/CreateForm.vue';
 import { useField, useForm } from 'vee-validate';
 import { CreateAdminAccountRequest } from '@/api/spec/admin/CreateAdminAccountApiSpec.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import RootAdminService from '@/api/admin/RootAdminService.ts';
 import TextField from '@/components/form/textfield/TextField.vue';
 import PasswordField from '@/components/form/textfield/PasswordField.vue';
 
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateAdminAccountRequest>({
   validationSchema: {
     username(value: string) {
@@ -42,13 +41,13 @@ const onSubmit = handleSubmit(async request => {
   try {
     await RootAdminService.createAdminAccount(request);
     handleReset();
-    snackbarStore.showSuccess('어드민 계정이 생성되었습니다.');
+    Toast.success('어드민 계정이 생성되었습니다.');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

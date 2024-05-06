@@ -6,7 +6,7 @@ import { FetchOneFestivalResponse } from '@/api/spec/festival/FetchOneFestivalAp
 import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { router } from '@/router';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { stringToDateString } from '@/utils/DateFormatUtil.ts';
 import { FetchFestivalStagesResponse } from '@/api/spec/festival/FetchFestivalStagesApiSpec.ts';
 import ReadonlyForm from '@/components/form/ReadonlyForm.vue';
@@ -16,7 +16,6 @@ import ActionTab from '@/components/tab/ActionTab.vue';
 import ActionButton from '@/components/tab/ActionButton.vue';
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 
 onMounted(() => {
   festivalId.value = parseInt(route.params.id as string);
@@ -25,7 +24,7 @@ onMounted(() => {
   }).catch(e => {
     if (e instanceof FestagoError) {
       router.push(RouterPath.Admin.AdminFestivalManageListView.path);
-      snackbarStore.showError('해당 축제를 찾을 수 없습니다.');
+      Toast.error('해당 축제를 찾을 수 없습니다.');
     } else throw e;
   });
   AdminFestivalService.fetchFestivalStages(festivalId.value).then(response => {

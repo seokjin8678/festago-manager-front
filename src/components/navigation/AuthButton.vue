@@ -2,17 +2,16 @@
 import { useAuthStore } from '@/stores/useAuthStore.ts';
 import { router } from '@/router';
 import AuthService from '@/api/auth/AuthService.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import RouterPath from '@/router/RouterPath.ts';
 
 const authStore = useAuthStore();
-const snackbarStore = useSnackbarStore();
 
 function logout() {
   AuthService.logout().then(() => {
     authStore.logout();
     router.push(RouterPath.Auth.LoginView.path);
-    snackbarStore.showSuccess('로그아웃 되었습니다.')
+    Toast.success('로그아웃 되었습니다.');
   });
 }
 </script>

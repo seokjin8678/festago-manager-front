@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useField, useForm } from 'vee-validate';
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import { CreateSchoolRequest } from '@/api/spec/school/CreateSchoolApiSpec.ts';
 import CreateForm from '@/components/form/CreateForm.vue';
@@ -11,7 +11,6 @@ import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
 
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSchoolRequest>({
   validationSchema: toTypedSchema(
     object({
@@ -50,13 +49,13 @@ const onSubmit = handleSubmit(async request => {
   try {
     await AdminSchoolService.createSchool(request);
     handleReset();
-    snackbarStore.showSuccess('학교가 생성되었습니다!');
+    Toast.success('학교가 생성되었습니다!');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

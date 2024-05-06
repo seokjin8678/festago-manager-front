@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { useField, useForm } from 'vee-validate';
 import { OwnerType } from '@/type/socialmedia/OwnerType.ts';
 import { SocialMediaType } from '@/type/socialmedia/SocialMediaType.ts';
@@ -21,7 +21,6 @@ type CreateArtistSocialMediaForm = {
 }
 
 const route = useRoute();
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateArtistSocialMediaForm>({
   validationSchema: toTypedSchema(
     object({
@@ -61,13 +60,13 @@ const onSubmit = handleSubmit(async form => {
       url: form.url,
     });
     handleReset();
-    snackbarStore.showSuccess('소셜미디어가 생성되었습니다!');
+    Toast.success('소셜미디어가 생성되었습니다!');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

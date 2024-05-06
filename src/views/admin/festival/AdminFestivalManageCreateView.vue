@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { FetchOneSchoolResponse } from '@/api/spec/school/FetchOneSchoolApiSpec.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { CreateFestivalRequest } from '@/api/spec/festival/CreateFestivalApiSpec.ts';
 import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
@@ -12,7 +12,6 @@ import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
 
-const snackbarStore = useSnackbarStore();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
   validationSchema: toTypedSchema(
     object({
@@ -49,13 +48,13 @@ const onSubmit = handleSubmit(async request => {
   try {
     await AdminFestivalService.createFestival(request);
     handleReset();
-    snackbarStore.showSuccess('축제가 생성되었습니다!');
+    Toast.success('축제가 생성되었습니다!');
   } catch (e) {
     if (e instanceof FestagoError) {
       if (e.isValidError()) {
         setErrors(e.result);
       } else {
-        snackbarStore.showError(e.message);
+        Toast.error(e.message);
       }
     } else throw e;
   }

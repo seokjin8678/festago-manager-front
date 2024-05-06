@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
+import Toast from '@/utils/Toast.ts';
 import { ref } from 'vue';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 
@@ -8,7 +8,6 @@ export type Artist = {
   id: number,
   name: string
 }
-const snackbarStore = useSnackbarStore();
 
 const artists = defineModel<Map<number, Artist>>('artists', { required: true });
 const showDialog = defineModel<boolean>('showDialog', { required: true });
@@ -36,7 +35,7 @@ function fetchArtists() {
 
 const putArtist = (artist: Artist) => {
   if (artists.value.has(artist.id)) {
-    snackbarStore.showError('이미 등록된 아티스트 입니다.');
+    Toast.error('이미 등록된 아티스트 입니다.');
     return;
   }
   artists.value.set(artist.id, artist);
