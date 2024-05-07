@@ -2,10 +2,9 @@
 import { ref, watch } from 'vue';
 import AdminImageUploadService from '@/api/admin/AdminImageUploadService.ts';
 import FestagoError from '@/api/FestagoError.ts';
-import { useSnackbarStore } from '@/stores/useSnackbarStore.ts';
 import { FileOwnerType } from '@/type/upload/FileOwnerType.ts';
+import Toast from '@/utils/Toast.ts';
 
-const snackbarStore = useSnackbarStore();
 const showDialog = defineModel<boolean>({ required: true });
 const props = defineProps<{
   title: string,
@@ -32,11 +31,11 @@ function uploadImage() {
   }).then(res => {
     emits('uploadCallback', res.data.uploadUri);
     images.value.splice(0);
-    snackbarStore.showSuccess('이미지가 업로드 되었습니다!');
+    Toast.success('이미지가 업로드 되었습니다!');
     showDialog.value = false;
   }).catch(e => {
     if (e instanceof FestagoError) {
-      snackbarStore.showError(e.message);
+      Toast.error(e.message);
     } else throw e;
   }).finally(() => {
     uploadImageLoading.value = false;
@@ -45,7 +44,7 @@ function uploadImage() {
 
 const rules = [(files: File[]) => {
   if (!files || files.length == 0) return true; // image is optional
-  if (files[0].size > 5_000_000) return '이미지의 크기는 5MB 까지 가능합니다.'
+  if (files[0].size > 5_000_000) return '이미지의 크기는 5MB 까지 가능합니다.';
   return true;
 }];
 
