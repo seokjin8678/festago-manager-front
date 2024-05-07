@@ -1,17 +1,19 @@
 <script setup lang="ts">
-const model = defineModel<string | number>({ required: true });
+const model = defineModel<string | number | undefined>({ required: true });
 
 interface Props {
   label: string,
   type?: string
   errorMessages?: string | readonly string[] | null;
   placeholder?: string | undefined;
+  readonly?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   errorMessages: '',
   placeholder: '',
+  readonly: false
 });
 </script>
 
@@ -24,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
     :placeholder="props.placeholder"
     v-model="model"
     :error-messages="props.errorMessages"
+    :readonly="props.readonly"
   />
 </template>
 
