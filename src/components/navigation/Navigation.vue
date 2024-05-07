@@ -8,7 +8,7 @@ const drawerStore = useDrawerStore();
 const isDev = ref(false)
 
 onMounted(() => {
-  isDev.value = import.meta.env.VITE_IS_DEV
+  isDev.value = import.meta.env.VITE_IS_DEV === 'true'
 })
 
 </script>
