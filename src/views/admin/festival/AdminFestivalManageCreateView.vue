@@ -10,12 +10,15 @@ import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { number, object, string } from 'zod';
 import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
 
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateFestivalRequest>({
   validationSchema: toTypedSchema(
     object({
+      schoolId: number({
+        required_error: '학교는 필수입니다.'
+      }),
       name: string({
         required_error: '축제 이름은 필수입니다.',
       })
