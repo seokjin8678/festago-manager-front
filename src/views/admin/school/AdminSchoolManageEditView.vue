@@ -15,6 +15,7 @@ import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
+import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
 
 const route = useRoute();
 
@@ -92,9 +93,37 @@ const domainField = useField<string>('domain');
 const regionField = useField<string>('region');
 const logoUrlField = useField<string>('logoUrl');
 const backgroundImageUrlField = useField<string>('backgroundImageUrl');
+
+const showImageUploadDialog = ref(false);
+const uploadDialogTitle = ref('');
+const uploadCallback = ref((_: string) => {})
+
+function uploadLogoImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '로고 이미지 업로드'
+  uploadCallback.value = uploadUri => {
+    logoUrlField.value.value = uploadUri;
+  }
+}
+
+function uploadBackgroundImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '백그라운드 이미지 업로드'
+  uploadCallback.value = uploadUri => {
+    backgroundImageUrlField.value.value = uploadUri;
+  }
+}
+
 </script>
 
 <template>
+  <ImageUploadDialog
+    v-model="showImageUploadDialog"
+    :title="uploadDialogTitle"
+    @upload-callback="uploadCallback"
+    :owner-id="schoolId"
+    owner-type="SCHOOL"
+  />
   <EditForm
     form-title="학교 수정/삭제"
     :loading="isSubmitting"
@@ -120,12 +149,16 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
       v-model="logoUrlField.value.value"
       :error-messages="logoUrlField.errorMessage.value"
       placeholder="https://image.com/logo.png"
+      :readonly="true"
+      @click="uploadLogoImage"
     />
     <TextField
       label="백그라운드 이미지 URL (선택)"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
       placeholder="https://image.com/backgroundImage.png"
+      :readonly="true"
+      @click="uploadBackgroundImage"
     />
     <SelectField
       label="지역"

@@ -14,6 +14,7 @@ import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
+import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
 
 const route = useRoute();
 
@@ -84,11 +85,31 @@ function onDeleteSubmit() {
       Toast.error(e.message);
     } else throw e;
   });
-
 }
+
+const showImageUploadDialog = ref(false);
+const uploadDialogTitle = ref('');
+const uploadCallback = ref((_: string) => {
+});
+
+function uploadPosterImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '포스터 이미지 업로드';
+  uploadCallback.value = uploadUri => {
+    posterImageUrlField.value.value = uploadUri;
+  };
+}
+
 </script>
 
 <template>
+  <ImageUploadDialog
+    v-model="showImageUploadDialog"
+    :title="uploadDialogTitle"
+    @upload-callback="uploadCallback"
+    :owner-id="festivalId"
+    owner-type="FESTIVAL"
+  />
   <EditForm
     form-title="축제 수정/삭제"
     :on-update-submit="onUpdateSubmit"
@@ -121,6 +142,8 @@ function onDeleteSubmit() {
       placeholder="https://image.com/festival-poseter.png"
       v-model="posterImageUrlField.value.value"
       :error-messages="posterImageUrlField.errorMessage.value"
+      :readonly="true"
+      @click="uploadPosterImage"
     />
   </EditForm>
 </template>

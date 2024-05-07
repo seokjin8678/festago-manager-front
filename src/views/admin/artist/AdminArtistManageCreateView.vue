@@ -9,6 +9,8 @@ import CreateForm from '@/components/form/CreateForm.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { object, string } from 'zod';
+import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
+import { ref } from 'vue';
 
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArtistRequest>({
   validationSchema: toTypedSchema(
@@ -48,9 +50,36 @@ const onSubmit = handleSubmit(async request => {
     } else throw e;
   }
 });
+
+const showImageUploadDialog = ref(false);
+const uploadDialogTitle = ref('');
+const uploadCallback = ref((_: string) => {
+});
+
+function uploadProfileImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '프로필 이미지 업로드';
+  uploadCallback.value = uploadUri => {
+    profileImageUrlField.value.value = uploadUri;
+  };
+}
+
+function uploadBackgroundImage() {
+  showImageUploadDialog.value = true;
+  uploadDialogTitle.value = '백그라운드 이미지 업로드';
+  uploadCallback.value = uploadUri => {
+    backgroundImageUrlField.value.value = uploadUri;
+  };
+}
+
 </script>
 
 <template>
+  <ImageUploadDialog
+    v-model="showImageUploadDialog"
+    :title="uploadDialogTitle"
+    @upload-callback="uploadCallback"
+  />
   <CreateForm
     :on-submit="onSubmit"
     :loading="isSubmitting"
@@ -67,12 +96,16 @@ const onSubmit = handleSubmit(async request => {
       placeholder="https://image.com/profile-image.png"
       v-model="profileImageUrlField.value.value"
       :error-messages="profileImageUrlField.errorMessage.value"
+      :readonly="true"
+      @click="uploadProfileImage"
     />
     <TextField
       label="아티스트 백그라운드 이미지 URL"
       placeholder="https://image.com/background-image.png"
       v-model="backgroundImageUrlField.value.value"
       :error-messages="backgroundImageUrlField.errorMessage.value"
+      :readonly="true"
+      @click="uploadBackgroundImage"
     />
   </CreateForm>
 </template>

@@ -65,6 +65,13 @@ const ApiService = {
     const apiAction = apiActions[method];
     return apiAction(url, data);
   },
+  requestMultipart<T>(spec: ApiSpec, data: any = null): Promise<AxiosResponse<T>> {
+    const { url, method } = spec;
+    if (method !== 'POST') {
+      throw new Error('POST 메서드만 사용할 수 있습니다.');
+    }
+    return axiosInstance.postForm(url, data);
+  },
 };
 
 export default ApiService;
