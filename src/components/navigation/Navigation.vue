@@ -8,7 +8,7 @@ const drawerStore = useDrawerStore();
 const isDev = ref(false)
 
 onMounted(() => {
-  isDev.value = import.meta.env.DEV
+  isDev.value = !import.meta.env.PROD
 })
 
 </script>
