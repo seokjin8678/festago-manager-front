@@ -18,16 +18,14 @@ const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateArt
       name: string({
         required_error: '아티스트 이름은 필수입니다.',
       }),
-      profileImageUrl: string({
-        required_error: '프로필 이미지 URL은 필수입니다.',
-      })
+      profileImageUrl: string()
       .max(255, '프로필 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '프로필 이미지 URL은 https://로 시작되어야 합니다.'),
-      backgroundImageUrl: string({
-        required_error: '백그라운드 이미지 URL은 필수입니다.',
-      })
+      .startsWith('https://', '프로필 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
+      backgroundImageUrl: string()
       .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.'),
+      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
+      .optional(),
     }),
   ),
 });
