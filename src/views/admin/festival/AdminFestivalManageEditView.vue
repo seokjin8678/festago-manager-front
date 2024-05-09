@@ -13,8 +13,9 @@ import { UpdateFestivalRequest } from '@/api/spec/festival/UpdateFestivalApiSpec
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const route = useRoute();
 
@@ -35,20 +36,10 @@ onMounted(() => {
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateFestivalRequest>({
   validationSchema: toTypedSchema(
     object({
-      name: string({
-        required_error: '축제 이름은 필수입니다.',
-      })
-      .min(5, '축제 이름은 5글자 이상이어야 합니다.'),
-      startDate: string({
-        required_error: '시작일은 필수입니다.',
-      }),
-      endDate: string({
-        required_error: '종료일은 필수입니다.',
-      }),
-      posterImageUrl: string()
-      .max(255, '포스터 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '포스터 이미지 URL은 https://로 시작되어야 합니다.')
-      .optional(),
+      name: FormValidator.Festival.name,
+      startDate: FormValidator.Festival.startDate,
+      endDate: FormValidator.Festival.endDate,
+      posterImageUrl: FormValidator.Festival.posterImageUrl.optional(),
     }),
   ),
 });

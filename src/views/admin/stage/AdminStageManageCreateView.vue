@@ -8,9 +8,10 @@ import AdminStageService from '@/api/admin/AdminStageService.ts';
 import FestagoError from '@/api/FestagoError.ts';
 import ArtistSearchDialog, { Artist } from '@/components/dialog/ArtistSelectDialog.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import ArtistsField from '@/components/form/textfield/ArtistsField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
+import FormValidator from '@/utils/FormValidator.ts';
 
 type CreateStageForm = {
   startTime: string,
@@ -21,12 +22,8 @@ const route = useRoute();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateStageForm>({
   validationSchema: toTypedSchema(
     object({
-      startTime: string({
-        required_error: '공연 시작 시간은 필수입니다.',
-      }),
-      ticketOpenTime: string({
-        required_error: '티켓 오픈 시간은 필수입니다.',
-      }),
+      startTime: FormValidator.Stage.startTime,
+      ticketOpenTime: FormValidator.Stage.ticketOpenTime,
     }),
   ),
 });

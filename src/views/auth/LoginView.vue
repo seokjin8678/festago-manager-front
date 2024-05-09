@@ -10,19 +10,18 @@ import RouterPath from '@/router/RouterPath.ts';
 import { LoginRequest } from '@/api/spec/auth/LoginApiSpec.ts';
 import TextField from '@/components/form/textfield/TextField.vue';
 import PasswordField from '@/components/form/textfield/PasswordField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object } from 'zod';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const authStore = useAuthStore();
 const { isSubmitting, handleSubmit, handleReset } = useForm<LoginRequest>({
-  validationSchema: {
-    username(value: string) {
-      if (!value) return '계정은 필수입니다.';
-      return true;
-    },
-    password(value: string) {
-      if (!value) return '비밀번호는 필수입니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      username: FormValidator.AdminLogin.username,
+      password: FormValidator.AdminLogin.password,
+    }),
+  ),
 });
 const usernameField = useField<string>('username');
 const passwordField = useField<string>('password');
