@@ -13,8 +13,9 @@ import { FetchOneSocialMediaResponse } from '@/api/spec/socialmedia/FetchOneSoci
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import Toast from '@/utils/Toast.ts';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const route = useRoute();
 
@@ -34,18 +35,9 @@ onMounted(() => {
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSocialMediaRequest>({
   validationSchema: toTypedSchema(
     object({
-      name: string({
-        required_error: '소셜미디어 이름은 필수입니다.',
-      }),
-      logoUrl: string()
-      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
-      .optional(),
-      url: string({
-        required_error: 'URL은 필수입니다.',
-      })
-      .max(255, 'URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', 'URL은 https://로 시작되어야 합니다.'),
+      name: FormValidator.SocialMedia.name,
+      logoUrl: FormValidator.SocialMedia.logoUrl.optional(),
+      url: FormValidator.SocialMedia.url,
     }),
   ),
 });

@@ -8,30 +8,24 @@ import FestagoError from '@/api/FestagoError.ts';
 import RootAdminService from '@/api/admin/RootAdminService.ts';
 import TextField from '@/components/form/textfield/TextField.vue';
 import PasswordField from '@/components/form/textfield/PasswordField.vue';
+import { toTypedSchema } from '@vee-validate/zod';
+import { object } from 'zod';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const { isSubmitting, handleSubmit, handleReset, setErrors } = useForm<CreateAdminAccountRequest>({
-  validationSchema: {
-    username(value: string) {
-      if (!value) return '계정은 필수입니다.';
-      if (value.length < 4) return '계정의 길이는 4글자 이상이어야 합니다.';
-      return true;
-    },
-    password(value: string) {
-      if (!value) return '비밀번호는 필수입니다.';
-      if (value.length < 6) return '비밀번호의 길이는 6글자 이상이어야 합니다.';
-      return true;
-    },
-    confirmPassword(value: string) {
-      if (!value) return '비밀번호는 필수입니다.';
-      if (value.length < 6) return '비밀번호의 길이는 6글자 이상이어야 합니다.';
-      return true;
-    },
-  },
+  validationSchema: toTypedSchema(
+    object({
+      username: FormValidator.AdminRegister.username,
+      password: FormValidator.AdminRegister.password,
+      confirmPassword: FormValidator.AdminRegister.password,
+    }),
+  ),
 });
 
 const usernameField = useField<string>('username');
 const passwordField = useField<string>('password');
 const confirmPasswordField = useField<string>('confirmPassword');
+
 const onSubmit = handleSubmit(async request => {
   if (passwordField.value.value !== confirmPasswordField.value.value) {
     passwordField.setErrors('비밀번호와 확인 비밀번호가 맞지 않습니다.');

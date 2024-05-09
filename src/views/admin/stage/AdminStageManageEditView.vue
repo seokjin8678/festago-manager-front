@@ -9,10 +9,11 @@ import { useField, useForm } from 'vee-validate';
 import AdminStageService from '@/api/admin/AdminStageService.ts';
 import EditForm from '@/components/form/EditForm.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { number, object, string } from 'zod';
+import { number, object } from 'zod';
 import ArtistSearchDialog, { Artist } from '@/components/dialog/ArtistSelectDialog.vue';
 import ArtistsField from '@/components/form/textfield/ArtistsField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
+import FormValidator from '@/utils/FormValidator.ts';
 
 type UpdateStageForm = {
   startTime: string,
@@ -46,12 +47,8 @@ onMounted(() => {
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateStageForm>({
   validationSchema: toTypedSchema(
     object({
-      startTime: string({
-        required_error: '공연 시작 시간은 필수입니다.',
-      }),
-      ticketOpenTime: string({
-        required_error: '티켓 오픈 시간은 필수입니다.',
-      }),
+      startTime: FormValidator.Stage.startTime,
+      ticketOpenTime: FormValidator.Stage.ticketOpenTime,
       artistIds: number().array(),
     }),
   ),
