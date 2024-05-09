@@ -11,7 +11,8 @@ import CreateForm from '@/components/form/CreateForm.vue';
 import SelectField from '@/components/form/textfield/SelectField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
+import FormValidator from '@/utils/FormValidator.ts';
 
 type CreateSchoolSocialMediaForm = {
   socialMediaType: SocialMediaType,
@@ -24,21 +25,10 @@ const route = useRoute();
 const { isSubmitting, handleSubmit, setErrors, handleReset } = useForm<CreateSchoolSocialMediaForm>({
   validationSchema: toTypedSchema(
     object({
-      socialMediaType: string({
-        required_error: '소셜미디어 타입은 필수입니다.',
-      }),
-      name: string({
-        required_error: '소셜미디어 이름은 필수입니다.',
-      }),
-      logoUrl: string()
-      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
-      .optional(),
-      url: string({
-        required_error: 'URL은 필수입니다.',
-      })
-      .max(255, 'URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', 'URL은 https://로 시작되어야 합니다.'),
+      socialMediaType: FormValidator.SocialMedia.socialMediaType,
+      name: FormValidator.SocialMedia.name,
+      logoUrl: FormValidator.SocialMedia.logoUrl.optional(),
+      url: FormValidator.SocialMedia.url,
     }),
   ),
 });

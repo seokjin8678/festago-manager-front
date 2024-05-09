@@ -12,8 +12,9 @@ import EditForm from '@/components/form/EditForm.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const route = useRoute();
 
@@ -32,17 +33,9 @@ onMounted(() => {
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateArtistRequest>({
   validationSchema: toTypedSchema(
     object({
-      name: string({
-        required_error: '아티스트 이름은 필수입니다.',
-      }),
-      profileImageUrl: string()
-      .max(255, '프로필 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '프로필 이미지 URL은 https://로 시작되어야 합니다.')
-      .optional(),
-      backgroundImageUrl: string()
-      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
-      .optional(),
+      name: FormValidator.Artist.name,
+      profileImageUrl: FormValidator.Artist.profileImageUrl.optional(),
+      backgroundImageUrl: FormValidator.Artist.backgroundImageUrl.optional(),
     }),
   ),
 });

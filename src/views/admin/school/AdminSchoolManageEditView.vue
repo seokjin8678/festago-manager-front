@@ -14,8 +14,9 @@ import SelectField from '@/components/form/textfield/SelectField.vue';
 import ReadonlyField from '@/components/form/textfield/ReadonlyField.vue';
 import TextField from '@/components/form/textfield/TextField.vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { object, string } from 'zod';
+import { object } from 'zod';
 import ImageUploadDialog from '@/components/dialog/ImageUploadDialog.vue';
+import FormValidator from '@/utils/FormValidator.ts';
 
 const route = useRoute();
 
@@ -34,28 +35,11 @@ onMounted(() => {
 const { isSubmitting, meta, resetForm, setErrors, handleSubmit } = useForm<UpdateSchoolRequest>({
   validationSchema: toTypedSchema(
     object({
-      name: string({
-        required_error: '대학교 이름은 필수입니다.',
-      })
-      .min(5, '대학교의 이름은 5글자 이상이어야 합니다.')
-      .regex(/((학교|캠퍼스)$)/, '대학교의 이름은 "학교" 또는 "캠퍼스"로 끝나야 합니다.'),
-      domain: string({
-        required_error: '도메인은 필수입니다.',
-      })
-      .min(5, '도메인은 5글자 이상이어야 합니다.')
-      .regex(/^[^.].*\..+$/, '도메인의 형식은 school.ac.kr과 같아야 합니다.')
-      .regex(/^[a-zA-Z.]+$/, '도메인은 영문으로만 구성되어야 합니다.'),
-      logoUrl: string()
-      .max(255, '로고 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '로고 URL은 https://로 시작되어야 합니다.')
-      .optional(),
-      backgroundImageUrl: string()
-      .max(255, '백그라운드 이미지 URL은 255글자 미만이어야 합니다.')
-      .startsWith('https://', '백그라운드 이미지 URL은 https://로 시작되어야 합니다.')
-      .optional(),
-      region: string({
-        required_error: '지역은 필수입니다.',
-      }),
+      name: FormValidator.School.name,
+      domain: FormValidator.School.domain,
+      logoUrl: FormValidator.School.logoUrl.optional(),
+      backgroundImageUrl: FormValidator.School.backgroundImageUrl.optional(),
+      region: FormValidator.School.region,
     }),
   ),
 });
@@ -96,22 +80,23 @@ const backgroundImageUrlField = useField<string>('backgroundImageUrl');
 
 const showImageUploadDialog = ref(false);
 const uploadDialogTitle = ref('');
-const uploadCallback = ref((_: string) => {})
+const uploadCallback = ref((_: string) => {
+});
 
 function uploadLogoImage() {
   showImageUploadDialog.value = true;
-  uploadDialogTitle.value = '로고 이미지 업로드'
+  uploadDialogTitle.value = '로고 이미지 업로드';
   uploadCallback.value = uploadUri => {
     logoUrlField.value.value = uploadUri;
-  }
+  };
 }
 
 function uploadBackgroundImage() {
   showImageUploadDialog.value = true;
-  uploadDialogTitle.value = '백그라운드 이미지 업로드'
+  uploadDialogTitle.value = '백그라운드 이미지 업로드';
   uploadCallback.value = uploadUri => {
     backgroundImageUrlField.value.value = uploadUri;
-  }
+  };
 }
 
 </script>
