@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
   };
 }, {
   persist: {
-    storage: localStorage,
+    storage: sessionStorage,
     afterRestore(_context) {
       const authStore = useAuthStore();
       if (authStore.isTokenExpired) {
