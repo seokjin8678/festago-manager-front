@@ -62,7 +62,7 @@ const rules = [(files: File[]) => {
         :show-size="true"
         v-model="images"
         prepend-icon="mdi-file-image-outline"
-        accept="image/png, image/jpeg, image/webp"
+        accept="image/png, image/jpeg"
         :rules="rules"
       />
       <v-btn
