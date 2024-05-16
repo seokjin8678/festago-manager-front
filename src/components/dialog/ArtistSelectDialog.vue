@@ -21,8 +21,7 @@ const fetchArtistsLoading = ref(false);
 function fetchArtists() {
   AdminArtistService.fetchArtists({
     page: 1,
-    itemsPerPage: 10,
-    sortBy: [],
+    itemsPerPage: 10
   }, {
     searchKeyword: artistSearchKeyword.value,
     searchFilter: 'name',

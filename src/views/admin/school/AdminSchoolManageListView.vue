@@ -2,11 +2,11 @@
 import { Ref, ref } from 'vue';
 import AdminSchoolService from '@/api/admin/AdminSchoolService.ts';
 import { PagingRequest } from '@/api/PagingRequest.ts';
-import { SearchRequest } from '@/api/SearchRequest.ts';
 import RouterPath from '@/router/RouterPath.ts';
 import { FetchSchoolsResponse } from '@/api/spec/school/FetchSchoolsApiSpec.ts';
-import SearchForm from '@/components/form/SearchForm.vue';
 import DataTable from '@/components/datatable/DataTable.vue';
+import { useSearchStore } from '@/stores/useSearchStore.ts';
+import { router } from '@/router';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -26,24 +26,15 @@ const itemsPerPageOptions = [
   { value: 25, title: '25' },
   { value: 50, title: '50' },
 ];
+const searchFilterStore = useSearchStore();
 const loading = ref(false);
-const itemsPerPage = ref(10);
-const searchRequest: Ref<SearchRequest> = ref({ searchFilter: null, searchKeyword: null });
 const items: Ref<FetchSchoolsResponse> = ref({ content: [], totalElements: 0 });
-
-function search(origin: SearchRequest) {
-  searchRequest.value = origin;
-  fetch({
-    page: 1,
-    itemsPerPage: itemsPerPage.value,
-    sortBy: [],
-  });
-}
 
 function fetch(paging: PagingRequest) {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  AdminSchoolService.fetchSchools(paging, searchRequest.value).then(response => {
+  const searchRequest = searchFilterStore.getSearchRequest(router.currentRoute.value.name?.toString());
+  AdminSchoolService.fetchSchools(paging, searchRequest).then(response => {
     items.value = response.data;
     loading.value = false;
   });
@@ -56,10 +47,6 @@ function fetch(paging: PagingRequest) {
     :flat="true"
     title="학교 목록"
   >
-    <SearchForm
-      :search="search"
-      :search-filters="searchFilters"
-    />
     <DataTable
       :loading="loading"
       :table-headers="tableHeaders"
@@ -68,6 +55,7 @@ function fetch(paging: PagingRequest) {
       :item-length="items.totalElements"
       :items="items.content"
       :detail-page-router-name="RouterPath.Admin.AdminSchoolManageDetailView.name"
+      :search-filters="searchFilters"
     />
   </v-card>
 </template>

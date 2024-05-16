@@ -59,7 +59,6 @@ function fetchSchools() {
   AdminSchoolService.fetchSchools({
     page: 1,
     itemsPerPage: 10,
-    sortBy: [],
   }, {
     searchKeyword: schoolSearchKeyword.value,
     searchFilter: 'name',
