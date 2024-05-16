@@ -1,13 +1,11 @@
 <script setup lang="ts">
 
 import RouterPath from '@/router/RouterPath.ts';
-import DataTable from '@/components/datatable/DataTable.vue';
+import DataSearchTable from '@/components/datatable/DataSearchTable.vue';
 import { Ref, ref } from 'vue';
 import AdminArtistService from '@/api/admin/AdminArtistService.ts';
 import { FetchArtistsResponse } from '@/api/spec/artist/FetchArtistsApiSpec.ts';
-import { PagingRequest } from '@/api/PagingRequest.ts';
-import { router } from '@/router';
-import { useSearchStore } from '@/stores/useSearchStore.ts';
+import { FetchRequest } from '@/api/FetchRequest.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -24,15 +22,13 @@ const itemsPerPageOptions = [
   { value: 50, title: '50' },
 ];
 
-const searchFilterStore = useSearchStore();
 const loading = ref(false);
 const items: Ref<FetchArtistsResponse> = ref({ content: [], totalElements: 0 });
 
-function fetch(paging: PagingRequest) {
+function fetch(request: FetchRequest) {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  const searchRequest = searchFilterStore.getSearchRequest(router.currentRoute.value.name?.toString());
-  AdminArtistService.fetchArtists(paging, searchRequest).then(response => {
+  AdminArtistService.fetchArtists(request.paging, request.search).then(response => {
     items.value = response.data;
   }).finally(() => {
     loading.value = false;
@@ -47,7 +43,7 @@ function fetch(paging: PagingRequest) {
     :flat="true"
     title="아티스트 목록"
   >
-    <DataTable
+    <DataSearchTable
       :search-filters="searchFilters"
       :loading="loading"
       :table-headers="tableHeaders"

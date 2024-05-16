@@ -1,4 +1,4 @@
-export interface SearchRequest {
+export type SearchRequest = {
   searchFilter: string | null,
   searchKeyword: string | null,
 }

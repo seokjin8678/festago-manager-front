@@ -6,13 +6,14 @@ import { useSearchStore } from '@/stores/useSearchStore.ts';
 import { router } from '@/router';
 import { SearchRequest } from '@/api/SearchRequest.ts';
 import { SortItem } from '@/type/SortItem.ts';
+import { FetchRequest } from '@/api/FetchRequest.ts';
 
-const searchFilterStore = useSearchStore();
+const searchStore = useSearchStore();
 const page = ref(1);
 const searchRequest = reactive<SearchRequest>({ searchFilter: null, searchKeyword: null });
 const order = ref<SortItem | null>(null);
 const loading = defineModel<boolean>('loading', { required: true });
-const emits = defineEmits<(e: 'fetch', request: PagingRequest) => void>();
+const emits = defineEmits<(e: 'fetch', request: FetchRequest) => void>();
 const props = defineProps<{
   tableHeaders: {
     title: string,
@@ -35,9 +36,12 @@ function fetch(request: PagingRequest) {
   }
   const routeName = router.currentRoute.value.name?.toString();
   emits('fetch', {
-    page: searchFilterStore.getPage(routeName) ?? page.value,
-    sortBy: searchFilterStore.getOrder(routeName) ?? order.value,
-    itemsPerPage: request.itemsPerPage,
+    paging: {
+      page: searchStore.getPage(routeName) ?? page.value,
+      sortBy: searchStore.getOrder(routeName) ?? order.value,
+      itemsPerPage: request.itemsPerPage,
+    },
+    search: searchRequest,
   });
 }
 
@@ -48,14 +52,14 @@ function updatePage(update: number) {
   page.value = update;
   const name = router.currentRoute.value.name?.toString();
   if (name) {
-    searchFilterStore.setPage(name, update);
+    searchStore.setPage(name, update);
   }
 }
 
 function updateOrder(update: SortItem[]) {
   const name = router.currentRoute.value.name?.toString();
   if (name) {
-    searchFilterStore.setOrder(name, update[0]);
+    searchStore.setOrder(name, update[0]);
   }
   order.value = update[0];
 }
@@ -63,7 +67,7 @@ function updateOrder(update: SortItem[]) {
 function search() {
   const routeName = router.currentRoute.value.name?.toString();
   if (routeName) {
-    searchFilterStore.setKeyword(routeName, searchRequest.searchKeyword);
+    searchStore.setKeyword(routeName, searchRequest.searchKeyword);
   }
   fetch({
     page: 1,
@@ -76,16 +80,16 @@ function search() {
 watch(() => searchRequest.searchFilter, () => {
   const routeName = router.currentRoute.value.name;
   if (routeName) {
-    searchFilterStore.setFilter(routeName.toString(), searchRequest.searchFilter);
+    searchStore.setFilter(routeName.toString(), searchRequest.searchFilter);
   }
 });
 
 onMounted(() => {
   const routeName = router.currentRoute.value.name?.toString();
-  page.value = searchFilterStore.getPage(routeName) ?? 1;
-  order.value = searchFilterStore.getOrder(routeName);
-  searchRequest.searchFilter = searchFilterStore.getFilter(routeName);
-  searchRequest.searchKeyword = searchFilterStore.getKeyword(routeName);
+  page.value = searchStore.getPage(routeName) ?? 1;
+  order.value = searchStore.getOrder(routeName);
+  searchRequest.searchFilter = searchStore.getFilter(routeName);
+  searchRequest.searchKeyword = searchStore.getKeyword(routeName);
 });
 
 </script>
