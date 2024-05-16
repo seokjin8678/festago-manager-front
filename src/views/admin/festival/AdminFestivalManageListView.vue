@@ -39,6 +39,7 @@ function fetch(paging: PagingRequest) {
   const searchRequest = searchFilterStore.getSearchRequest(router.currentRoute.value.name?.toString());
   AdminFestivalService.fetchFestivals(paging, searchRequest).then(response => {
     items.value = response.data;
+  }).finally(() => {
     loading.value = false;
   });
 }
@@ -56,7 +57,7 @@ function fetch(paging: PagingRequest) {
       :loading="loading"
       :table-headers="tableHeaders"
       :items-per-page-options="itemsPerPageOptions"
-      :fetch="fetch"
+      @fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
       :detail-page-router-name="RouterPath.Admin.AdminFestivalManageDetailView.name"

@@ -12,6 +12,7 @@ const page = ref(1);
 const searchRequest = reactive<SearchRequest>({ searchFilter: null, searchKeyword: null });
 const order = ref<SortItem | null>(null);
 const loading = defineModel<boolean>('loading', { required: true });
+const emits = defineEmits<(e: 'fetch', request: PagingRequest) => void>();
 const props = defineProps<{
   tableHeaders: {
     title: string,
@@ -22,7 +23,6 @@ const props = defineProps<{
     title: string,
     value: number,
   }[],
-  fetch: (request: PagingRequest) => void,
   itemLength: number,
   items: any[],
   detailPageRouterName?: string,
@@ -34,7 +34,7 @@ function fetch(request: PagingRequest) {
     return;
   }
   const routeName = router.currentRoute.value.name?.toString();
-  props.fetch({
+  emits('fetch', {
     page: searchFilterStore.getPage(routeName) ?? page.value,
     sortBy: searchFilterStore.getOrder(routeName) ?? order.value,
     itemsPerPage: request.itemsPerPage,
