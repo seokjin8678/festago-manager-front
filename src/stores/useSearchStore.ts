@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
-import { SearchRequest } from '@/api/SearchRequest.ts';
 import { SortItem } from '@/type/SortItem.ts';
 
 export const useSearchStore = defineStore('search', () => {
@@ -54,16 +53,6 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
-  function getSearchRequest(key: string | null | undefined): SearchRequest {
-    if (!key) {
-      return { searchFilter: null, searchKeyword: null };
-    }
-    return {
-      searchFilter: filters.get(key) ?? null,
-      searchKeyword: keywords.get(key) ?? null,
-    };
-  }
-
   function getOrder(key: string | null | undefined) {
     if (!key) {
       return null;
@@ -89,7 +78,6 @@ export const useSearchStore = defineStore('search', () => {
     pages,
     getPage,
     setPage,
-    getSearchRequest,
     orders,
     getOrder,
     setOrder,
