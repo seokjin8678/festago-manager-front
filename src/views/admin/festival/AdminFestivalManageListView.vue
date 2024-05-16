@@ -1,13 +1,13 @@
 <script setup lang="ts">
 
 import RouterPath from '@/router/RouterPath.ts';
-import SearchForm from '@/components/form/SearchForm.vue';
 import DataTable from '@/components/datatable/DataTable.vue';
-import { SearchRequest } from '@/api/SearchRequest.ts';
 import { Ref, ref } from 'vue';
 import { PagingRequest } from '@/api/PagingRequest.ts';
 import { FetchFestivalsResponse } from '@/api/spec/festival/FetchFestivalsApiSpec.ts';
 import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
+import { router } from '@/router';
+import { useSearchStore } from '@/stores/useSearchStore.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -29,25 +29,17 @@ const itemsPerPageOptions = [
   { value: 50, title: '50' },
 ];
 
+const searchFilterStore = useSearchStore();
 const loading = ref(false);
-const itemsPerPage = ref(10);
-const searchRequest: Ref<SearchRequest> = ref({ searchFilter: null, searchKeyword: null });
 const items: Ref<FetchFestivalsResponse> = ref({ content: [], totalElements: 0 });
-
-function search(origin: SearchRequest) {
-  searchRequest.value = origin;
-  fetch({
-    page: 1,
-    itemsPerPage: itemsPerPage.value,
-    sortBy: [],
-  });
-}
 
 function fetch(paging: PagingRequest) {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  AdminFestivalService.fetchFestivals(paging, searchRequest.value).then(response => {
+  const searchRequest = searchFilterStore.getSearchRequest(router.currentRoute.value.name?.toString());
+  AdminFestivalService.fetchFestivals(paging, searchRequest).then(response => {
     items.value = response.data;
+  }).finally(() => {
     loading.value = false;
   });
 }
@@ -60,15 +52,12 @@ function fetch(paging: PagingRequest) {
     :flat="true"
     title="축제 목록"
   >
-    <SearchForm
-      :search="search"
-      :search-filters="searchFilters"
-    />
     <DataTable
+      :search-filters="searchFilters"
       :loading="loading"
       :table-headers="tableHeaders"
       :items-per-page-options="itemsPerPageOptions"
-      :fetch="fetch"
+      @fetch="fetch"
       :item-length="items.totalElements"
       :items="items.content"
       :detail-page-router-name="RouterPath.Admin.AdminFestivalManageDetailView.name"
