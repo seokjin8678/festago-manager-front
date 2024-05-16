@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
-import { PagingRequest } from '@/api/PagingRequest.ts';
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
 import { useSearchStore } from '@/stores/useSearchStore.ts';
 import { router } from '@/router';
 import { SearchRequest } from '@/api/SearchRequest.ts';
@@ -12,6 +11,7 @@ const searchStore = useSearchStore();
 const page = ref(1);
 const searchRequest = reactive<SearchRequest>({ searchFilter: null, searchKeyword: null });
 const order = ref<SortItem | null>(null);
+const itemsPerPage = ref(10);
 const loading = defineModel<boolean>('loading', { required: true });
 const emits = defineEmits<(e: 'fetch', request: FetchRequest) => void>();
 const props = defineProps<{
@@ -30,7 +30,7 @@ const props = defineProps<{
   searchFilters: { title: string, value: string }[]
 }>();
 
-function fetch(request: PagingRequest) {
+function fetch() {
   if (loading.value) {
     return;
   }
@@ -39,7 +39,7 @@ function fetch(request: PagingRequest) {
     paging: {
       page: searchStore.getPage(routeName) ?? page.value,
       sortBy: searchStore.getOrder(routeName) ?? order.value,
-      itemsPerPage: request.itemsPerPage,
+      itemsPerPage: itemsPerPage.value,
     },
     search: searchRequest,
   });
@@ -49,11 +49,11 @@ function updatePage(update: number) {
   if (loading.value) {
     return;
   }
-  page.value = update;
   const name = router.currentRoute.value.name?.toString();
   if (name) {
     searchStore.setPage(name, update);
   }
+  page.value = update;
 }
 
 function updateOrder(update: SortItem[]) {
@@ -64,17 +64,20 @@ function updateOrder(update: SortItem[]) {
   order.value = update[0];
 }
 
+function updateItemsPerPage(update: number) {
+  const routeName = router.currentRoute.value.name?.toString();
+  if (routeName) {
+    searchStore.setItemsPerPage(routeName, update);
+  }
+}
+
 function search() {
   const routeName = router.currentRoute.value.name?.toString();
   if (routeName) {
     searchStore.setKeyword(routeName, searchRequest.searchKeyword);
   }
-  fetch({
-    page: 1,
-    sortBy: order.value,
-    itemsPerPage: 10,
-  });
   updatePage(1);
+  fetch();
 }
 
 watch(() => searchRequest.searchFilter, () => {
@@ -82,6 +85,11 @@ watch(() => searchRequest.searchFilter, () => {
   if (routeName) {
     searchStore.setFilter(routeName.toString(), searchRequest.searchFilter);
   }
+});
+
+onBeforeMount(() => {
+  const routeName = router.currentRoute.value.name?.toString();
+  itemsPerPage.value = searchStore.getItemsPerPage(routeName) ?? props.itemsPerPageOptions[0].value;
 });
 
 onMounted(() => {
@@ -135,6 +143,8 @@ onMounted(() => {
   </v-row>
 
   <v-data-table-server
+    :show-current-page="true"
+    v-model:items-per-page="itemsPerPage"
     :headers="props.tableHeaders"
     :loading="loading"
     :items-length="props.itemLength"
@@ -144,6 +154,7 @@ onMounted(() => {
     @update:options="fetch"
     @update:page="updatePage"
     @update:sort-by="updateOrder"
+    @update:items-per-page="updateItemsPerPage"
   >
     <template v-slot:item.actions="{item}" v-if="!!(props.detailPageRouterName)">
       <v-icon
