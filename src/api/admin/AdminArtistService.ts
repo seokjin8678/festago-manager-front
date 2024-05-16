@@ -18,7 +18,7 @@ const AdminArtistService = {
     return ApiService.request<FetchArtistsResponse>(FetchArtistsApiSpec, {
       page: paging.page,
       size: paging.itemsPerPage,
-      sort: paging.sortBy[0] ? `${paging.sortBy[0].key},${paging.sortBy[0].order}` : null,
+      sort: paging.sortBy ? `${paging.sortBy.key},${paging.sortBy.order}` : null,
       searchKeyword: search.searchKeyword,
       searchFilter: search.searchFilter,
     });
