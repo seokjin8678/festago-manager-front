@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 const passwordVisible = ref(false);
-const model = defineModel<string | number>({ required: true });
+const model = defineModel<string | number | undefined>({ required: true });
 
 interface Props {
   label: string,
