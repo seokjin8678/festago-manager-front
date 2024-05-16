@@ -1,15 +1,15 @@
 <script setup lang="ts">
 
-import { onBeforeMount, onMounted, reactive, ref, watch } from 'vue';
+import { onBeforeMount, onMounted, ref, watch } from 'vue';
 import { useSearchStore } from '@/stores/useSearchStore.ts';
 import { router } from '@/router';
-import { SearchRequest } from '@/api/SearchRequest.ts';
 import { SortItem } from '@/type/SortItem.ts';
 import { FetchRequest } from '@/api/FetchRequest.ts';
 
 const searchStore = useSearchStore();
 const page = ref(1);
-const searchRequest = reactive<SearchRequest>({ searchFilter: null, searchKeyword: null });
+const searchFilter = ref<string | null>(null);
+const searchKeyword = ref<string | null>(null);
 const order = ref<SortItem | null>(null);
 const itemsPerPage = ref(10);
 const loading = defineModel<boolean>('loading', { required: true });
@@ -39,9 +39,12 @@ function fetch() {
     paging: {
       page: searchStore.getPage(routeName) ?? page.value,
       sortBy: searchStore.getOrder(routeName) ?? order.value,
-      itemsPerPage: itemsPerPage.value,
+      itemsPerPage: searchStore.getItemsPerPage(routeName) ?? itemsPerPage.value,
     },
-    search: searchRequest,
+    search: {
+      searchKeyword: searchStore.getKeyword(routeName) ?? searchKeyword.value,
+      searchFilter: searchStore.getFilter(routeName) ?? searchFilter.value,
+    },
   });
 }
 
@@ -74,16 +77,16 @@ function updateItemsPerPage(update: number) {
 function search() {
   const routeName = router.currentRoute.value.name?.toString();
   if (routeName) {
-    searchStore.setKeyword(routeName, searchRequest.searchKeyword);
+    searchStore.setKeyword(routeName, searchKeyword.value);
   }
   updatePage(1);
   fetch();
 }
 
-watch(() => searchRequest.searchFilter, () => {
+watch(searchFilter, () => {
   const routeName = router.currentRoute.value.name;
   if (routeName) {
-    searchStore.setFilter(routeName.toString(), searchRequest.searchFilter);
+    searchStore.setFilter(routeName.toString(), searchFilter.value);
   }
 });
 
@@ -96,8 +99,8 @@ onMounted(() => {
   const routeName = router.currentRoute.value.name?.toString();
   page.value = searchStore.getPage(routeName) ?? 1;
   order.value = searchStore.getOrder(routeName);
-  searchRequest.searchFilter = searchStore.getFilter(routeName);
-  searchRequest.searchKeyword = searchStore.getKeyword(routeName);
+  searchFilter.value = searchStore.getFilter(routeName);
+  searchKeyword.value = searchStore.getKeyword(routeName);
 });
 
 </script>
@@ -107,7 +110,7 @@ onMounted(() => {
     <v-col :cols="3">
       <v-select
         class="pa-2 ma-2"
-        v-model="searchRequest.searchFilter"
+        v-model="searchFilter"
         :clearable="true"
         label="필터"
         :items="props.searchFilters"
@@ -118,7 +121,7 @@ onMounted(() => {
     <v-col :cols="8">
       <v-text-field
         class="pa-2 ma-2"
-        v-model="searchRequest.searchKeyword"
+        v-model="searchKeyword"
         label="Search"
         prepend-inner-icon="mdi-magnify"
         :single-line="true"
@@ -130,7 +133,7 @@ onMounted(() => {
     <v-col :cols="1">
       <v-btn
         :loading="loading"
-        :disabled="!(!!(searchRequest.searchKeyword && searchRequest.searchFilter))"
+        :disabled="!(!!(searchKeyword && searchFilter))"
         class="py-7 text-h6"
         color="blue"
         type="submit"
