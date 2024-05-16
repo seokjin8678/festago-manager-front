@@ -1,13 +1,11 @@
 <script setup lang="ts">
 
 import RouterPath from '@/router/RouterPath.ts';
-import DataTable from '@/components/datatable/DataTable.vue';
+import DataSearchTable from '@/components/datatable/DataSearchTable.vue';
 import { Ref, ref } from 'vue';
-import { PagingRequest } from '@/api/PagingRequest.ts';
 import { FetchFestivalsResponse } from '@/api/spec/festival/FetchFestivalsApiSpec.ts';
 import AdminFestivalService from '@/api/admin/AdminFestivalService.ts';
-import { router } from '@/router';
-import { useSearchStore } from '@/stores/useSearchStore.ts';
+import { FetchRequest } from '@/api/FetchRequest.ts';
 
 const tableHeaders = [
   { title: 'ID', key: 'id' },
@@ -29,15 +27,13 @@ const itemsPerPageOptions = [
   { value: 50, title: '50' },
 ];
 
-const searchFilterStore = useSearchStore();
 const loading = ref(false);
 const items: Ref<FetchFestivalsResponse> = ref({ content: [], totalElements: 0 });
 
-function fetch(paging: PagingRequest) {
+function fetch(request: FetchRequest) {
   loading.value = true;
   setTimeout(() => (loading.value = false), 1000);
-  const searchRequest = searchFilterStore.getSearchRequest(router.currentRoute.value.name?.toString());
-  AdminFestivalService.fetchFestivals(paging, searchRequest).then(response => {
+  AdminFestivalService.fetchFestivals(request.paging, request.search).then(response => {
     items.value = response.data;
   }).finally(() => {
     loading.value = false;
@@ -52,7 +48,7 @@ function fetch(paging: PagingRequest) {
     :flat="true"
     title="축제 목록"
   >
-    <DataTable
+    <DataSearchTable
       :search-filters="searchFilters"
       :loading="loading"
       :table-headers="tableHeaders"
