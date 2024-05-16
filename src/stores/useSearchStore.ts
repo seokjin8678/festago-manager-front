@@ -7,6 +7,7 @@ export const useSearchStore = defineStore('search', () => {
   const keywords = new Map<string, string>();
   const pages = new Map<string, number>();
   const orders = new Map<string, SortItem>();
+  const itemsPerPages = new Map<string, number>();
 
   function getFilter(key: string | null | undefined) {
     if (!key) {
@@ -68,6 +69,21 @@ export const useSearchStore = defineStore('search', () => {
     }
   }
 
+  function getItemsPerPage(key: string | null | undefined) {
+    if (!key) {
+      return null;
+    }
+    return itemsPerPages.get(key) ?? null;
+  }
+
+  function setItemsPerPage(key: string, value: number) {
+    if (value) {
+      itemsPerPages.set(key, value);
+    } else {
+      itemsPerPages.delete(key);
+    }
+  }
+
   return {
     filters,
     getFilter,
@@ -81,6 +97,9 @@ export const useSearchStore = defineStore('search', () => {
     orders,
     getOrder,
     setOrder,
+    itemsPerPages,
+    getItemsPerPage,
+    setItemsPerPage
   };
 }, {
   persist: {
